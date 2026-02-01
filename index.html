@@ -3,8 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO de base -->
     <title>SCCS - Codex Officiel</title>
+    <meta name="description" content="Accédez au Codex Officiel du Système de Création et de Simulation (SCCS) : fiches interactives, livrets de règles, équipement et bestiaire.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="SCCS Team">
+
+    <!-- Open Graph (Pour Discord, Facebook, Twitter) -->
+    <meta property="og:title" content="SCCS - Codex Officiel">
+    <meta property="og:description" content="L'encyclopédie complète des mécanismes et de la création du SCCS.">
+    <meta property="og:type" content="website">
+    <!-- Note : Idéalement, ajoutez une image og:image ici plus tard -->
+
+    <!-- Favicon (Petite icône dans l'onglet) -->
+    <link rel="icon" href="https://fav.farm/📜">
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         body { 
             margin: 0;
@@ -15,6 +32,7 @@
             font-family: 'Cormorant Garamond', serif;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
         .container {
             max-width: 800px;
@@ -36,7 +54,7 @@
             color: #1c1917;
             margin: 0;
             text-transform: uppercase;
-            font-size: 2rem;
+            font-size: 1.8rem;
             line-height: 1.2;
         }
         .subtitle {
@@ -60,14 +78,14 @@
             text-decoration: none; 
             color: #1c1917; 
             font-weight: 700; 
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px;
         }
         .version { 
-            font-size: 0.95rem; 
+            font-size: 0.85rem; 
             font-weight: 900; 
             color: #000000;
             background: rgba(0,0,0,0.08);
@@ -79,6 +97,12 @@
         }
         .emoji { margin-right: 12px; }
         .label { flex-grow: 1; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.4rem; }
+            a { font-size: 1.1rem; flex-direction: column; align-items: flex-start; }
+            .version { margin-top: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -90,15 +114,10 @@
         
         <ul>
             <li><a href="Fiche de personnage.v0.83.html" target="_blank"><span class="label"><span class="emoji">📝</span>Fiche de personnage Interactive</span> <span class="version">v0.83</span></a></li>
-            
             <li><a href="Livret 1 - Mécanismes.v0.82.pdf" target="_blank"><span class="label"><span class="emoji">📖</span>Livret 1 - Mécanismes</span> <span class="version">v0.82</span></a></li>
-            
             <li><a href="Livret 2 - Création.v0.73.pdf" target="_blank"><span class="label"><span class="emoji">📖</span>Livret 2 - Création</span> <span class="version">v0.73</span></a></li>
-            
             <li><a href="Livret 3 - Equipement.v0.74.pdf" target="_blank"><span class="label"><span class="emoji">🛡️</span>Livret 3 - Équipement</span> <span class="version">v0.74</span></a></li>
-            
             <li><a href="Livret 4 - Rencontres.v0.79.pdf" target="_blank"><span class="label"><span class="emoji">⚔️</span>Livret 4 - Rencontres</span> <span class="version">v0.79</span></a></li>
-            
             <li><a href="Livret 5 - Bestiaire.v0.79.pdf" target="_blank"><span class="label"><span class="emoji">🐉</span>Livret 5 - Bestiaire</span> <span class="version">v0.79</span></a></li>
         </ul>
     </div>
