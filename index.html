@@ -14,14 +14,14 @@
            ========================================= */
         :root {
             /* 1. TRANSPARENCE DE LA PAGE (Le grand cadre) */
-            --opacite-page: 0.15;
+            --opacite-page: 0.2;
 
             /* 2. TRANSPARENCE DES ONGLETS (Les barres de liens) */
-            --opacite-onglets: 0.4; 
+            --opacite-onglets: 0.45; 
 
             /* 3. COULEURS DES ONGLETS */
-            --couleur-onglet-fond: 35, 35, 35; 
-            --couleur-texte-onglet: #1c1917; /* Noir anthracite pour tous les textes */
+            --couleur-onglet-fond: 20, 20, 20; /* Plus sombre pour faire ressortir le blanc */
+            --couleur-texte-onglet: #ffffff; /* Blanc pur pour une lisibilité maximale */
             
             /* 4. FORCE DU FLOU */
             --flou-vitre: 2px;
@@ -57,7 +57,7 @@
             -webkit-backdrop-filter: blur(var(--flou-vitre));
             padding: 30px 40px; 
             border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
             border-top: 1px solid rgba(255, 255, 255, 0.6);
             border-left: 1px solid rgba(255, 255, 255, 0.6);
@@ -66,26 +66,28 @@
         .header {
             text-align: center;
             margin-bottom: 30px; 
-            border-bottom: 1px solid rgba(28, 25, 23, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
             padding-bottom: 20px;
         }
 
         h1 {
             font-family: 'Cinzel', serif;
-            color: #1c1917;
+            color: #ffffff; /* Titre en blanc */
             margin: 0;
             text-transform: uppercase;
             font-size: 1.6rem;
             line-height: 1.2;
             letter-spacing: 1px;
+            /* Ombre portée subtile pour détacher le blanc du fond clair */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .subtitle {
             font-style: italic;
-            color: #1c1917; /* Noir pour le sous-titre */
+            color: rgba(255, 255, 255, 0.9); /* Blanc cassé pour le sous-titre */
             font-size: 1.1rem;
             margin-top: 8px;
-            opacity: 0.8;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         ul { list-style: none; padding: 0; margin: 0; }
@@ -94,8 +96,8 @@
         li { 
             margin-bottom: 12px; 
             background: rgba(var(--couleur-onglet-fond), var(--opacite-onglets)); 
-            border: 1px solid rgba(0,0,0,0.1);
-            border-left: 4px solid #1c1917;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-left: 4px solid #ffffff; /* Barre latérale blanche */
             transition: all 0.3s ease;
             border-radius: 4px;
             overflow: hidden;
@@ -103,9 +105,9 @@
 
         li:hover { 
             transform: translateX(8px); 
-            background: rgba(var(--couleur-onglet-fond), 0.5); /* Légèrement plus opaque au survol */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border-left-color: #d4af37;
+            background: rgba(var(--couleur-onglet-fond), 0.7); /* Plus sombre au survol */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-left-color: #d4af37; /* Or au survol */
         }
 
         a { 
@@ -128,19 +130,19 @@
         .version { 
             font-size: 0.8rem; 
             font-weight: 800; 
-            color: #1c1917; /* Noir pour la version */
-            background: rgba(0, 0, 0, 0.08); /* Fond léger pour détacher le texte */
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15); /* Fond clair léger */
             padding: 3px 8px;
             border-radius: 4px;
             font-family: sans-serif;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .emoji { 
             margin-right: 15px; 
             font-size: 1.2em;
-            /* Suppression du sepia pour garder les couleurs originales sur fond gris */
-            filter: none;
+            /* On booste un peu la luminosité des emojis sur fond sombre */
+            filter: brightness(1.2);
         }
 
         @media (max-width: 600px) {
