@@ -3,75 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO de base -->
     <title>SCCS - Codex Officiel</title>
     <meta name="description" content="Accédez au Codex Officiel du Système de Création et de Simulation (SCCS).">
-    
-    <!-- Favicon -->
     <link rel="icon" href="https://fav.farm/📜">
-
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         body {
             margin: 0;
-            padding: 20px; /* Réduit pour éviter trop d'espace en haut/bas sur petits écrans */
-            
-            /* --- FOND DE PAGE (Style Gris/Pierre neutre) --- */
+            padding: 20px;
             background-color: #e3e3e3; 
-            
-            /* Note : J'ai gardé vos URLs d'images. Si elles ne s'affichent pas dans la prévisualisation, 
-               c'est normal car les fichiers ne sont pas sur le serveur. 
-               Le dégradé gris assure que c'est joli même sans images. */
             background-image: 
                 url("clean-gray-paper.png"), 
                 linear-gradient(rgba(227, 227, 227, 0.9), rgba(227, 227, 227, 0.9)),
                 url("fond-de-page-accueil.png");
-            
             background-attachment: fixed;
             background-position: center;
             background-size: auto, cover, cover;
             background-repeat: repeat, no-repeat, no-repeat;
             background-blend-mode: multiply;
-
             font-family: 'Cormorant Garamond', serif;
             display: flex;
             justify-content: center;
-            /* Centre verticalement si la page est assez haute, sinon laisse scroller */
             align-items: center; 
             min-height: 100vh;
             box-sizing: border-box;
         }
 
-        /* --- LE CADRE CENTRAL --- */
+        /* --- CADRE PRINCIPAL (La Page) --- */
         .container {
-            max-width: 600px; /* Largeur conservée */
+            max-width: 800px;
             width: 100%;
             
-            /* COULEUR & TRANSPARENCE CORRIGÉES 
-               Au lieu de blanc (255,255,255), on utilise un beige grisâtre.
-               Cela garde la transparence mais "éteint" la lumière. */
-            background: rgba(230, 225, 215, 0.4); 
+            /* Fond Beige "Papier" assez opaque pour être lisible */
+            background: rgba(235, 228, 215, 0.3); 
             
-            /* Flou d'arrière-plan : améliore la lisibilité du texte sur la transparence */
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
-
-            /* HAUTEUR RÉDUITE : Padding tassé (25px au lieu de 40px) */
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             padding: 25px 40px; 
-            
             border-radius: 4px;
-            /* Ombre douce pour détacher du fond */
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            /* Bordure subtile */
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            
+            /* Bordure fine blanche pour délimiter le papier */
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .header {
             text-align: center;
-            /* HAUTEUR RÉDUITE : Marge réduite sous le titre */
             margin-bottom: 25px; 
             border-bottom: 2px solid #1c1917;
             padding-bottom: 15px;
@@ -96,12 +74,17 @@
 
         ul { list-style: none; padding: 0; margin: 0; }
 
+        /* --- ONGLETS (Les Lignes) --- */
         li { 
-            /* HAUTEUR RÉDUITE : Espace entre les boutons réduit */
             margin-bottom: 10px; 
             
-            /* FOND DES ONGLETS : Très peu opaque pour éviter le flash blanc */
-            background: rgba(255, 255, 255, 0.25); 
+            /* CHANGEMENT MAJEUR ICI : 
+               Au lieu de remettre du blanc sur du blanc, on met une teinte "Ombre" très légère.
+               Cela donne l'impression que le texte est imprimé sur une ligne distincte. */
+            background: rgba(0, 0, 0, 0.04); 
+            
+            /* Bordure sombre très fine pour l'effet "encadré" */
+            border: 1px solid rgba(0,0,0,0.05);
             
             border-left: 4px solid #1c1917;
             transition: all 0.2s ease;
@@ -110,9 +93,10 @@
 
         li:hover { 
             transform: translateX(8px); 
-            /* Au survol, on éclaire un peu mais pas trop */
-            background: rgba(255, 255, 255, 0.5); 
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+            /* Au survol, on passe en mode "Lumière" */
+            background: rgba(255, 255, 255, 0.6); 
+            border-color: rgba(255,255,255,0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         a { 
@@ -123,7 +107,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            /* HAUTEUR RÉDUITE : Padding interne des boutons tassé */
             padding: 12px 15px; 
         }
 
@@ -137,7 +120,7 @@
             font-size: 0.85rem; 
             font-weight: 900; 
             color: #333;
-            /* Fond de version plus sombre pour le contraste */
+            /* Le badge version reste discret */
             background: rgba(0,0,0,0.06);
             padding: 4px 10px;
             border-radius: 4px;
@@ -149,7 +132,6 @@
         .emoji { 
             margin-right: 15px; 
             font-size: 1.3em;
-            /* Optionnel : légère désaturation des emojis pour coller au style sérieux */
             filter: sepia(0.3);
         }
 
