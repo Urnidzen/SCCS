@@ -29,19 +29,16 @@
             /* COULEUR DE BASE */
             background-color: #d8c3a5; 
             
-            /* SUPERPOSITION : 
-               1. On met la texture parchemin en premier (elle sera devant)
-               2. On met ton image de fond en deuxième (elle sera derrière) */
-            background-image: url("clean-gray-paper.png"), url("fond-de-page-accueil.png");
+            /* SUPERPOSITION : 1. Texture / 2. Voile de clarté / 3. Image de fond */
+            background-image: 
+                url("clean-gray-paper.png"), 
+                linear-gradient(rgba(216, 195, 165, 0.8), rgba(216, 195, 165, 0.8)),
+                url("fond-de-page-accueil.png");
             
-            /* REGLAGES DE L'IMAGE DE FOND */
-            background-attachment: fixed; /* L'image ne bouge pas au scroll */
+            background-attachment: fixed;
             background-position: center;
-            background-size: auto, cover; /* Le parchemin garde sa taille, l'image couvre tout */
-            background-repeat: repeat, no-repeat;
-            
-            /* FUSION : 
-               On multiplie la texture avec l'image pour un effet "vieux dessin" */
+            background-size: auto, cover, cover;
+            background-repeat: repeat, no-repeat, no-repeat;
             background-blend-mode: multiply;
 
             font-family: 'Cormorant Garamond', serif;
@@ -52,7 +49,7 @@
         .container {
             max-width: 800px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.6); 
+            background: rgba(255, 255, 255, 0.3); 
             padding: 40px;
             border-radius: 2px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.1);
