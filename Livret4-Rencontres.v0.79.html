@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCS - Livret 4 : Rencontres (Version Intégrale)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4ecd8;
+            --dark-ink: #1c1917;
+            --accent: #7c2d12;
+            --highlight: #2c2520;
+            --danger: #7f1d1d;
+            --warning: #9a3412;
+            --safe: #14532d;
+        }
+
+        body {
+            background-color: #d8c3a5;
+            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--dark-ink);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, .font-cinzel {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar {
+            background: rgba(28, 25, 23, 0.05);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            scrollbar-width: thin;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--dark-ink);
+        }
+
+        .nav-link {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            border-left-color: var(--accent);
+            background: rgba(0,0,0,0.05);
+            padding-left: 1.5rem;
+        }
+
+        .rule-box {
+            border-left: 4px solid var(--accent);
+            background: rgba(124, 45, 18, 0.05);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .danger-box {
+            border-left: 4px solid var(--danger);
+            background: rgba(127, 29, 29, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .warning-box {
+            border-left: 4px solid var(--warning);
+            background: rgba(154, 52, 18, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .safe-box {
+            border-left: 4px solid var(--safe);
+            background: rgba(20, 83, 45, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hidden-item {
+            display: none !important;
+        }
+
+        ul.dash-list > li::before {
+            content: "• ";
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-[#d8c3a5] bg-opacity-95 border-b border-black border-opacity-20 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl">🐉</span>
+            <div>
+                <h1 class="text-xl font-bold uppercase">LIVRET 4: RENCONTRES</h1>
+                <p class="text-xs italic opacity-75 font-serif">Codex Officiel SCCS - Intégrale v0.79</p>
+            </div>
+        </div>
+        
+        <div class="relative w-full md:w-96">
+            <input type="text" id="searchInput" placeholder="Rechercher une règle, une dangerosité..." 
+                class="search-input w-full pl-10 pr-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-900">
+            <span class="absolute left-3 top-2.5 opacity-50">🔍</span>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- SIDEBAR -->
+        <aside class="sidebar w-72 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
+            <nav class="space-y-6">
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">Responsabilité</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#responsabilite" class="nav-link block py-1 px-2">Note sur la Responsabilité</a></li>
+                        <li><a href="#principes" class="nav-link block py-1 px-2">Principes (Cohérence, etc.)</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">Dangerosité</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#identification" class="nav-link block py-1 px-2">Identifier la Dangerosité</a></li>
+                        <li><a href="#chiffre" class="nav-link block py-1 px-2">Le Chiffre (X) & Bonus (+)</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">Comparaison</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#comparaison" class="nav-link block py-1 px-2">Règle d'Équilibrage</a></li>
+                        <li><a href="#cas1" class="nav-link block py-1 px-2 text-red-900">1. Ennemi > PJ</a></li>
+                        <li><a href="#cas2" class="nav-link block py-1 px-2 text-amber-900">2. Ennemi = PJ</a></li>
+                        <li><a href="#cas3" class="nav-link block py-1 px-2 text-green-900">3. Ennemi < PJ</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 lg:ml-72 p-6 md:p-16 max-w-5xl">
+
+            <!-- RESPONSABILITÉ -->
+            <section id="responsabilite" class="searchable-section mb-16">
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">Note sur la Responsabilité du MJ (Humain ou IA) :</h2>
+                
+                <div class="content-card searchable-item">
+                    <p class="mb-4">Le Bestiaire ne sont pas destinés à être utilisés de manière aléatoire ou automatique. Le MJ est le seul garant de l'équilibre, de la cohérence et du plaisir de jeu.</p>
+                </div>
+
+                <div id="principes" class="searchable-item space-y-4">
+                    <div class="rule-box">
+                        <ul class="dash-list space-y-4">
+                            <li>
+                                <strong>Cohérence et Réalisme:</strong> L'adaptation ne doit pas sacrifier la logique de l'univers. Un camp de brigands ne doit pas être réduit à un seul homme blessé uniquement pour s'aligner sur la force des PJ; le nombre et la force des adversaires doivent rester crédibles selon le contexte (ville ou village).
+                            </li>
+                            <li>
+                                <strong>Cohérence des Groupements:</strong> Les créatures au sein d'un même lieu doivent former un écosystème ou un voisinage logique. Il est impensable qu'un prédateur sauvage (ex: un ours) cohabite naturellement dans la même pièce avec des araignées géantes ou des morts-vivants. Une telle cohabitation doit être justifiée narrativement (ex: passage scellé séparant les zones, contrôle magique, ou action d'un individu intelligent ayant organisé le lieu).
+                            </li>
+                            <li>
+                                <strong>Arbitrage et Viabilité:</strong> Le MJ doit favoriser une difficulté qui permet aux joueurs de triompher et de s'amuser, en gardant un œil vigilant sur leur état actuel (équipement, blessures). L'aventure doit rester viable, mais méritée.
+                            </li>
+                            <li>
+                                <strong>Agence et Survie:</strong> Si une situation est logiquement "suicidaire", le MJ n'a pas l'obligation de la corriger artificiellement. C'est aux joueurs d'apprendre à ruser, à négocier ou à fuir. Le MJ doit cependant éviter d'abuser des situations mortelles sans offrir de signes avant-coureurs ou d'alternatives narratives.
+                            </li>
+                            <li>
+                                <strong>Interdiction de l'Aléatoire Pur:</strong> Une rencontre ne doit jamais être le fruit d'un simple "jet de dé" si le résultat menace la cohérence de la narration ou impose un déséquilibre technique injuste.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DANGEROSITÉ -->
+            <section id="identification" class="searchable-section mb-16">
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">Identification de la Dangerosité</h2>
+                
+                <div class="content-card searchable-item">
+                    <p class="mb-6">Pour évaluer la difficulté d'un combat, le MJ doit d'abord identifier la Dangerosité des adversaires.</p>
+                    <p class="mb-4">Chaque créature possède un score de Dangerosité affiché sous la forme X ou X+ :</p>
+                    
+                    <ul class="dash-list space-y-4 pl-4" id="chiffre">
+                        <li>
+                            <strong>Le Chiffre (X):</strong> Correspond au Score Total d'Attaque le plus élevé (somme du Type et de la Cible) de la créature. C'est ce chiffre qui détermine si la créature peut rivaliser techniquement avec les PJ.
+                        </li>
+                        <li>
+                            <strong>Les Bonus (+):</strong> Un + représente un indice qui indique que la créature est plus dangereuse que ce que son chiffre indique. Cela est en général dû à une armure ou un talent de furtivité.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- RÈGLE DE COMPARAISON -->
+            <section id="comparaison" class="searchable-section mb-16">
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">La Règle de Comparaison (Équilibrage)</h2>
+                
+                <div class="mb-8 searchable-item">
+                    <p class="italic text-lg">Le MJ compare le Meilleur Score d'Attaque du Groupe PJ (la stat la plus haute parmi les joueurs) au Chiffre de Dangerosité de l'ennemi le plus fort.</p>
+                </div>
+
+                <div id="cas1" class="danger-box searchable-item">
+                    <h3 class="font-cinzel text-xl font-bold text-red-900 mb-2">1. Si Max Ennemi > Max PJ</h3>
+                    <p class="font-bold text-red-800 mb-2">RENCONTRE MORTELLE (À Éviter).</p>
+                    <p class="text-sm italic opacity-80">Exemple (Duo): 2 Novices (+1) contre 1 Araignée Colossale (Dangerosité 2).</p>
+                </div>
+
+                <div id="cas2" class="warning-box searchable-item">
+                    <h3 class="font-cinzel text-xl font-bold text-amber-900 mb-2">2. Si Max Ennemi = Max PJ</h3>
+                    <ul class="space-y-4 mt-2">
+                        <li>
+                            <span class="font-bold text-red-800">Groupe Adverse de Taille Égale: RENCONTRE MORTELLE (À Éviter).</span>
+                            <p class="text-sm italic opacity-80 mt-1">Exemple (Duo): 2 Novices (+1) contre 2 Bandits humains Vaurien (Dangerosité 1).</p>
+                        </li>
+                        <li>
+                            <span class="font-bold text-amber-800">Groupe Adverse de Taille Inférieure: RENCONTRE DANGEREUSE.</span>
+                            <p class="text-sm italic opacity-80 mt-1">Exemple (Duo): 2 Novices (+1) contre 1 Ours Brun Adulte (Dangerosité 1+).</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="cas3" class="safe-box searchable-item">
+                    <h3 class="font-cinzel text-xl font-bold text-green-900 mb-2">3. Si Max Ennemi < Max PJ</h3>
+                    <ul class="space-y-4 mt-2">
+                        <li>
+                            <span class="font-bold text-green-800">Groupe Adverse de Taille Supérieure (Surnombre): RENCONTRE ÉQUILIBRÉE.</span>
+                            <p class="text-sm italic opacity-80 mt-1">Exemple (Duo): 2 Novices (+1) contre 4 Rats Géants (Dangerosité 0) (2 Rats/PJ).</p>
+                        </li>
+                        <li>
+                            <span class="font-bold text-green-700">Autres cas (Taille Égale ou Inférieure): RENCONTRE FACILE.</span>
+                            <p class="text-sm italic opacity-80 mt-1">Exemple (Duo): 2 Novices (+1) contre 2 Paysans (Dangerosité 0).</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- RECHERCHE MOT POUR MOT ---
+        const searchInput = document.getElementById('searchInput');
+        const searchableItems = document.querySelectorAll('.searchable-item');
+        const searchableSections = document.querySelectorAll('.searchable-section');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+
+            searchableItems.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    item.classList.remove('hidden-item');
+                } else {
+                    item.classList.add('hidden-item');
+                }
+            });
+
+            // Gérer la visibilité des sections entières
+            searchableSections.forEach(section => {
+                const visibleItems = section.querySelectorAll('.searchable-item:not(.hidden-item)');
+                if (visibleItems.length === 0 && term !== "") {
+                    section.classList.add('hidden-item');
+                } else {
+                    section.classList.remove('hidden-item');
+                }
+            });
+        });
+
+        // --- NAVIGATION ACTIVE ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const scrollTargets = document.querySelectorAll('h3[id], h2[id], section[id], div[id]');
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            scrollTargets.forEach(target => {
+                const top = target.offsetTop;
+                if (pageYOffset >= top - 200) {
+                    current = target.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        navLinks.forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

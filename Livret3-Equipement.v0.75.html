@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCS - Livret 3 : Équipement (Version Intégrale)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4ecd8;
+            --dark-ink: #1c1917;
+            --accent: #7c2d12;
+        }
+
+        body {
+            background-color: #d8c3a5;
+            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--dark-ink);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, .font-cinzel {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar {
+            background: rgba(28, 25, 23, 0.05);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            scrollbar-width: thin;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--dark-ink);
+        }
+
+        .nav-link {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            border-left-color: var(--accent);
+            background: rgba(0,0,0,0.05);
+            padding-left: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            background: rgba(0,0,0,0.07);
+            text-align: left;
+            padding: 12px 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            border: 1px solid rgba(0,0,0,0.2);
+        }
+
+        td {
+            padding: 12px 15px;
+            border: 1px solid rgba(0,0,0,0.1);
+            vertical-align: top;
+        }
+
+        .verbatim {
+            white-space: pre-line;
+        }
+
+        .rule-box {
+            border-left: 4px solid var(--accent);
+            background: rgba(124, 45, 18, 0.05);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .hidden-item {
+            display: none !important;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-[#d8c3a5] bg-opacity-95 border-b border-black border-opacity-20 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl">📜</span>
+            <div>
+                <h1 class="text-xl font-bold uppercase">LIVRET 3: ÉQUIPEMENT</h1>
+                <p class="text-xs italic opacity-75 font-serif">Codex Officiel SCCS - Intégrale v0.75</p>
+            </div>
+        </div>
+        
+        <div class="relative w-full md:w-96">
+            <input type="text" id="searchInput" placeholder="Rechercher un terme exact..." 
+                class="search-input w-full pl-10 pr-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-900">
+            <span class="absolute left-3 top-2.5 opacity-50">🔍</span>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- SIDEBAR -->
+        <aside class="sidebar w-72 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
+            <nav class="space-y-8">
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-4">A. Armures & Boucliers</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#armures-table" class="nav-link block py-1 px-2">1. Armures</a></li>
+                        <li><a href="#boucliers-table" class="nav-link block py-1 px-2">2. Boucliers</a></li>
+                        <li><a href="#regle-usure" class="nav-link block py-1 px-2">Règle d'Usure</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-4">B. Armes & Catalyseurs</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#armes-intro" class="nav-link block py-1 px-2">Règles & Malus</a></li>
+                        <li><a href="#armes-table" class="nav-link block py-1 px-2">Tableau des Armes</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-4">C. Objets Magiques</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#principes" class="nav-link block py-1 px-2">1. Principes de Création</a></li>
+                        <li><a href="#consommables" class="nav-link block py-1 px-2">2. Consommables & Reliques</a></li>
+                        <li><a href="#discretion" class="nav-link block py-1 px-2">3. Discrétion et Assaut</a></li>
+                        <li><a href="#prestige" class="nav-link block py-1 px-2">4. Armurerie de Prestige</a></li>
+                        <li><a href="#connaissance" class="nav-link block py-1 px-2">5. Instruments</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 lg:ml-72 p-6 md:p-16 max-w-5xl">
+            
+            <!-- SECTION A -->
+            <section id="armures" class="searchable-section mb-20">
+                <h2 class="text-4xl font-cinzel mb-8 border-b-2 border-black pb-4">A. ARMURES ET BOUCLIERS</h2>
+                <p class="text-xl mb-10 leading-relaxed italic">
+                    Le port d'une armure confère une protection vitale (Résistance), mais impose des contraintes sur la mobilité et la perception du personnage, se traduisant par des malus sur certains Talents.
+                </p>
+                
+                <h3 id="armures-table" class="text-2xl font-cinzel mb-6">1. Armures</h3>
+                <div class="overflow-x-auto mb-10">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type d'Armure</th>
+                                <th>Durabilité</th>
+                                <th>Bonus de Résistance</th>
+                                <th>Conséquence Mécanique (Malus)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Légère sans casque (Cuirs)</td>
+                                <td class="text-center font-bold">6</td>
+                                <td>+1 (Tronc et Membres)</td>
+                                <td class="text-sm">-1 aux jets de Magie (si le sort cible/inclut des ennemis) et -1 aux Talents: Acrobatie et Athlétisme.</td>
+                            </tr>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Moyenne sans casque (Mailles)</td>
+                                <td class="text-center font-bold">8</td>
+                                <td>+2 (Tronc et Membres)</td>
+                                <td class="text-sm">-1 aux jets de Magie (si le sort cible/inclut des ennemis) et -1 aux Talents: Acrobatie, Athlétisme, Mécanique et Subtilité.</td>
+                            </tr>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Lourde sans casque (Plaques)</td>
+                                <td class="text-center font-bold">10</td>
+                                <td>+3 (Tronc et Membres)</td>
+                                <td class="text-sm">-1 aux jets de Magie (si le sort cible/inclut des ennemis) et -1 aux Talents: Acrobatie, Athlétisme, Mécanique, Subtilité et Perception.</td>
+                            </tr>
+                            <tr class="searchable-item">
+                                <td class="font-bold italic">Casque (Variable)</td>
+                                <td class="text-center">= Type d'armure</td>
+                                <td>= Type d'armure (tête)</td>
+                                <td class="text-sm">-1 aux Talents: Perception et Acrobatie.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 id="boucliers-table" class="text-2xl font-cinzel mb-6">2. Boucliers</h3>
+                <div class="overflow-x-auto mb-12">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Équipement</th>
+                                <th>Durabilité</th>
+                                <th>Bonus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Bouclier</td>
+                                <td class="text-center font-bold">12</td>
+                                <td>+1 Défense vs Direct sauf dos si utilisé activement, ou +1 Défense vs Direct dos si porté dans le dos.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="regle-usure" class="rule-box searchable-item">
+                    <h4 class="font-cinzel text-xl mb-4 underline">Règle d'Usure (Durabilité)</h4>
+                    <p class="mb-4">Les armures et les boucliers ne sont pas éternels. Ils possèdent un score de Durabilité. Lorsque le personnage subit une attaque, l'armure perd 1 Point de Durabilité si elle est "nécessaire" pour éviter l'Impact.</p>
+                    <p class="mb-4 font-bold">La Condition :</p>
+                    <p class="italic mb-6">L'usure s'applique si le score de Défense sans le bonus d'armure aurait entraîné une "Supériorité (Attaque > Défense)", mais que le bonus d'armure permet d'atteindre l'Égalité (Tension) ou la Supériorité de Défense.</p>
+                    <p><strong>• Bris de l'armure :</strong> Si la Durabilité tombe à 0, l'armure est inutilisable et ne confère plus aucun bonus de Résistance jusqu'à réparation (Test de Mécanique ou Magie de Restauration).</p>
+                </div>
+            </section>
+
+            <!-- SECTION B -->
+            <section id="armes" class="searchable-section mb-20">
+                <h2 class="text-4xl font-cinzel mb-8 border-b-2 border-black pb-4">B. ARMES & CATALYSEURS</h2>
+                <div id="armes-intro" class="mb-8 p-6 bg-white bg-opacity-20 border border-black border-opacity-10">
+                    <p class="leading-relaxed">
+                        Si une Arme autre que celles listées dans les focalisateurs magiques est utilisée pour lancer un sort, appliquez un <strong>Malus de -1 aux résolutions du sort</strong>. Il est impossible de lancer des sorts sans avoir une arme en main (sauf capacités innées).
+                    </p>
+                </div>
+
+                <h3 id="armes-table" class="text-2xl font-cinzel mb-6">Tableau des Armes</h3>
+                <div class="overflow-x-auto mb-6">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Catégorie</th>
+                                <th>Exemples</th>
+                                <th>Contrainte / Avantage</th>
+                                <th>Initiative</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Distance</td>
+                                <td>Arc, Arbalète, Fronde</td>
+                                <td class="text-sm">Encombrement / Munitions. Nécessite généralement deux mains (sauf fronde/arbalète de poing).</td>
+                                <td class="text-sm">Priorité 1 (si libre) ou Priorité 7 (si engagé au corps-à-corps).</td>
+                            </tr>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Focalisateur Magique</td>
+                                <td>Grimoire, Chapelet, Bâton.</td>
+                                <td class="text-sm">Nécessite de tenir l'objet dans une main et d'avoir l'autre main de libre.</td>
+                                <td class="text-sm">Priorité 2 (Magie Libre) ou Priorité 8 (Magie sous Pression).</td>
+                            </tr>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Longue (arme utilisée à deux mains)</td>
+                                <td>Lance, Épée à deux mains, Hache, Masse</td>
+                                <td class="text-sm">Encombrement / Deux mains obligatoires. Empêche l'utilisation active d'un bouclier.</td>
+                                <td class="text-sm">Priorité 4</td>
+                            </tr>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Moyenne (arme utilisée à une seule main)</td>
+                                <td>Épée, Hache, Masse, Lance, Fléau</td>
+                                <td class="text-sm">Permet l'usage d'un bouclier.</td>
+                                <td class="text-sm">Priorité 5</td>
+                            </tr>
+                            <tr class="searchable-item">
+                                <td class="font-bold">Courte (arme de petite taille)</td>
+                                <td>Dague, Poing, Pied, Épée courte, Torche, Saisie, Bouclier</td>
+                                <td class="text-sm">Permet l'usage d'un bouclier ou d'une seconde attaque avec une deuxième arme courte.</td>
+                                <td class="text-sm">Priorité 6</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-sm italic opacity-70">Note de rappel: La Priorité 3 manquante dans le tableau est réservée à l'action de Sprint (déplacement pur sans attaque).</p>
+            </section>
+
+            <!-- SECTION C -->
+            <section id="objets" class="searchable-section mb-20">
+                <h2 class="text-4xl font-cinzel mb-8 border-b-2 border-black pb-4">C. OBJETS MAGIQUES</h2>
+                <p class="mb-10 text-lg">Cette section recense les artefacts rares, les matériaux légendaires et les secrets de fabrication permettant de transcender les limites de l'équipement conventionnel.</p>
+
+                <div id="principes" class="content-card searchable-item">
+                    <h3 class="text-2xl font-cinzel mb-6">1. Principes de Création d'Objet Magique</h3>
+                    <p class="mb-6 italic">La confection d'un objet magique suit des règles strictes qui limitent la puissance de ces artefacts dans le monde :</p>
+                    <ul class="space-y-4 ml-4">
+                        <li class="flex items-start">
+                            <span class="mr-3 mt-1">•</span>
+                            <span><strong>Bonus Limité:</strong> Un objet magique ne confère jamais plus d'un bonus de +1 à une statistique ou un talent.</span>
+                        </li>
+                        <li class="flex items-start ml-6 text-sm italic">
+                            <span>Exceptions: Exceptionnellement, certains objets dits "exceptionnels" peuvent accorder plusieurs bonus différents.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-3 mt-1">•</span>
+                            <span><strong>Compétence Requise:</strong> La création nécessite obligatoirement la maîtrise d'un Talent de confection approprié (Mécanique, Survie, Savoir Académique, etc.).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-3 mt-1">•</span>
+                            <span><strong>Matériaux Rares:</strong> Toute création magique exige un matériau spécial, souvent issu d'un monstre (écailles, sang, glandes) ou d'un minerai rare (Fer Lunaire, Adamantite, Mithril).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-3 mt-1">•</span>
+                            <span><strong>Objets Exceptionnels:</strong> Pour les objets cumulant plusieurs bonus, une spécificité supplémentaire est requise (forge spéciale, secret ancestral, rituel complexe) en plus des matériaux rares.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="consommables" class="mb-12">
+                    <h3 class="text-2xl font-cinzel mb-8 border-l-4 border-black pl-4">2. Consommables et Reliques de Sang</h3>
+                    
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel text-red-900 mb-4">Sang d'Ogre Mage</h4>
+                        <ul class="space-y-3">
+                            <li><strong>Propriétés:</strong> L'essence vitale d'un Ogre Mage est imprégnée d'une magie brute. Son ingestion modifie définitivement le flux spirituel de l'utilisateur.</li>
+                            <li><strong>Effet:</strong> Confère la capacité permanente de lancer des sorts sans nécessité l'usage d'une arme et annule le malus de catalyseur partiel.</li>
+                            <li><strong>Création:</strong> Une flasque de sang d'ogre mage dont on extrait l'essence (Test Savoir Académique 1).</li>
+                            <li><strong>Utilisation:</strong> Absorption et rituel complexe (Difficulté Saisie Tronc 4).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="discretion" class="mb-12">
+                    <h3 class="text-2xl font-cinzel mb-8 border-l-4 border-black pl-4">3. Équipements de Discrétion et d'Assaut</h3>
+                    
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel mb-4">Cape de soie d'araignée caméléon</h4>
+                        <ul class="space-y-2">
+                            <li><strong>Propriétés:</strong> Tissée à partir de fibres réagissant aux variations de lumière ambiante.</li>
+                            <li><strong>Effet:</strong> Confère un bonus de +1 pour se cacher.</li>
+                            <li><strong>Création:</strong> Fil de soie d'araignée caméléon extrait de ses glandes (Test Survie 1) et tissage (Test Mécanique 1).</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel mb-4">Épée ou Hache Lunaire</h4>
+                        <ul class="space-y-2">
+                            <li><strong>Propriétés:</strong> Tirant son nom de l'aspect arc de cercle d'un croissant de lune rappelant l'arc décrit par une attaque circulaire. Forgée dans un métal nommé "Fer Lunaire" (désignant son usage principal et non sa provenance).</li>
+                            <li><strong>Effet:</strong> +1 Attaque Circulaire.</li>
+                            <li><strong>Création:</strong> Utilisation de Fer Lunaire (Test Mécanique 1).</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel mb-4">Lance Diamantine</h4>
+                        <ul class="space-y-2">
+                            <li><strong>Propriétés:</strong> Une arme dont la pointe est d'une dureté absolue, capable de percer les protections les plus denses.</li>
+                            <li><strong>Effet:</strong> +1 Attaque Directe.</li>
+                            <li><strong>Création:</strong> Utilisation de Fer Diamantin (Test Mécanique 1).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="prestige" class="mb-12">
+                    <h3 class="text-2xl font-cinzel mb-8 border-l-4 border-black pl-4">4. Armurerie de Prestige</h3>
+                    
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel mb-4">Cotte de maille et Harnois Elfique</h4>
+                        <ul class="space-y-2">
+                            <li><strong>Propriétés:</strong> Fabriquée en Mithril, un métal d'une légèreté surnaturelle.</li>
+                            <li><strong>Effet:</strong> Pas de malus pour lancer des sorts, pas de malus aux Talents (Acrobatie, Athlétisme, etc.).</li>
+                            <li><strong>Création:</strong> Utilisation de Mithril (Test Mécanique 1) et forge spéciale (Secret Elfique).</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel mb-4">Harnois Nain</h4>
+                        <ul class="space-y-2">
+                            <li><strong>Propriétés:</strong> Une armure massive en Adamantite, conçue pour encaisser les chocs les plus violents des tréfonds.</li>
+                            <li><strong>Effet:</strong> +1 en Résistance (total de +4) et Durabilité 20.</li>
+                            <li><strong>Création:</strong> Utilisation d'Adamantite (Test Mécanique 1) et forge spéciale (Secret Nain).</li>
+                            <li class="font-bold">Contrainte: Très lourd. Nécessite Athlétisme +1 (hors malus du port de l'armure) sinon l'armure est inutilisable en combat.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel mb-4">Armure de cuir en écaille de Dragon</h4>
+                        <ul class="space-y-2">
+                            <li><strong>Propriétés:</strong> Confectionnée à partir de cuir et d'écailles de dragon véritable, offrant la solidité de l'acier et la souplesse de la peau.</li>
+                            <li><strong>Effet:</strong> Protège comme un harnois (Résistance +3) mais avec les malus d'une armure de cuir uniquement. Ne subit pas le -1 aux jets de magie.</li>
+                            <li><strong>Création:</strong> Cuir et écailles de dragon véritable (Test Survie 1 pour dépecer) et test Mécanique 1 pour la confectionner.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="connaissance" class="mb-12">
+                    <h3 class="text-2xl font-cinzel mb-8 border-l-4 border-black pl-4">5. Instruments de Connaissance</h3>
+                    <div class="content-card searchable-item">
+                        <h4 class="text-xl font-cinzel mb-4">Grimoire de l'Érudit</h4>
+                        <ul class="space-y-2">
+                            <li><strong>Propriétés:</strong> Un grimoire dont les pages sont magiquement imprégnées du savoir d'une bibliothèque entière.</li>
+                            <li><strong>Effet:</strong> Confère un bonus de +1 en Savoir Académique.</li>
+                            <li><strong>Création:</strong> Un grimoire vide, une grande bibliothèque, et un rituel magique (Difficulté Rituel Magique 2) qui absorbe tous les livres de la bibliothèque pour les imprimer magiquement dans le grimoire qui devient magique.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- RECHERCHE MOT POUR MOT ---
+        const searchInput = document.getElementById('searchInput');
+        const searchableItems = document.querySelectorAll('.searchable-item');
+        const searchableSections = document.querySelectorAll('.searchable-section');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+
+            searchableItems.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    item.classList.remove('hidden-item');
+                } else {
+                    item.classList.add('hidden-item');
+                }
+            });
+
+            // Gérer la visibilité des sections entières
+            searchableSections.forEach(section => {
+                const visibleItems = section.querySelectorAll('.searchable-item:not(.hidden-item)');
+                if (visibleItems.length === 0 && term !== "") {
+                    section.classList.add('hidden-item');
+                } else {
+                    section.classList.remove('hidden-item');
+                }
+            });
+        });
+
+        // --- NAVIGATION ACTIVE ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const scrollTargets = document.querySelectorAll('h3[id], div[id], section[id]');
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            scrollTargets.forEach(target => {
+                const top = target.offsetTop;
+                if (pageYOffset >= top - 150) {
+                    current = target.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        navLinks.forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCS - Livret 5 : Bestiaire (Version Intégrale)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4ecd8;
+            --dark-ink: #1c1917;
+            --accent: #7c2d12;
+            --highlight: #2c2520;
+            --danger-text: #7f1d1d;
+        }
+
+        body {
+            background-color: #d8c3a5;
+            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--dark-ink);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, .font-cinzel {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar {
+            background: rgba(28, 25, 23, 0.05);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            scrollbar-width: thin;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            break-inside: avoid;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--dark-ink);
+        }
+
+        .nav-link {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            border-left-color: var(--accent);
+            background: rgba(0,0,0,0.05);
+            padding-left: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            background: rgba(0,0,0,0.07);
+            text-align: left;
+            padding: 12px 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            border: 1px solid rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 15px;
+            border: 1px solid rgba(0,0,0,0.1);
+            vertical-align: top;
+        }
+
+        .creature-header {
+            border-bottom: 2px solid var(--highlight);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+        .danger-badge {
+            background: var(--dark-ink);
+            color: #d8c3a5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .stat-block {
+            background: rgba(0, 0, 0, 0.03);
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .hidden-item {
+            display: none !important;
+        }
+
+        ul.dash-list > li::before {
+            content: "• ";
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-[#d8c3a5] bg-opacity-95 border-b border-black border-opacity-20 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl">🐾</span>
+            <div>
+                <h1 class="text-xl font-bold uppercase">LIVRET 5: BESTIAIRE</h1>
+                <p class="text-xs italic opacity-75 font-serif">Codex Officiel SCCS - Intégrale v0.79</p>
+            </div>
+        </div>
+        
+        <div class="relative w-full md:w-96">
+            <input type="text" id="searchInput" placeholder="Rechercher une créature..." 
+                class="search-input w-full pl-10 pr-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-900">
+            <span class="absolute left-3 top-2.5 opacity-50">🔍</span>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- SIDEBAR -->
+        <aside class="sidebar w-64 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
+            <nav class="space-y-6">
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">Introduction</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#lexique" class="nav-link block py-1 px-2">Lexique</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">Créatures (A-Z)</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#araignees" class="nav-link block py-1 px-2">Araignées</a></li>
+                        <li><a href="#bandits" class="nav-link block py-1 px-2">Bandits humains</a></li>
+                        <li><a href="#chevaux" class="nav-link block py-1 px-2">Chevaux</a></li>
+                        <li><a href="#drakes" class="nav-link block py-1 px-2">Drakes</a></li>
+                        <li><a href="#gobelins" class="nav-link block py-1 px-2">Gobelins</a></li>
+                        <li><a href="#kobolds" class="nav-link block py-1 px-2">Kobolds</a></li>
+                        <li><a href="#loups" class="nav-link block py-1 px-2">Loups</a></li>
+                        <li><a href="#mercenaires" class="nav-link block py-1 px-2">Mercenaires</a></li>
+                        <li><a href="#mortsvivants" class="nav-link block py-1 px-2">Morts vivants</a></li>
+                        <li><a href="#ogre" class="nav-link block py-1 px-2">Ogre</a></li>
+                        <li><a href="#ours" class="nav-link block py-1 px-2">Ours</a></li>
+                        <li><a href="#peuple" class="nav-link block py-1 px-2">Peuple</a></li>
+                        <li><a href="#rats" class="nav-link block py-1 px-2">Rats</a></li>
+                        <li><a href="#sangliers" class="nav-link block py-1 px-2">Sangliers</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 lg:ml-64 p-6 md:p-16 max-w-5xl">
+
+            <p class="italic mb-8 searchable-item">Ce document recense les fiches techniques des adversaires, classées par ordre alphabétique.</p>
+            
+            <!-- LEXIQUE -->
+            <section id="lexique" class="searchable-section mb-16">
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">LEXIQUE DES ABRÉVIATIONS</h2>
+                <div class="overflow-x-auto searchable-item">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Combat</th>
+                                <th>Type / Cible</th>
+                                <th>Talents</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Att:</strong> Attaquer</td>
+                                <td><strong>dir:</strong> Direct</td>
+                                <td><strong>Tal:</strong> Talents</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pro:</strong> Se Protéger</td>
+                                <td><strong>cir:</strong> Circulaire</td>
+                                <td><strong>Athlé:</strong> Athlétisme</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Type:</strong> Type</td>
+                                <td><strong>saisie:</strong> Saisie</td>
+                                <td><strong>Acro:</strong> Acrobatie</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cible:</strong> Cible</td>
+                                <td><strong>tête:</strong> Tête</td>
+                                <td><strong>Méca:</strong> Mécanique</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Def:</strong> Défense</td>
+                                <td><strong>tronc:</strong> Tronc</td>
+                                <td><strong>Subti:</strong> Subtilité</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Res:</strong> Résistance</td>
+                                <td><strong>mbre:</strong> Membres</td>
+                                <td><strong>Percep:</strong> Perception</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Surv:</strong> Survie</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Sav Acad:</strong> Savoir Académique</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ARAIGNÉES -->
+            <section id="araignees" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Araignées :</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Géante</h3>
+                        <span class="danger-badge">Dangerosité: 1</span>
+                    </div>
+                    <p><strong>Description:</strong> Créature cauchemardesque de la taille d'un poney, tapie au plafond.</p>
+                    <p><strong>Allonge:</strong> Distance (Toile), Moyenne (Pattes), Courte (Crochets).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: saisie +1, Pro: vs dir +1, Tal: Surv +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Tente une Att saisie (Toile) depuis le plafond pour entraver la cible avant de l'empoisonner avec une Att dir (crochets).</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Caméléon</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p>Identique à Géante + Acro +1 (corps qui se fond dans l'environnement, difficile à repérer si cachée)</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Colossale</h3>
+                        <span class="danger-badge">Dangerosité: 2</span>
+                    </div>
+                    <p><strong>Description:</strong> Souvent une très vieille araignée géante qui au fil du temps est devenue encore plus grande et dangereuse, souvent à la tête d'une colonie d'araignées géantes.</p>
+                    <p><strong>Allonge:</strong> Distance (Toile), Moyenne (Crochets).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: saisie +2, dir +1, Pro: vs dir et saisie +1, tronc, mbre et tête +1 (Chitine, Dur: 6), Tal: Surv +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Tente une Att saisie (Toile) pour entraver la cible avant de l'empoisonner avec une Att dir (crochets).</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Caméléon Colossale</h3>
+                        <span class="danger-badge">Dangerosité: 2+</span>
+                    </div>
+                    <p>• Identique à Colossale + Acro +2 (corps qui se fond parfaitement dans l'environnement, quasi impossible à repérer si cachée)</p>
+                </div>
+            </section>
+
+            <!-- BANDITS HUMAINS -->
+            <section id="bandits" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Bandits humains :</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Vaurien</h3>
+                        <span class="danger-badge">Dangerosité: 1</span>
+                    </div>
+                    <p><strong>Description:</strong> Brigand armé d'une hache ou d'une masse.</p>
+                    <p><strong>Allonge:</strong> Moyenne.</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: cir +1, Tal: Subti +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Met tout son poids dans des coups larges pour briser la garde.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Brute</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p><strong>Description:</strong> Colosse cicatrisé avec armure de cuir et hache lourde, souvent chef d'un groupe de Vaurien.</p>
+                    <p><strong>Allonge:</strong> Longue (Hache à deux mains).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: cir +1 et saisie +1, Pro: tronc et mbre +1 (Armure de cuir, Dur: 6).</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Privilégie les attaques lourdes (Att cir); utilise sa force pour une Att saisie et jeter au sol si l'adversaire esquive / bloque trop.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Coupe-jarret</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p><strong>Description:</strong> Brigand coutumier des pillages et des embuscades.</p>
+                    <p><strong>Allonge:</strong> Distance (Arc, Arbalète ou fronde) et Moyenne (Arme à une main) ou Courte (Dague).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: dir et saisie +1, Tal: Athlé et Acro +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Leurs embuscades depuis une position dissimulée (Acro +1) sont redoutables et difficile à détecter pour éviter la surprise (attention l'avantage que confère une attaque surprise est redoutable pour les PJ, souvent mortelle)</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Chef de bande</h3>
+                        <span class="danger-badge">Dangerosité: 2+</span>
+                    </div>
+                    <p><strong>Description:</strong> Chef de groupe hétéroclite (divers types de bandits) ou homogène (même type de bandits) de bandits humains, peuvent parfois avec leur groupe s'associer à d'autres espèces ou groupe d'autres espèces.</p>
+                    <p><strong>Allonge:</strong> Distance (Arc, Arbalète ou fronde) et Moyenne (Arme à une main) ou Courte (Dague).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: dir et saisie +2, Pro: vs dir, cir et saisie +1, tronc et mbre +1 (Armure de cuir, Dur: 6), Tal: Percep, Athlé et Acro +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Reste discret pour repérer l'ennemi le plus problématique et établir une stratégie pour l'occire rapidement.</p>
+                </div>
+            </section>
+
+            <!-- CHEVAUX -->
+            <section id="chevaux" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Chevaux:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">De monte</h3>
+                        <span class="danger-badge">Dangerosité: 0</span>
+                    </div>
+                    <p><strong>Description:</strong> Cheval rapide et endurant.</p>
+                    <p><strong>• Allonge:</strong> Moyenne (Sabots).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Tal: Athlé, Surv et Percep +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Tente de repousser violemment l'attaquant avec ses sabots, ne peut pas attaquer si monté.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">De Guerre (Destrier)</h3>
+                        <span class="danger-badge">Dangerosité: 1 (1+ avec barde)</span>
+                    </div>
+                    <p><strong>Description:</strong> Cheval robuste et puissant, entraîné au combat.</p>
+                    <p><strong>• Allonge:</strong> Moyenne (Sabots).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: dir +1, Tal: Athlé, Surv et Percep +1, si barde équipée Pro: tête, tronc et corps +2 (Dur 8), Tal: Athlé passe à 0.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Tente de repousser violemment l'attaquant avec ses sabots, ne peut pas attaquer si monté.</p>
+                </div>
+            </section>
+
+            <!-- DRAKES -->
+            <section id="drakes" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Drakes:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Rocheux</h3>
+                        <span class="danger-badge">Dangerosité: 0+</span>
+                    </div>
+                    <p><strong>Description:</strong> Gros lézard trapu aux écailles rocheuses de la taille d'un cheval.</p>
+                    <p><strong>• Allonge:</strong> Moyenne (Morsure).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Pro: tronc, mbre et tête +2 (Globale, Dur: 8), vs saisie +1, Tal: Acro et Surv +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Reste immobile, ressemblant à un rocher, en attendant de surprendre une malheureuse proie qui s'approche trop près, peu rapide il ne poursuit pas une proie qui le fuit, si il la manque.</p>
+                </div>
+            </section>
+
+            <!-- GOBELINS -->
+            <section id="gobelins" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Gobelins:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Eclaireur</h3>
+                        <span class="danger-badge">Dangerosité: 0</span>
+                    </div>
+                    <p><strong>Description:</strong> Petit, vicieux et très mobile, jamais seul.</p>
+                    <p><strong>• Allonge:</strong> Longue (Fronde) et Courte (Dague rudimentaire).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Pro: vs cir +1, Tal: Athlé et Surv +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> À distance, utilise leur fronde pour harceler leurs adversaires, engagé au CàC, poignarde les mbre pour avoir l'opportunité de reprendre de la distance. Dresse parfois des Loups Gris pour les aider à pister ou combattre, tandis qu'ils restent à distance.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Bagarreur</h3>
+                        <span class="danger-badge">Dangerosité: 0+</span>
+                    </div>
+                    <p><strong>Description:</strong> Petit, vicieux et teigneux.</p>
+                    <p><strong>Allonge:</strong> Longue (Massue cloutée à deux mains) ou Courte (Morsure).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Pro: vs cir et dir +1, Tal: Athlé et Acro +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Se cache en embuscade devant les éclaireurs. Utilise maladroitement une arme trop grande pour eux. Rageux: si l'adversaire évite 2x leur attaque, ils lâchent leur arme pour bondir et tenter de le mordre.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Chef</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p><strong>Description:</strong> Grand gobelin armé d'une massue.</p>
+                    <p><strong>Allonge:</strong> Longue (Massue cloutée à deux mains).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: cir et saisie +1, Pro: vs cir et dir +1, Tal: Athlé et Acro +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Donne ses ordres en restant caché puis sort de sa cachette pour achever les ennemis et montrer sa force aux autres Gobelins.</p>
+                </div>
+            </section>
+
+            <!-- KOBOLDS -->
+            <section id="kobolds" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Kobolds:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Traqueur</h3>
+                        <span class="danger-badge">Dangerosité: 1</span>
+                    </div>
+                    <p><strong>Description:</strong> Créature chétive mais rapide et adroite.</p>
+                    <p><strong>Allonge:</strong> Moyenne (Petite Lance).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: dir +1, Tal: Percep, Surv et Athlé +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Charge rapidement sa proie pour lui percer le torse avec sa lance.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Shaman</h3>
+                        <span class="danger-badge">Dangerosité: 1</span>
+                    </div>
+                    <p><strong>Description:</strong> Kobold aux écailles vives maniant un bâton orné d'os, dirige un petit groupe de Kobold.</p>
+                    <p><strong>Allonge:</strong> Distance (Magie).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: cir et saisie (Magie) +1, Pro: vs dir +1, Tal: Percep et Athlé +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Tente d'immobiliser ses adversaires pour permettre aux Kobolds Traqueurs de les achever avec leur lance. Seul ou si les Kobolds Traqueurs sont trop loin, attaque avec des sorts de zone.</p>
+                </div>
+            </section>
+
+            <!-- LOUPS -->
+            <section id="loups" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Loups:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Gris</h3>
+                        <span class="danger-badge">Dangerosité: 1</span>
+                    </div>
+                    <p><strong>Description:</strong> Prédateur rapide cherchant à mettre sa proie au sol.</p>
+                    <p><strong>Allonge:</strong> Courte (Morsure).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: saisie +1, Tal: Athlé, Surv et Percep +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Charge pour mordre les mbre et forcer une mise au sol via Att saisie.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Géant (Worg)</h3>
+                        <span class="danger-badge">Dangerosité: 1</span>
+                    </div>
+                    <p><strong>Description:</strong> Loup de la taille d'un cheval, maléfique et intelligent.</p>
+                    <p><strong>Allonge:</strong> Moyenne (Morsure).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: saisie et dir +1, Tal: Athlé, Surv et Percep +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Cherche à renverser la cible (Att saisie).</p>
+                </div>
+            </section>
+
+            <!-- MERCENAIRES -->
+            <section id="mercenaires" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Mercenaires, milice et armée :</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Garde ou fantassin</h3>
+                        <span class="danger-badge">Dangerosité: 1</span>
+                    </div>
+                    <p><strong>Description:</strong> Soldat, milicien ou mercenaire employé pour protéger un lieu, une personne ou un convoie.</p>
+                    <p><strong>• Allonge:</strong> Longue (Lance).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: dir +1, Pro: vs dir +1 sous condition (Bouclier, Dur 12).</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Utilise son allonge et se met en défense s'il est menacé en attendant des renforts.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Vétran</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p><strong>Description:</strong> Dirige souvent un groupe de garde ou constitue un groupe d'élite.</p>
+                    <p><strong>Allonge:</strong> Longue (Lance).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: dir +1, Pro: vs dir, cir, saisie +1, vs dir +1 supplémentaire sous condition (Bouclier, Dur 12), tronc et mbre +1 (Armure de cuir, Dur 6), Tal: Athlé 0 (à cause de l'armure) et Percep +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> se regrouper en formation pour combattre efficacement et durablement.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Chevalier</h3>
+                        <span class="danger-badge">Dangerosité: 2+</span>
+                    </div>
+                    <p><strong>Description:</strong> Combattant d'élite souvent au service d'un noble, généralement chevauchant un cheval de guerre.</p>
+                    <p><strong>Allonge:</strong> À cheval: Longue (Lance d'arçon), à pied: Moyenne (Épée longue ou Masse d'arme).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: dir et cir +2, Pro: vs dir, cir, saisie +1, vs dir +1 supplémentaire sous condition (Bouclier, Dur 12), tête, tronc et mbre +3 (Armure de plaques, Dur 10), Tal: Athlé 0 et Percep -1 (à cause de l'armure complète) et Sav Acad +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> charge à cheval profitant de l'avantage d'une position surélevée (bonus d'Att applicable).</p>
+                </div>
+            </section>
+
+            <!-- MORTS VIVANTS -->
+            <section id="mortsvivants" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Morts vivants :</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Squelette</h3>
+                        <span class="danger-badge">Dangerosité: 0</span>
+                    </div>
+                    <p><strong>Description:</strong> Squelette d'une créature (Rat Géant, Loup Gris, Cheval, Humain, Orque, Elfe, Nain, Gobelin, Kobold) animé par magie.</p>
+                    <p><strong>Allonge:</strong> Variable suivant la créature et si elle possédait une arme de son vivant.</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Pro: vs dir +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Avance et frappe mécaniquement.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Zombie (Cadavre Ambulant)</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p><strong>Description:</strong> Corps plus ou moins décomposé d'une créature (Rat Géant, Loup Gris, Cheval, Humain, Orque, Elfe, Nain, Gobelin, Kobold) animé par magie.</p>
+                    <p><strong>Allonge:</strong> Courte (Saisie ou Morsure).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: saisie +1, Pro: tronc, mbre et tête +1 (Globale, Dur: 6).</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Humanoïde: une fois sa proie attrapée via Att saisie, tente de profiter de l'avantage de la saisie pour mordre. Animal: tente de mordre.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Amas de corps</h3>
+                        <span class="danger-badge">Dangerosité: 2+</span>
+                    </div>
+                    <p><strong>Description:</strong> Assemblage chaotique de cadavres humanoïdes en une énorme masse difforme doté de nombreux bras et visages affichant une expression de souffrance extrême.</p>
+                    <p><strong>Allonge:</strong> Moyenne (Saisie avec ses bras difformes).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: saisie +2, Pro: tronc, mbre et tête +2 (Globale, Dur : 8).</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Cherche le contact pour utiliser ses bras multiples en Att saisie et étouffer ses victimes qu'il incorpore à son propre corps.</p>
+                </div>
+            </section>
+
+            <!-- OGRE -->
+            <section id="ogre" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Ogre :</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Brute</h3>
+                        <span class="danger-badge">Dangerosité: 2+</span>
+                    </div>
+                    <p><strong>Description:</strong> Colosse de 3 mètres maniant un tronc ou un pilier. Il s'associe parfois à un grand groupe de Gobelin.</p>
+                    <p><strong>Allonge:</strong> Longue (À deux mains).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: cir +2 et saisie +1, Pro: vs saisie +1, tronc, mbre, tête +1 (Dur: 6), Tal: Athlé +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Effectue de grands moulinets pour balayer ou broyer plusieurs ennemis.</p>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Mage</h3>
+                        <span class="danger-badge">Dangerosité: 2+</span>
+                    </div>
+                    <p><strong>Description:</strong> Colosse de 3 mètres capable de lancer des sorts sans avoir besoin d'un focalisateur magique. Intelligent, il dirige en général un groupe d'Ogre Brute.</p>
+                    <p><strong>• Allonge:</strong> Variable (Sort).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: tronc et mbre +2, saisie +1, Pro: vs saisie +1, tronc, mbre, tête +2 (Dur : 8), Tal: Sav Acad et Percep +1.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Invisibilité pour surprendre (avantage) ou fuir, Vol, Transposition, Immobilisation puis dévoration.</p>
+                </div>
+            </section>
+
+            <!-- OURS -->
+            <section id="ours" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Ours:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Brun Adulte</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p><strong>Description:</strong> Bête massive.</p>
+                    <p><strong>Allonge:</strong> Moyenne (Pattes).</p>
+                    <div class="stat-block">
+                        <p><strong>• Stats:</strong> Att: cir et saisie +1, Pro: tronc, mbre et tête +1 (Globale, Dur: 6), Tal: Percep et Surv +1.</p>
+                    </div>
+                    <p><strong>• Tactique:</strong> Se dresse pour intimider, puis frappe en Att cir ou tente d'écraser la cible (Att saisie).</p>
+                </div>
+            </section>
+
+            <!-- PEUPLE -->
+            <section id="peuple" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Peuple :</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Paysan</h3>
+                        <span class="danger-badge">Dangerosité: 0</span>
+                    </div>
+                    <p><strong>Description:</strong> Villageois avec un outil de ferme.</p>
+                    <p><strong>• Allonge:</strong> Moyenne ou Courte (Outil de ferme).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Tal: Surv +1.</p>
+                    </div>
+                </div>
+
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Marchand</h3>
+                        <span class="danger-badge">Dangerosité: 0</span>
+                    </div>
+                    <p><strong>Description:</strong> Dans son échoppe ou sur la route avec un chariot tiré par une âne ou un cheval (quand leur finance le permet, ils emploient des gardes pour protéger leur marchandises).</p>
+                    <p><strong>Allonge:</strong> Courte (Dague).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> toutes à 0.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RATS -->
+            <section id="rats" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Rats:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Géant</h3>
+                        <span class="danger-badge">Dangerosité: 0</span>
+                    </div>
+                    <p><strong>Description:</strong> Bête de la taille d'un chien, sale et affamée.</p>
+                    <p><strong>• Allonge:</strong> Courte (Morsure).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> toutes à 0.</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Le nombre fait la force.</p>
+                </div>
+            </section>
+
+            <!-- SANGLIERS -->
+            <section id="sangliers" class="searchable-section mb-12">
+                <h2 class="text-3xl font-cinzel mb-8 border-b-2 border-black pb-2">Sangliers:</h2>
+                
+                <div class="content-card searchable-item">
+                    <div class="creature-header">
+                        <h3 class="text-2xl font-cinzel">Géant</h3>
+                        <span class="danger-badge">Dangerosité: 1+</span>
+                    </div>
+                    <p><strong>Description:</strong> Bête musculeuse aux défenses acérées.</p>
+                    <p><strong>• Allonge:</strong> Moyenne (Crocs).</p>
+                    <div class="stat-block">
+                        <p><strong>Stats:</strong> Att: dir +1, Pro: tronc et tête +1 (Dur: 6).</p>
+                    </div>
+                    <p><strong>Tactique:</strong> Charge de face pour un impact frontal puissant.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- RECHERCHE MOT POUR MOT ---
+        const searchInput = document.getElementById('searchInput');
+        const searchableItems = document.querySelectorAll('.searchable-item');
+        const searchableSections = document.querySelectorAll('.searchable-section');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+
+            searchableItems.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    item.classList.remove('hidden-item');
+                } else {
+                    item.classList.add('hidden-item');
+                }
+            });
+
+            // Gérer la visibilité des sections entières
+            searchableSections.forEach(section => {
+                const visibleItems = section.querySelectorAll('.searchable-item:not(.hidden-item)');
+                if (visibleItems.length === 0 && term !== "") {
+                    section.classList.add('hidden-item');
+                } else {
+                    section.classList.remove('hidden-item');
+                }
+            });
+        });
+
+        // --- NAVIGATION ACTIVE ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const scrollTargets = document.querySelectorAll('h3[id], h2[id], section[id], div[id]');
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            scrollTargets.forEach(target => {
+                const top = target.offsetTop;
+                if (pageYOffset >= top - 200) {
+                    current = target.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        navLinks.forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

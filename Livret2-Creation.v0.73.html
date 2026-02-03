@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCS - Livret 2 : Création & Évolution (Version Intégrale)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4ecd8;
+            --dark-ink: #1c1917;
+            --accent: #7c2d12;
+            --highlight: #2c2520;
+        }
+
+        body {
+            background-color: #d8c3a5;
+            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--dark-ink);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, .font-cinzel {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar {
+            background: rgba(28, 25, 23, 0.05);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            scrollbar-width: thin;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--dark-ink);
+        }
+
+        .nav-link {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            border-left-color: var(--accent);
+            background: rgba(0,0,0,0.05);
+            padding-left: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            background: rgba(0,0,0,0.07);
+            text-align: left;
+            padding: 12px 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            border: 1px solid rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 15px;
+            border: 1px solid rgba(0,0,0,0.1);
+            vertical-align: top;
+        }
+
+        .rule-box {
+            border-left: 4px solid var(--accent);
+            background: rgba(124, 45, 18, 0.05);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .hidden-item {
+            display: none !important;
+        }
+
+        ul.dash-list > li::before {
+            content: "• ";
+            font-weight: bold;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-[#d8c3a5] bg-opacity-95 border-b border-black border-opacity-20 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl">🌱</span>
+            <div>
+                <h1 class="text-xl font-bold uppercase">LIVRET 2: CRÉATION & ÉVOLUTION</h1>
+                <p class="text-xs italic opacity-75 font-serif">Codex Officiel SCCS - Intégrale v0.73</p>
+            </div>
+        </div>
+        
+        <div class="relative w-full md:w-96">
+            <input type="text" id="searchInput" placeholder="Rechercher un talent, une race..." 
+                class="search-input w-full pl-10 pr-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-900">
+            <span class="absolute left-3 top-2.5 opacity-50">🔍</span>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- SIDEBAR -->
+        <aside class="sidebar w-72 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
+            <nav class="space-y-6">
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">1. Talents & Stats</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#talents" class="nav-link block py-1 px-2">Les Talents</a></li>
+                        <li><a href="#valeurs" class="nav-link block py-1 px-2">Valeurs des Statistiques</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">2. Création</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#espece" class="nav-link block py-1 px-2">1) Choisissez une espèce</a></li>
+                        <li><a href="#details" class="nav-link block py-1 px-2">2-4) Détails & Identité</a></li>
+                        <li><a href="#depart" class="nav-link block py-1 px-2">5) Équipement de Départ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">3. Progression</h3>
+                    <ul class="space-y-1">
+                        <li><a href="#progression" class="nav-link block py-1 px-2">Points d'Amélioration</a></li>
+                        <li><a href="#usage" class="nav-link block py-1 px-2">Règle de l'Usage</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 lg:ml-72 p-6 md:p-16 max-w-5xl">
+
+            <p class="italic mb-8 searchable-item">(Ce document contient tout ce qui concerne la création et l'évolution d'un personnage.)</p>
+            
+            <!-- 1. TALENTS ET STATISTIQUES -->
+            <section id="talents" class="searchable-section mb-16">
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">1. Talents et Statistiques de combat.</h2>
+                
+                <div class="content-card searchable-item">
+                    <h3 class="text-2xl font-cinzel mb-4">Les Talents</h3>
+                    <ol class="list-decimal pl-5 space-y-2 mb-4 font-bold">
+                        <li>Athlétisme: <span class="font-normal">Force et endurance.</span></li>
+                        <li>Acrobatie: <span class="font-normal">Équilibre et discrétion.</span></li>
+                        <li>Mécanique: <span class="font-normal">Outils et ingénierie.</span></li>
+                        <li>Subtilité: <span class="font-normal">Vol et manipulation fine.</span></li>
+                        <li>Perception: <span class="font-normal">Sens et détection.</span></li>
+                        <li>Survie: <span class="font-normal">Nature et pistage.</span></li>
+                        <li>Savoir Académique: <span class="font-normal">Théorie et histoire.</span></li>
+                    </ol>
+                    <p class="italic bg-white bg-opacity-40 p-3 rounded border-l-2 border-black">Chaque Talent à +1 permet de réussir automatiquement les épreuves faciles (Difficulté 0) et de tenter les épreuves ardues (Difficulté 1).</p>
+                </div>
+
+                <div id="valeurs" class="mb-10 searchable-item">
+                    <h3 class="text-2xl font-cinzel mb-4">Les Valeurs des Statistiques de combat</h3>
+                    <p class="mb-4">Au nombre de 12 (6 attaques: 3 Types (Direct, Circulaire, Saisie) et 3 Cibles (Tête, Tronc, Membres) et 6 protections: 3 Défenses (vs Direct, vs Circulaire, vs Saisie) et 3 Résistances (Tête, Tronc, Membres) leur valeur représente vos aptitudes au combat, mettant en avant vos faiblesses et vos point fort:</p>
+                    <ul class="dash-list pl-4 space-y-2">
+                        <li><strong>0 (Non-initié):</strong> Valeur par défaut.</li>
+                        <li><strong>+1 (Initié):</strong> Entraînement de base.</li>
+                        <li><strong>+2 (Expert):</strong> Aventurier expérimenté.</li>
+                        <li><strong>+3 (Maître):</strong> Élite.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 2. CRÉATION DE PERSONNAGE -->
+            <section id="espece" class="searchable-section mb-16">
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">2. Création de personnage</h2>
+                
+                <h3 class="text-xl font-bold mb-4 searchable-item">1) Choisissez une espèce :</h3>
+                <p class="mb-6 searchable-item">Vous débutez en ayant hérité des facultés innées de vos ancêtres, attribuez les bonus (talents et statistiques) que cela vous accorde comme indiqué dans le tableau suivant :</p>
+
+                <div class="overflow-x-auto mb-10 searchable-item">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Race</th>
+                                <th>Talents</th>
+                                <th>Statistiques</th>
+                                <th>Rôle Narratif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold">Elfe</td>
+                                <td>Acrobatie +1, Perception +1, Survie +1</td>
+                                <td>2 au choix à +1</td>
+                                <td>Furtif et fin limier de la nature.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Nain</td>
+                                <td>Athlétisme +1, Mécanique +1, Savoir Académique +1</td>
+                                <td>2 au choix à +1</td>
+                                <td>Pilier physique et ingénieur.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Orque</td>
+                                <td>Athlétisme +1, Survie +1</td>
+                                <td>Type saisie +1 et 2 autres au choix à +1</td>
+                                <td>Fort au corps-à-corps et résilient.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Humain</td>
+                                <td>2 au choix à +1</td>
+                                <td>2 au choix à +1</td>
+                                <td>Adaptable et polyvalent.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="details" class="grid md:grid-cols-2 gap-6 mb-10 searchable-item">
+                    <div class="content-card">
+                        <h4 class="font-cinzel font-bold mb-2">2) Déterminez son genre</h4>
+                        <p>(féminin, masculin).</p>
+                    </div>
+                    <div class="content-card">
+                        <h4 class="font-cinzel font-bold mb-2">3) Donnez lui un Nom.</h4>
+                    </div>
+                    <div class="content-card col-span-full">
+                        <h4 class="font-cinzel font-bold mb-2">4) Décrivez son apparence</h4>
+                        <p>Âge apparent, Couleur des cheveux et des yeux, Éventuels signes distinctifs.</p>
+                    </div>
+                </div>
+
+                <div id="depart" class="rule-box searchable-item">
+                    <h3 class="text-xl font-bold font-cinzel mb-4">5) Équipement de Départ</h3>
+                    <p class="mb-4">Chaque personnage débutant commence l'aventure avec :</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>Une arme au choix (Distance, Longue, Moyenne ou Courte).</li>
+                        <li>Sans armure.</li>
+                        <li>Autre: suivant accord du MJ.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 3. PROGRESSION -->
+            <section id="progression" class="searchable-section mb-16">
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">3. Progression du Personnage</h2>
+                
+                <div class="content-card searchable-item">
+                    <h3 class="text-xl font-bold font-cinzel mb-2">Gain de Points d'Amélioration (PA)</h3>
+                    <p class="mb-6">À la fin de chaque séance significative, le joueur gagne 1 PA.</p>
+
+                    <h3 class="text-xl font-bold font-cinzel mb-2">Dépense des PA</h3>
+                    <ul class="dash-list pl-4 mb-4">
+                        <li><strong>Statistiques de Combat:</strong> Coût = Niveau cible (ex: passer de +1 à +2 coûte 2 PA).</li>
+                        <li><strong>Talents d'Exploration:</strong> Acquérir un nouveau Talent (0 vers +1) coûte 1 PA.</li>
+                    </ul>
+                    <p class="italic text-sm border-l-2 border-black pl-3 mb-4">Note: Un talent ne peut pas dépasser +1.</p>
+                </div>
+
+                <div id="usage" class="rule-box searchable-item">
+                    <h3 class="text-xl font-bold font-cinzel mb-4">Règle de l'Usage</h3>
+                    <p>L'amélioration doit être justifiée soit par une pratique marquante lors de la séance précédente, soit par un mentorat durant un temps mort.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- RECHERCHE MOT POUR MOT ---
+        const searchInput = document.getElementById('searchInput');
+        const searchableItems = document.querySelectorAll('.searchable-item');
+        const searchableSections = document.querySelectorAll('.searchable-section');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+
+            searchableItems.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    item.classList.remove('hidden-item');
+                } else {
+                    item.classList.add('hidden-item');
+                }
+            });
+
+            // Gérer la visibilité des sections entières
+            searchableSections.forEach(section => {
+                const visibleItems = section.querySelectorAll('.searchable-item:not(.hidden-item)');
+                if (visibleItems.length === 0 && term !== "") {
+                    section.classList.add('hidden-item');
+                } else {
+                    section.classList.remove('hidden-item');
+                }
+            });
+        });
+
+        // --- NAVIGATION ACTIVE ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const scrollTargets = document.querySelectorAll('h3[id], h2[id], div[id], section[id]');
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            scrollTargets.forEach(target => {
+                const top = target.offsetTop;
+                if (pageYOffset >= top - 200) {
+                    current = target.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll
+        navLinks.forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
