@@ -4,89 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCCS - Codex Officiel</title>
+    <meta name="description" content="Accédez au Codex Officiel du Système de Création et de Simulation (SCCS).">
+    <link rel="icon" href="https://fav.farm/📜">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- SEO & Metadonnées -->
-    <meta name="description" content="Le Codex Officiel du SCCS : retrouvez l'intégralité des archives, des règles et de l'histoire de notre univers.">
-    <meta name="keywords" content="SCCS, Codex, Archives, Jeu de rôle, Lore">
-    <meta property="og:title" content="SCCS - Codex Officiel">
-    <meta property="og:description" content="L'encyclopédie de référence du SCCS.">
-    <meta property="og:type" content="website">
-
     <style>
-        body { 
+        /* =========================================
+           ZONE DE RÉGLAGES
+           ========================================= */
+        :root {
+            /* 1. TRANSPARENCE DE LA PAGE (Le grand cadre) */
+            --opacite-page: 0.1;
+
+            /* 2. TRANSPARENCE DES ONGLETS (Les barres de liens) */
+            --opacite-onglets: 0.45; 
+
+            /* 3. COULEURS DES ONGLETS */
+            --couleur-onglet-fond: 20, 20, 20; 
+            --couleur-texte-onglet: #ffffff; 
+            
+            /* 4. FORCE DU FLOU */
+            --flou-vitre: 2px;
+        }
+
+        body {
             margin: 0;
-            padding: 40px 20px;
-            background-color: #d8c3a5; 
-            background-image: url("clean-gray-paper.png");
+            padding: 20px;
+            background-color: #e3e3e3; 
+            background-image: 
+                url("clean-gray-paper.png"), 
+                linear-gradient(rgba(227, 227, 227, 0.8), rgba(227, 227, 227, 0.8)),
+                url("fond-de-page-accueil.png");
+            background-attachment: fixed;
+            background-position: center;
+            background-size: auto, cover, cover;
+            background-repeat: repeat, no-repeat, no-repeat;
             background-blend-mode: multiply;
             font-family: 'Cormorant Garamond', serif;
             display: flex;
             justify-content: center;
+            align-items: center; 
+            min-height: 100vh;
+            box-sizing: border-box;
         }
+
+        /* --- CADRE PRINCIPAL (Effet Vitre Propre) --- */
         .container {
-            max-width: 800px;
+            max-width: 550px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.3); 
-            padding: 40px;
-            border-radius: 2px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, var(--opacite-page)); 
+            backdrop-filter: blur(var(--flou-vitre));
+            -webkit-backdrop-filter: blur(var(--flou-vitre));
+            padding: 30px 40px; 
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.6);
+            border-left: 1px solid rgba(255, 255, 255, 0.6);
         }
+
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #1c1917;
+            margin-bottom: 30px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
             padding-bottom: 20px;
         }
+
         h1 {
             font-family: 'Cinzel', serif;
-            color: #1c1917;
+            color: #ffffff; 
             margin: 0;
             text-transform: uppercase;
-            font-size: 2rem;
+            font-size: 1.6rem;
             line-height: 1.2;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
+
         .subtitle {
             font-style: italic;
-            color: #333;
-            font-size: 1.2rem;
-            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.9); 
+            font-size: 1.1rem;
+            margin-top: 8px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-        ul { list-style: none; padding: 0; }
+
+        ul { list-style: none; padding: 0; margin: 0; }
+
+        /* --- ONGLETS --- */
         li { 
-            margin-bottom: 15px; 
-            background: rgba(255,255,255,0.4);
-            border-left: 4px solid #1c1917;
-            transition: all 0.2s ease;
+            margin-bottom: 12px; 
+            background: rgba(var(--couleur-onglet-fond), var(--opacite-onglets)); 
+            border: 1px solid rgba(255,255,255,0.1);
+            border-left: 4px solid #ffffff; 
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            overflow: hidden;
         }
+
         li:hover { 
-            transform: translateX(10px); 
-            background: rgba(255,255,255,0.7);
+            transform: translateX(8px); 
+            background: rgba(var(--couleur-onglet-fond), 0.7); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-left-color: #d4af37; 
         }
+
         a { 
             text-decoration: none; 
-            color: #1c1917; 
+            color: var(--couleur-texte-onglet); 
             font-weight: 700; 
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 14px 18px; 
         }
+
+        .label {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
         .version { 
-            font-size: 0.95rem; 
-            font-weight: 900; 
-            color: #000000;
-            background: rgba(0,0,0,0.08);
-            padding: 3px 10px;
+            font-size: 0.8rem; 
+            font-weight: 800; 
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15); 
+            padding: 3px 8px;
             border-radius: 4px;
             font-family: sans-serif;
-            min-width: 60px;
-            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .emoji { margin-right: 12px; }
-        .label { flex-grow: 1; }
+
+        .emoji { 
+            margin-right: 15px; 
+            font-size: 1.2em;
+            filter: brightness(1.2);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; margin: 10px; width: auto; }
+            h1 { font-size: 1.2rem; }
+            a { font-size: 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -97,17 +158,53 @@
         </div>
         
         <ul>
-            <li><a href="Fiche de personnage.v0.84.html" target="_blank"><span class="label"><span class="emoji">📝</span>Fiche de personnage Interactive</span> <span class="version">v0.84</span></a></li>
+            <!-- Fiche Personnage -->
+            <li>
+                <a href="Fiche de personnage.v0.84.html" target="_blank">
+                    <span class="label"><span class="emoji">📝</span>Fiche Interactive</span> 
+                    <span class="version">v0.84</span>
+                </a>
+            </li>
             
-            <li><a href="livret1 - mecanismes.html" target="_blank"><span class="label"><span class="emoji">⚙️</span>Livret 1 - Mécanismes</span> <span class="version">v0.82</span></a></li>
+            <!-- Livret 1 : Mécanismes -->
+            <li>
+                <a href="livret 1 - mecanismes.html" target="_blank">
+                    <span class="label"><span class="emoji">⚙️</span>Livret 1 - Mécanismes</span> 
+                    <span class="version">v0.82</span>
+                </a>
+            </li>
             
-            <li><a href="livret2 - creation.html" target="_blank"><span class="label"><span class="emoji">📖</span>Livret 2 - Création</span> <span class="version">v0.73</span></a></li>
+            <!-- Livret 2 : Création -->
+            <li>
+                <a href="livret 2 - creation.html" target="_blank">
+                    <span class="label"><span class="emoji">📖</span>Livret 2 - Création</span> 
+                    <span class="version">v0.73</span>
+                </a>
+            </li>
             
-            <li><a href="livret3 - equipement.html" target="_blank"><span class="label"><span class="emoji">🛡️</span>Livret 3 - Équipement</span> <span class="version">v0.75</span></a></li>
+            <!-- Livret 3 : Équipement -->
+            <li>
+                <a href="livret 3 - equipement.html" target="_blank">
+                    <span class="label"><span class="emoji">🛡️</span>Livret 3 - Équipement</span> 
+                    <span class="version">v0.75</span>
+                </a>
+            </li>
             
-            <li><a href="livret4 - rencontres.html" target="_blank"><span class="label"><span class="emoji">⚔️</span>Livret 4 - Rencontres</span> <span class="version">v0.79</span></a></li>
+            <!-- Livret 4 : Rencontres -->
+            <li>
+                <a href="livret 4 - rencontres.html" target="_blank">
+                    <span class="label"><span class="emoji">⚔️</span>Livret 4 - Rencontres</span> 
+                    <span class="version">v0.79</span>
+                </a>
+            </li>
             
-            <li><a href="livret5 - bestiaire.html" target="_blank"><span class="label"><span class="emoji">🐉</span>Livret 5 - Bestiaire</span> <span class="version">v0.79</span></a></li>
+            <!-- Livret 5 : Bestiaire -->
+            <li>
+                <a href="livret 5 - bestiaire.html" target="_blank">
+                    <span class="label"><span class="emoji">🐉</span>Livret 5 - Bestiaire</span> 
+                    <span class="version">v0.79</span>
+                </a>
+            </li>
         </ul>
     </div>
 </body>
