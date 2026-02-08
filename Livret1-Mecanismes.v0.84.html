@@ -122,6 +122,7 @@
             font-weight: bold;
         }
 
+        /* Ajustement responsive pour la sidebar sous la nouvelle nav */
         @media (max-width: 1024px) {
             .sidebar { display: none; }
         }
@@ -147,8 +148,8 @@
     </header>
 
     <div class="flex">
-        <!-- SIDEBAR RÉVISÉ -->
-        <aside class="sidebar w-80 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
+        <!-- SIDEBAR RÉVISÉ - MODIFICATIONS ICI : top-[130px] et h-[calc(100vh-130px)] -->
+        <aside class="sidebar w-80 fixed top-[130px] h-[calc(100vh-130px)] overflow-y-auto p-6 hidden lg:block z-40">
             <nav class="space-y-1">
                 <!-- SECTION 1 -->
                 <div class="nav-category">1. Philosophie</div>
@@ -642,4 +643,3 @@
 </body>
 
 </html>
-
