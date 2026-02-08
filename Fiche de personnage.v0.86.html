@@ -115,6 +115,54 @@
             transform: translateX(0);
         }
 
+        /* --- SIDEBAR NAVIGATION DOCUMENTS (AJOUT) --- */
+        .sidebar-right {
+            background: rgba(216, 195, 165, 0.98);
+            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
+            border-left: 1px solid rgba(0,0,0,0.2);
+            scrollbar-width: thin;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            z-index: 40;
+            display: none;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+        }
+
+        @media (min-width: 1280px) {
+            .sidebar-right { display: block; }
+        }
+
+        .file-link {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            display: block;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0 4px 4px 0;
+            color: #000;
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .file-link:hover {
+            border-left-color: #7c2d12;
+            background: rgba(124, 45, 18, 0.1);
+            padding-left: 1.25rem;
+        }
+
+        .file-link.active-file {
+            background: rgba(124, 45, 18, 0.15);
+            border-left-color: #7c2d12;
+            font-weight: 600;
+        }
+
         /* Actions Header */
         .header-actions { display: flex; gap: 5px; }
         .btn-action {
@@ -134,13 +182,13 @@
                 background: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; 
                 padding: 0; height: 297mm; display: block; overflow: hidden;
             }
-            .layout-wrapper { display: block; height: 297mm; }
+            .layout-wrapper { display: block; height: 297mm; margin-right: 0 !important; }
             .sheet-container { 
                 box-shadow: none; margin: 0; width: 210mm !important; height: 297mm !important;
                 min-height: 297mm; position: absolute; top: 0; left: 0;
                 overflow: hidden; page-break-after: always; z-index: auto;
             }
-            .no-print, .binder-sidebar, .header-actions { display: none !important; }
+            .no-print, .binder-sidebar, .header-actions, .sidebar-right { display: none !important; }
         }
 
         /* Styles de base */
@@ -548,6 +596,58 @@
             </div>
         </div>
     </div>
+
+    <!-- SIDEBAR NAVIGATION DOCUMENTS -->
+    <aside class="sidebar-right no-print">
+        <div style="margin-bottom: 1.5rem;">
+            <h3 style="font-family: 'Cinzel', serif; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; opacity: 0.7; border-bottom: 1px solid rgba(0,0,0,0.2); padding-bottom: 0.5rem;">Documents</h3>
+        </div>
+        <nav style="display: flex; flex-direction: column; gap: 0.25rem;">
+            <a href="Livret1-Mecanismes.v0.84.html" class="file-link" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>⚙️</span>
+                <div>
+                    <div style="font-weight: 700;">Livret 1</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">Mécanismes</div>
+                </div>
+            </a>
+            <a href="Livret2-Creation.v0.73.html" class="file-link" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>📖</span>
+                <div>
+                    <div style="font-weight: 700;">Livret 2</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">Création & Évolution</div>
+                </div>
+            </a>
+            <a href="Livret3-Equipement.v0.77.html" class="file-link" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>🛡️</span>
+                <div>
+                    <div style="font-weight: 700;">Livret 3</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">Équipement</div>
+                </div>
+            </a>
+            <a href="Livret4-Rencontres.v0.79.html" class="file-link" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>⚔️</span>
+                <div>
+                    <div style="font-weight: 700;">Livret 4</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">Rencontres</div>
+                </div>
+            </a>
+            <a href="Livret5-Bestiaire.v0.79.html" class="file-link" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span>🐾</span>
+                <div>
+                    <div style="font-weight: 700;">Livret 5</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">Bestiaire</div>
+                </div>
+            </a>
+            <div style="margin: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1);"></div>
+            <a href="Fiche de personnage.v0.86.html" class="file-link active-file" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.2);">
+                <span>📝</span>
+                <div>
+                    <div style="font-weight: 700;">Fiche de Personnage</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">Interactive</div>
+                </div>
+            </a>
+        </nav>
+    </aside>
 
     <script>
         const CUSTOM_PORTRAITS_URLS = {
