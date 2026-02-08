@@ -32,6 +32,12 @@
             scrollbar-width: thin;
         }
 
+        .sidebar-right {
+            background: rgba(28, 25, 23, 0.08);
+            border-left: 1px solid rgba(0,0,0,0.1);
+            scrollbar-width: thin;
+        }
+
         .content-card {
             background: rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(0,0,0,0.08);
@@ -55,6 +61,29 @@
             border-left-color: var(--accent);
             background: rgba(0,0,0,0.05);
             padding-left: 1rem;
+        }
+
+        .file-link {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            display: block;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .file-link:hover {
+            border-left-color: var(--accent);
+            background: rgba(124, 45, 18, 0.1);
+            padding-left: 1.25rem;
+        }
+
+        .file-link.active-file {
+            background: rgba(124, 45, 18, 0.15);
+            border-left-color: var(--accent);
+            font-weight: 600;
         }
 
         .nav-category {
@@ -101,6 +130,11 @@
             display: none !important;
         }
 
+        @media (max-width: 1280px) {
+            .sidebar-right { display: none; }
+            .main-content { margin-right: 0 !important; }
+        }
+
         @media (max-width: 1024px) {
             .sidebar { display: none; }
         }
@@ -125,9 +159,9 @@
         </div>
     </header>
 
-    <div class="flex">
-        <!-- SIDEBAR CORRIGÉ -->
-        <aside class="sidebar w-80 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
+    <div class="flex relative">
+        <!-- SIDEBAR GAUCHE (Navigation interne) -->
+        <aside class="sidebar w-80 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block left-0 top-[80px]">
             <nav class="space-y-1">
                 <!-- SECTION A -->
                 <div class="nav-category">A. Armures et Boucliers</div>
@@ -157,8 +191,67 @@
             </nav>
         </aside>
 
+        <!-- SIDEBAR DROITE (Navigation entre fichiers) -->
+        <aside class="sidebar-right w-80 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden xl:block right-0 top-[80px] z-40">
+            <div class="mb-6">
+                <h3 class="font-cinzel text-sm font-bold uppercase tracking-widest mb-4 opacity-70 border-b border-black/20 pb-2">Documents</h3>
+            </div>
+            
+            <nav class="space-y-1">
+                <a href="Livret1-Mecanismes.v0.84.html" class="file-link text-sm flex items-center gap-2">
+                    <span>⚙️</span>
+                    <div>
+                        <div class="font-bold">Livret 1</div>
+                        <div class="text-xs opacity-70">Mécanismes</div>
+                    </div>
+                </a>
+                
+                <a href="Livret2-Creation.v0.73.html" class="file-link text-sm flex items-center gap-2">
+                    <span>📖</span>
+                    <div>
+                        <div class="font-bold">Livret 2</div>
+                        <div class="text-xs opacity-70">Création & Évolution</div>
+                    </div>
+                </a>
+                
+                <a href="Livret3-Equipement.v0.77.html" class="file-link active-file text-sm flex items-center gap-2">
+                    <span>🛡️</span>
+                    <div>
+                        <div class="font-bold">Livret 3</div>
+                        <div class="text-xs opacity-70">Équipement</div>
+                    </div>
+                </a>
+                
+                <a href="Livret4-Rencontres.v0.79.html" class="file-link text-sm flex items-center gap-2">
+                    <span>⚔️</span>
+                    <div>
+                        <div class="font-bold">Livret 4</div>
+                        <div class="text-xs opacity-70">Rencontres</div>
+                    </div>
+                </a>
+                
+                <a href="Livret5-Bestiaire.v0.79.html" class="file-link text-sm flex items-center gap-2">
+                    <span>🐾</span>
+                    <div>
+                        <div class="font-bold">Livret 5</div>
+                        <div class="text-xs opacity-70">Bestiaire</div>
+                    </div>
+                </a>
+                
+                <div class="my-4 border-t border-black/10"></div>
+                
+                <a href="Fiche de personnage.v0.86.html" class="file-link text-sm flex items-center gap-2 bg-white/20">
+                    <span>📝</span>
+                    <div>
+                        <div class="font-bold">Fiche de Personnage</div>
+                        <div class="text-xs opacity-70">Interactive</div>
+                    </div>
+                </a>
+            </nav>
+        </aside>
+
         <!-- MAIN CONTENT -->
-        <main class="flex-1 lg:ml-80 p-6 md:p-16 max-w-5xl">
+        <main class="main-content flex-1 lg:ml-80 xl:mr-80 p-6 md:p-16 max-w-5xl mx-auto">
             
             <!-- SECTION A -->
             <section id="armures" class="searchable-section mb-20">
@@ -243,7 +336,7 @@
                 <div id="armes-intro" class="mb-8 p-6 bg-white bg-opacity-20 border border-black border-opacity-10 searchable-item">
                     <h4 class="font-cinzel text-lg mb-3 font-bold">Règles de Focalisation Magique</h4>
                     <p class="leading-relaxed">
-                        Si une <strong>Arme manufacturée</strong> ou un <strong>Objet</strong>, autre que ceux listés dans la catégorie des focalisateurs magiques, est utilisée pour lancer un sort, appliquez un <strong>Malus de -1 aux résolutions du sort</strong>. Lancer un sort requiert <strong>une main libre</strong> ET un <strong>catalyseur</strong> (arme manufacturée, objet ou focalisateur magique). Les <strong>armes à deux mains</strong> permettent de libérer une main temporairement pour incanter, contrairement à l'usage simultané de deux objets (ex: épée + bouclier).
+                        Si une <strong>Arme manufacturée</strong> ou un <strong>Objet</strong>, autre que ceux listés dans la catégorie des focalisateurs magiques, est utilisé pour lancer un sort, appliquez un <strong>Malus de -1 aux résolutions du sort</strong>. Lancer un sort requiert <strong>une main libre</strong> ET un <strong>catalyseur</strong> (arme manufacturée, objet ou focalisateur magique). Les <strong>armes à deux mains</strong> permettent de libérer une main temporairement pour incanter, contrairement à l'usage simultané de deux objets (ex: épée + bouclier).
                     </p>
                 </div>
 
@@ -512,5 +605,4 @@
         });
     </script>
 </body>
-
 </html>
