@@ -15,9 +15,8 @@
         }
 
         body {
-            background-color: #c5a880;
-            background-image: url("https://www.transparenttextures.com/patterns/clean-gray-paper.png");
-            background-blend-mode: multiply;
+            background-color: #d8c3a5;
+            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
             font-family: 'Cormorant Garamond', serif;
             color: var(--dark-ink);
             line-height: 1.6;
@@ -49,13 +48,31 @@
         .nav-link {
             transition: all 0.2s;
             border-left: 3px solid transparent;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
 
         .nav-link:hover, .nav-link.active {
             border-left-color: var(--accent);
             background: rgba(0,0,0,0.05);
-            padding-left: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .nav-category {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+        }
+
+        .nav-sub {
+            font-size: 0.85rem;
+            padding-left: 1rem;
+            opacity: 0.85;
         }
 
         table {
@@ -122,42 +139,43 @@
     </header>
 
     <div class="flex">
-        <!-- SIDEBAR -->
-        <aside class="sidebar w-72 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
-            <nav class="space-y-6">
-                <div>
-                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">1. Talents & Stats</h3>
-                    <ul class="space-y-1">
-                        <li><a href="#talents" class="nav-link block py-1 px-2">Les Talents</a></li>
-                        <li><a href="#valeurs" class="nav-link block py-1 px-2">Valeurs des Statistiques</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">2. Création</h3>
-                    <ul class="space-y-1">
-                        <li><a href="#espece" class="nav-link block py-1 px-2">1) Choisissez une espèce</a></li>
-                        <li><a href="#details" class="nav-link block py-1 px-2">2-4) Détails & Identité</a></li>
-                        <li><a href="#depart" class="nav-link block py-1 px-2">5) Équipement de Départ</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-cinzel text-xs font-bold opacity-50 uppercase mb-2">3. Progression</h3>
-                    <ul class="space-y-1">
-                        <li><a href="#progression" class="nav-link block py-1 px-2">Points d'Amélioration</a></li>
-                        <li><a href="#usage" class="nav-link block py-1 px-2">Règle de l'Usage</a></li>
-                    </ul>
-                </div>
+        <!-- SIDEBAR RÉVISÉ -->
+        <aside class="sidebar w-80 fixed h-[calc(100vh-80px)] overflow-y-auto p-6 hidden lg:block">
+            <nav class="space-y-1">
+                <!-- SECTION 1 -->
+                <div class="nav-category">1. Talents & Statistiques</div>
+                <ul class="space-y-1 mb-4">
+                    <li><a href="#talents" class="nav-link block py-1.5 px-3 text-sm">Les 7 Talents</a></li>
+                    <li><a href="#valeurs" class="nav-link block py-1.5 px-3 text-sm nav-sub">• Valeurs des Statistiques</a></li>
+                </ul>
+
+                <!-- SECTION 2 -->
+                <div class="nav-category">2. Création de Personnage</div>
+                <ul class="space-y-1 mb-4">
+                    <li><a href="#espece" class="nav-link block py-1.5 px-3 text-sm">Étape 1 : Espèce</a></li>
+                    <li><a href="#genre" class="nav-link block py-1.5 px-3 text-sm nav-sub">• Étape 2 : Genre</a></li>
+                    <li><a href="#nom" class="nav-link block py-1.5 px-3 text-sm nav-sub">• Étape 3 : Nom</a></li>
+                    <li><a href="#apparence" class="nav-link block py-1.5 px-3 text-sm nav-sub">• Étape 4 : Apparence</a></li>
+                    <li><a href="#depart" class="nav-link block py-1.5 px-3 text-sm nav-sub">• Étape 5 : Équipement</a></li>
+                </ul>
+
+                <!-- SECTION 3 -->
+                <div class="nav-category">3. Progression</div>
+                <ul class="space-y-1">
+                    <li><a href="#progression" class="nav-link block py-1.5 px-3 text-sm">Points d'Amélioration (PA)</a></li>
+                    <li><a href="#usage" class="nav-link block py-1.5 px-3 text-sm nav-sub">• Règle de l'Usage</a></li>
+                </ul>
             </nav>
         </aside>
 
         <!-- MAIN CONTENT -->
-        <main class="flex-1 lg:ml-72 p-6 md:p-16 max-w-5xl">
+        <main class="flex-1 lg:ml-80 p-6 md:p-16 max-w-5xl">
 
             <p class="italic mb-8 searchable-item">(Ce document contient tout ce qui concerne la création et l'évolution d'un personnage.)</p>
             
             <!-- 1. TALENTS ET STATISTIQUES -->
             <section id="talents" class="searchable-section mb-16">
-                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">1. Talents et Statistiques de combat.</h2>
+                <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">1. Talents et Statistiques de combat</h2>
                 
                 <div class="content-card searchable-item">
                     <h3 class="text-2xl font-cinzel mb-4">Les Talents</h3>
@@ -189,7 +207,7 @@
             <section id="espece" class="searchable-section mb-16">
                 <h2 class="text-3xl font-cinzel mb-6 border-b-2 border-black pb-2">2. Création de personnage</h2>
                 
-                <h3 class="text-xl font-bold mb-4 searchable-item">1) Choisissez une espèce :</h3>
+                <h3 class="text-xl font-bold mb-4 searchable-item">Étape 1 : Choisissez une espèce</h3>
                 <p class="mb-6 searchable-item">Vous débutez en ayant hérité des facultés innées de vos ancêtres, attribuez les bonus (talents et statistiques) que cela vous accorde comme indiqué dans le tableau suivant :</p>
 
                 <div class="overflow-x-auto mb-10 searchable-item">
@@ -231,22 +249,22 @@
                     </table>
                 </div>
 
-                <div id="details" class="grid md:grid-cols-2 gap-6 mb-10 searchable-item">
-                    <div class="content-card">
-                        <h4 class="font-cinzel font-bold mb-2">2) Déterminez son genre</h4>
+                <div class="grid md:grid-cols-2 gap-6 mb-10 searchable-item">
+                    <div id="genre" class="content-card">
+                        <h4 class="font-cinzel font-bold mb-2">Étape 2 : Déterminez son genre</h4>
                         <p>(féminin, masculin).</p>
                     </div>
-                    <div class="content-card">
-                        <h4 class="font-cinzel font-bold mb-2">3) Donnez lui un Nom.</h4>
+                    <div id="nom" class="content-card">
+                        <h4 class="font-cinzel font-bold mb-2">Étape 3 : Donnez lui un Nom</h4>
                     </div>
-                    <div class="content-card col-span-full">
-                        <h4 class="font-cinzel font-bold mb-2">4) Décrivez son apparence</h4>
+                    <div id="apparence" class="content-card col-span-full">
+                        <h4 class="font-cinzel font-bold mb-2">Étape 4 : Décrivez son apparence</h4>
                         <p>Âge apparent, Couleur des cheveux et des yeux, Éventuels signes distinctifs.</p>
                     </div>
                 </div>
 
                 <div id="depart" class="rule-box searchable-item">
-                    <h3 class="text-xl font-bold font-cinzel mb-4">5) Équipement de Départ</h3>
+                    <h3 class="text-xl font-bold font-cinzel mb-4">Étape 5 : Équipement de Départ</h3>
                     <p class="mb-4">Chaque personnage débutant commence l'aventure avec :</p>
                     <ol class="list-decimal pl-5 space-y-2">
                         <li>Une arme au choix (Distance, Longue, Moyenne ou Courte).</li>
