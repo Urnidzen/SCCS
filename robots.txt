@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: [https://urnidzen.github.io/SCCS/sitemap.xml](https://urnidzen.github.io/SCCS/sitemap.xml)
+Sitemap: https://urnidzen.github.io/SCCS/sitemap.xml
