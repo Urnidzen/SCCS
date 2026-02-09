@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes">
     <title>Fiche SCCS - Lignes Manuscrites (v0.45 2H Magic)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Spectral:wght@600;700;800&display=swap" rel="stylesheet">
@@ -22,6 +22,9 @@
             font-family: 'Cormorant Garamond', serif;
             color: #000000; /* Noir strict */
             min-height: 100vh;
+            overflow: auto;
+            touch-action: pan-x pan-y pinch-zoom;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Wrapper pour le système d'onglets */
@@ -1263,5 +1266,6 @@
 </footer>
 </body>
 </html>
+
 
 
