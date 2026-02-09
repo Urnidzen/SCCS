@@ -18,12 +18,12 @@
             padding: 40px 20px; 
             background-color: #2b2b2b; 
             display: flex; 
-            justify-content: center; /* Centré par défaut (PC) */
+            justify-content: center; 
             font-family: 'Cormorant Garamond', serif;
             color: #000000;
             min-height: 100vh;
-            overflow: auto; /* Scroll activé */
-            touch-action: pan-x pan-y pinch-zoom; /* Zoom tactile */
+            overflow: auto; /* Scroll activé dans les deux directions */
+            touch-action: pan-x pan-y pinch-zoom; /* Zoom tactile autorisé */
             -webkit-overflow-scrolling: touch; /* Scroll fluide iOS */
         }
 
@@ -31,6 +31,8 @@
         .layout-wrapper {
             position: relative;
             display: flex;
+            flex-direction: row;
+            align-items: flex-start;
             flex-shrink: 0;
         }
 
@@ -49,18 +51,20 @@
             flex-direction: column;
             z-index: 10;
             flex-shrink: 0;
+            order: 1; /* Fiche en premier */
         }
 
         /* --- SYSTÈME DE CLASSEUR (BINDER) --- */
         .binder-sidebar {
-            position: absolute; /* Position absolue par défaut (PC) */
-            right: -42px;
-            top: 50px;
             display: flex;
             flex-direction: column;
             gap: 8px;
             z-index: 5;
             width: 40px;
+            flex-shrink: 0;
+            order: 2; /* Onglets après la fiche */
+            margin-top: 50px;
+            margin-left: 10px; /* Espace entre fiche et onglets */
         }
 
         .binder-tab {
@@ -132,24 +136,39 @@
             z-index: 40;
             box-shadow: -2px 0 10px rgba(0,0,0,0.3);
             flex-shrink: 0;
+            height: 297mm; /* Même hauteur que la fiche */
+            overflow-y: auto;
         }
 
-        /* COMPORTEMENT PC (Grand écran) : Sidebar fixe à droite */
+        /* COMPORTEMENT PC (Grand écran > 1280px) : Comme l'original */
         @media (min-width: 1280px) {
+            body {
+                justify-content: center;
+            }
+            
+            .binder-sidebar {
+                position: absolute; /* Position absolue comme dans l'original */
+                right: -42px;
+                top: 50px;
+                margin-left: 0;
+                order: auto;
+            }
+            
             .sidebar-right {
-                position: fixed;
+                position: fixed; /* Fixe à droite de l'écran */
                 right: 0;
                 top: 0;
                 height: 100vh;
                 display: block;
+                margin-left: 0;
             }
         }
 
-        /* COMPORTEMENT MOBILE : Tout dans le flux pour scroll horizontal */
+        /* COMPORTEMENT MOBILE (< 1280px) : Scroll horizontal, onglets à droite de la fiche */
         @media (max-width: 1279px) {
             body {
-                justify-content: flex-start; /* Aligné à gauche pour scroll */
-                min-width: min-content;
+                justify-content: flex-start; /* Aligné à gauche pour permettre scroll droit */
+                min-width: min-content; /* Empêche le rognage */
                 padding: 20px;
             }
             
@@ -157,20 +176,12 @@
                 margin-right: 20px; /* Espace avant la sidebar */
             }
             
-            .binder-sidebar {
-                position: relative; /* Dans le flux */
-                right: auto;
-                top: auto;
-                margin-top: 50px;
-                margin-right: 10px;
-            }
-            
             .sidebar-right {
                 position: relative; /* Dans le flux */
                 right: auto;
                 top: auto;
-                height: 297mm; /* Même hauteur que la fiche */
                 display: block !important;
+                margin-left: 20px; /* Espace entre onglets et sidebar */
             }
         }
 
