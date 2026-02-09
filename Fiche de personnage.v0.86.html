@@ -2,14 +2,15 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport corrigé : permet le zoom tactile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiche SCCS - Lignes Manuscrites (v0.86 Mobile)</title>
+    <title>Fiche SCCS - Lignes Manuscrites (v0.45 2H Magic)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Spectral:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Reset Box-sizing */
         * { box-sizing: border-box; }
 
+        /* Configuration A4 stricte */
         @page { size: A4 portrait; margin: 0; }
         
         body { 
@@ -19,20 +20,20 @@
             display: flex; 
             justify-content: center; 
             font-family: 'Cormorant Garamond', serif;
-            color: #000000;
+            color: #000000; /* Noir strict */
             min-height: 100vh;
         }
 
+        /* Wrapper pour le système d'onglets */
         .layout-wrapper {
             position: relative;
             display: flex;
-            max-width: 100%;
         }
 
-        /* Conteneur A4 - taille fixe réelle */
+        /* Conteneur principal A4 */
         .sheet-container {
             width: 210mm; 
-            height: 297mm;
+            height: 297mm; /* Hauteur fixe A4 */
             padding: 10mm 15mm; 
             background-color: #c5a880;
             background-image: url("https://www.transparenttextures.com/patterns/clean-gray-paper.png");
@@ -45,7 +46,7 @@
             z-index: 10;
         }
 
-        /* Onglets du classeur */
+        /* --- SYSTÈME DE CLASSEUR (BINDER) --- */
         .binder-sidebar {
             position: absolute;
             right: -42px;
@@ -78,7 +79,7 @@
             font-family: 'Cinzel', serif;
             font-weight: 700;
             font-size: 10px;
-            color: #000000;
+            color: #000000; /* Noir strict */
             text-transform: uppercase;
             letter-spacing: 1px;
             user-select: none;
@@ -114,7 +115,7 @@
             transform: translateX(0);
         }
 
-        /* Sidebar navigation documents */
+        /* --- SIDEBAR NAVIGATION DOCUMENTS (AJOUT) --- */
         .sidebar-right {
             background: rgba(216, 195, 165, 0.98);
             background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
@@ -130,21 +131,10 @@
             z-index: 40;
             display: none;
             box-shadow: -2px 0 10px rgba(0,0,0,0.3);
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-right.active {
-            transform: translateX(0);
-            display: block;
         }
 
         @media (min-width: 1280px) {
-            .sidebar-right { 
-                display: block; 
-                transform: translateX(0);
-                position: fixed;
-            }
+            .sidebar-right { display: block; }
         }
 
         .file-link {
@@ -173,16 +163,12 @@
             font-weight: 600;
         }
 
-        /* Header actions */
+        /* Actions Header */
         .header-actions { display: flex; gap: 5px; }
         .btn-action {
             cursor: pointer; opacity: 0.4; transition: opacity 0.2s, color 0.2s;
             padding: 0 2px; font-size: 1.1rem;
             color: #000000;
-            background: none;
-            border: none;
-            min-width: 30px;
-            min-height: 30px;
         }
         .btn-action:hover { opacity: 1; }
         .btn-reset:hover { color: #ea580c; }
@@ -202,7 +188,7 @@
                 min-height: 297mm; position: absolute; top: 0; left: 0;
                 overflow: hidden; page-break-after: always; z-index: auto;
             }
-            .no-print, .binder-sidebar, .header-actions, .sidebar-right, .mobile-controls, .mobile-sheet-wrapper { display: none !important; }
+            .no-print, .binder-sidebar, .header-actions, .sidebar-right { display: none !important; }
         }
 
         /* Styles de base */
@@ -214,6 +200,7 @@
         ::placeholder { color: #000000 !important; opacity: 0.6; font-style: italic; }
         input, select { color: #000000; }
 
+        /* Inputs spécifiques */
         .stat-digit {
             font-family: 'Spectral', serif !important; font-weight: 700 !important; 
             font-size: 2.2rem !important; line-height: 1 !important;
@@ -243,6 +230,7 @@
         .identity-select { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.2rem; }
         .identity-input { font-family: 'Spectral', serif; font-weight: 700; font-size: 1.2rem; }
 
+        /* Checkbox */
         .check-box {
             width: 14px; height: 14px; border: 2px solid #000000;
             display: inline-flex; align-items: center; justify-content: center;
@@ -252,6 +240,7 @@
         .check-box.active { background: #000000; }
         .check-box.active::after { content: "✓"; color: #fff; font-size: 12px; line-height: 1; }
 
+        /* Containers */
         .area-textarea {
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(0, 0, 0, 0.3);
@@ -276,536 +265,347 @@
             width: 100%; height: 100%; object-fit: cover;
             filter: sepia(0.2) contrast(1.1) brightness(0.9); mix-blend-mode: multiply;
         }
-
-        /* ======= MOBILE CORRIGÉ ======= */
-        
-        /* Wrapper qui permet le scroll et le zoom */
-        .mobile-sheet-wrapper {
-            width: 100%;
-            height: 100vh;
-            overflow: auto; /* Permet scroll horizontal et vertical */
-            -webkit-overflow-scrolling: touch; /* Défilement fluide iOS */
-            display: flex;
-            justify-content: flex-start; /* Aligné à gauche pour scroll naturel */
-            align-items: flex-start;
-            padding: 20px;
-            background: #1a1a1a;
-        }
-
-        /* Contrôles flottants */
-        .mobile-controls {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .mobile-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #7c2d12;
-            color: white;
-            border: 2px solid #c5a880;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .mobile-btn:active {
-            transform: scale(0.95);
-            background: #5c1e0c;
-        }
-
-        .mobile-menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 90;
-        }
-
-        .mobile-menu-overlay.active {
-            display: block;
-        }
-
-        /* Responsive */
-        @media (max-width: 1280px) and (min-width: 769px) {
-            .sidebar-right { display: none; }
-            .layout-wrapper { margin-right: 0; }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 0;
-                overflow: hidden; /* Empêche le body de scroller, c'est le wrapper qui scrolle */
-            }
-
-            .layout-wrapper {
-                width: 100%;
-                height: 100vh;
-                position: relative;
-            }
-
-            /* Cache le binder desktop sur mobile */
-            .binder-sidebar {
-                display: none;
-            }
-
-            /* Affiche le wrapper mobile */
-            .mobile-controls {
-                display: flex;
-            }
-
-            /* La fiche garde sa taille A4 réelle (210mm) */
-            .sheet-container {
-                margin: 0;
-                box-shadow: 0 0 30px rgba(0,0,0,0.8);
-                /* Pas de transform: scale() ici ! */
-            }
-
-            /* Inputs adaptés pour tactile */
-            input, select, textarea, button {
-                font-size: 16px; /* Empêche le zoom automatique iOS sur les inputs */
-                min-height: 44px;
-            }
-
-            .btn-action {
-                min-width: 44px;
-                min-height: 44px;
-            }
-        }
-
-        /* Menu mobile des personnages */
-        .mobile-binder-nav {
-            display: none;
-            position: fixed;
-            bottom: 90px;
-            left: 20px;
-            right: 20px;
-            background: rgba(216, 195, 165, 0.98);
-            border: 2px solid #000;
-            border-radius: 12px;
-            padding: 15px;
-            z-index: 100;
-            max-height: 50vh;
-            overflow-y: auto;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-        }
-
-        .mobile-binder-nav.active {
-            display: block;
-        }
-
-        .mobile-binder-item {
-            padding: 12px;
-            border-bottom: 1px solid rgba(0,0,0,0.2);
-            cursor: pointer;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-
-        .mobile-binder-item.active {
-            background: rgba(124, 45, 18, 0.2);
-            border-left: 4px solid #7c2d12;
-            padding-left: 8px;
-        }
-
-        .mobile-binder-item:last-child {
-            border-bottom: none;
-        }
-
-        @media (max-width: 768px) {
-            footer {
-                font-size: 0.6em !important;
-                padding: 5px !important;
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-            }
-        }
     </style>
     <script data-goatcounter="https://urnidzen.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="font-body text-black">
 
-    <!-- Contrôles Mobiles Flottants -->
-    <div class="mobile-controls no-print">
-        <button class="mobile-btn" onclick="toggleMobileMenu()" title="Menu Documents">📜</button>
-        <button class="mobile-btn" onclick="toggleBinderMenu()" title="Personnages">👤</button>
-        <button class="mobile-btn" onclick="scrollToTop()" title="Haut">⬆️</button>
-    </div>
-
-    <!-- Overlay pour fermer les menus -->
-    <div class="mobile-menu-overlay no-print" onclick="closeMobileMenus()"></div>
-
-    <!-- Menu Mobile des Personnages -->
-    <div class="mobile-binder-nav no-print" id="mobileBinderNav">
-        <div style="font-family: 'Cinzel', serif; font-weight: 700; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 8px; font-size: 1.2rem;">
-            Personnages
-        </div>
-        <div id="mobileBinderList">
-            <!-- Rempli par JS -->
-        </div>
-        <button onclick="createNewProfile()" style="width: 100%; margin-top: 15px; padding: 15px; background: #2b2b2b; color: #c5a880; border: none; border-radius: 8px; font-family: 'Cinzel', serif; font-weight: 700; cursor: pointer; font-size: 1.1rem;">
-            + Nouveau Personnage
-        </button>
-    </div>
-
     <div class="layout-wrapper">
         <div id="binder-sidebar" class="binder-sidebar"></div>
         <input type="file" id="file-upload" style="display:none" accept=".json" onchange="handleFileUpload(this)">
 
-        <!-- Wrapper Mobile : Permet le pinch-zoom et le scroll -->
-        <div class="mobile-sheet-wrapper" id="sheetWrapper">
-            <div class="sheet-container">
-                <table style="width: 100%;">
-                    
-                    <!-- HEADER -->
-                    <tr style="height: 175px;">
-                        <td style="width: 160px; padding-right: 25px;">
-                            <table style="width:100%; height:175px; border: 4px solid rgba(0, 0, 0, 0.6);">
-                                <tr>
-                                    <td style="padding:4px;">
-                                        <div id="portrait-container" style="width:100%; height:100%; border: 2px dashed rgba(0, 0, 0, 0.4); display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style="vertical-align: bottom;">
-                            <table style="height: 100%;">
-                                <tr>
-                                    <td colspan="3" style="vertical-align: top;">
-                                        <div class="flex justify-between items-end">
-                                            <label class="block text-xs font-black uppercase tracking-[0.3em] font-title text-black">Nom du personnage</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input type="text" id="char-name" class="w-full bg-transparent border-b-4 border-black/60 text-4xl font-black py-1 font-title outline-none text-black placeholder-black" placeholder="" oninput="updateProfileName(this.value)">
-                                            <div class="header-actions ml-2">
-                                                <button onclick="resetSheet()" class="btn-action btn-reset" title="Vider">↺</button>
-                                                <button onclick="deleteCurrentProfile()" class="btn-action btn-delete" title="Supprimer">🗑️</button>
-                                                <span style="color:#000; font-size:1.1rem; cursor:default;">|</span> 
-                                                <button onclick="exportBackup()" class="btn-action btn-export" title="Sauvegarder">💾</button>
-                                                <button onclick="triggerImport()" class="btn-action btn-import" title="Charger">📂</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr style="height: 50px;">
-                                    <td style="padding-right: 15px; vertical-align: bottom;">
-                                        <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Espèce</label>
-                                        <select id="race-select" class="identity-select" onchange="updateRace(); updatePortrait()">
-                                            <option value="HUMAIN">HUMAIN</option>
-                                            <option value="ELFE">ELFE</option>
-                                            <option value="NAIN">NAIN</option>
-                                            <option value="ORQUE">ORQUE</option>
-                                        </select>
-                                    </td>
-                                    <td style="padding-right: 15px; vertical-align: bottom;">
-                                        <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Genre</label>
-                                        <select id="gender-select" class="identity-select" onchange="updatePortrait()">
-                                            <option value="MASCULIN">MASCULIN</option>
-                                            <option value="FÉMININ">FÉMININ</option>
-                                        </select>
-                                    </td>
-                                    <td style="width: 70px; vertical-align: bottom;">
-                                        <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">PA</label>
-                                        <input type="number" id="val-pa" class="identity-input text-left" value="0">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="padding-top: 15px;">
-                                        <table>
-                                            <tr>
-                                                <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">COULEUR DES YEUX:</td>
-                                                <td class="border-b border-black/30"><input type="text" id="identity-eyes" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">CHEVEUX:</td>
-                                                <td class="border-b border-black/30"><input type="text" id="identity-hair" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-
-                    <tr class="spacer-row"><td></td><td></td></tr>
-
-                    <!-- 2. SECTION COMBAT -->
-                    <tr>
-                        <td colspan="2">
-                            <table style="table-layout: fixed;">
-                                <tr>
-                                    <!-- ATTAQUE -->
-                                    <td style="width: 48%; padding-right: 2%;">
-                                        <h2 class="font-title text-xl font-black uppercase border-l-4 border-black pl-3 mb-2 text-black">⚔️ Attaque</h2>
-                                        <table style="width:100%; border:1px solid rgba(0, 0, 0, 0.3); background-color: rgba(0,0,0,0.05); border-radius:4px;">
-                                            <tr>
-                                                <td style="padding:10px;">
-                                                    <table style="table-layout: fixed;">
-                                                        <tr>
-                                                            <td style="padding-right: 15px;">
-                                                                <p class="text-[9px] font-black uppercase mb-1 border-b border-black/40 text-black">Type</p>
-                                                                <table>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Direct</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Circulaire</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Saisie</td><td class="value-cell"><input type="number" id="stat-att-saisie" class="clean-input" value="0"></td></tr>
-                                                                </table>
-                                                            </td>
-                                                            <td>
-                                                                <p class="text-[9px] font-black uppercase mb-1 border-b border-black/40 text-black">Cible</p>
-                                                                <table>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Tête</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell"><input type="number" id="stat-att-tronc" class="clean-input" value="0"></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Membres</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    
-                                    <!-- PROTECTION -->
-                                    <td style="width: 48%; padding-left: 2%;">
-                                        <h2 class="font-title text-xl font-black uppercase border-l-4 border-black pl-3 mb-2 text-black">🛡️ Protection</h2>
-                                        <table style="width:100%; border:1px solid rgba(0, 0, 0, 0.3); background-color: rgba(0,0,0,0.05); border-radius:4px;">
-                                            <tr>
-                                                <td style="padding:10px;">
-                                                    <table style="table-layout: fixed; width: 100%;">
-                                                        <tr>
-                                                            <td style="padding-right: 15px; vertical-align: top;">
-                                                                <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
-                                                                    <div class="text-[9px] font-black uppercase text-black flex-grow">Défense</div>
-                                                                </div>
-                                                                <table style="width: 100%;">
-                                                                    <tr style="height: 34px;"><td class="label-cell"><span style="font-size:0.7em; margin-right:1px;">vs</span> Direct</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell"><span style="font-size:0.7em; margin-right:1px;">vs</span> Circu.</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell"><span style="font-size:0.7em; margin-right:1px;">vs</span> Saisie</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                </table>
-                                                            </td>
-                                                            <td style="vertical-align: top;">
-                                                                <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
-                                                                    <div class="text-[9px] font-black uppercase text-black flex-grow">Résistance</div>
-                                                                    <div class="text-[8px] font-black uppercase text-black text-center w-[32px] pb-[1px]">Nat.</div>
-                                                                    <div class="text-[8px] font-black uppercase text-black text-center w-[38px] pb-[1px]">Arm.</div>
-                                                                </div>
-                                                                <table style="width: 100%;">
-                                                                    <colgroup><col><col style="width: 32px;"><col style="width: 38px;"></colgroup>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Tête</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-tete" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-tete" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-tronc" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-tronc" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
-                                                                    <tr style="height: 34px;"><td class="label-cell">Membres</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-membres" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-membres" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-
-                    <tr class="spacer-row"><td></td><td></td></tr>
-
-                    <!-- 3. ÉQUIPEMENT & TALENTS -->
-                    <tr>
-                        <td colspan="2">
-                            <table style="table-layout: fixed;">
-                                <tr>
-                                    <!-- COLONNE ARSENAL (GAUCHE) -->
-                                    <td style="width: 65%; padding-right: 2%;">
-                                        
-                                        <!-- BLOC FUSIONNÉ : ARMES (Set 1 & 2) -->
-                                        <table style="width:100%; margin-bottom: 8px;">
-                                            <tr>
-                                                <td class="box-cell">
-                                                    <!-- Titre Principal (Sans le sous-titre) -->
-                                                    <div class="mb-2 border-b border-black/20 pb-1 flex justify-between items-end">
-                                                        <span class="font-title font-black uppercase text-xs text-black">Armes</span>
-                                                    </div>
-
-                                                    <!-- COMPOSITION 1 -->
-                                                    <table style="width:100%; table-layout: fixed;">
-                                                        <tr>
-                                                            <td style="width:50%; padding-right:5px;">
-                                                                <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
-                                                                <select id="weapon-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
-                                                                    <!-- Rempli par JS -->
-                                                                </select>
-                                                            </td>
-                                                            <td style="width:50%; padding-left:5px;">
-                                                                <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
-                                                                <select id="offhand-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
-                                                                    <!-- Rempli par JS -->
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" style="padding-top:4px;">
-                                                                <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
-                                                                    <div class="flex items-center">
-                                                                        <!-- Ajout de l'ID pour le label Initiative 1 -->
-                                                                        <span id="init-label-1" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
-                                                                        <span id="init-val-1" class="font-digit font-bold text-sm text-black">0</span>
-                                                                    </div>
-                                                                    <div class="flex items-center">
-                                                                        <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
-                                                                        <span id="magic-malus-1" class="font-digit font-bold text-sm text-black">0</span>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-
-                                                    <!-- SÉPARATEUR VISUEL (Proposition 1) -->
-                                                    <div class="pl-1 my-1">
-                                                        <span class="text-[9px] font-bold text-black italic lowercase">ou</span>
-                                                    </div>
-
-                                                    <!-- COMPOSITION 2 -->
-                                                    <table style="width:100%; table-layout: fixed;">
-                                                        <tr>
-                                                            <td style="width:50%; padding-right:5px;">
-                                                                <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
-                                                                <select id="weapon-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
-                                                                    <!-- Rempli par JS -->
-                                                                </select>
-                                                            </td>
-                                                            <td style="width:50%; padding-left:5px;">
-                                                                <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
-                                                                <select id="offhand-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
-                                                                    <!-- Rempli par JS -->
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2" style="padding-top:4px;">
-                                                                <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
-                                                                    <div class="flex items-center">
-                                                                        <!-- Ajout de l'ID pour le label Initiative 2 -->
-                                                                        <span id="init-label-2" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
-                                                                        <span id="init-val-2" class="font-digit font-bold text-sm text-black">0</span>
-                                                                    </div>
-                                                                    <div class="flex items-center">
-                                                                        <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
-                                                                        <span id="magic-malus-2" class="font-digit font-bold text-sm text-black">0</span>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-
-                                        <!-- PROTECTION -->
-                                        <table style="width:100%; margin-bottom: 8px;">
-                                            <tr>
-                                                <td class="box-cell">
-                                                    <!-- Titre Principal -->
-                                                    <div class="mb-2 border-b border-black/20 pb-1 flex justify-between items-end">
-                                                        <span class="font-title font-black uppercase text-xs text-black">Protection</span>
-                                                    </div>
-
-                                                    <table style="width:100%;">
-                                                        <tr>
-                                                            <td>
-                                                                <label class="block text-[8px] font-black uppercase text-black">Type d'armure</label>
-                                                                <select id="armor-select" class="w-full bg-transparent font-title font-bold text-base border-b border-black/40 outline-none text-black" onchange="updateUI()">
-                                                                    <option value="Aucune">Sans Armure</option>
-                                                                    <option value="Légère">Cuir sans Heaume</option>
-                                                                    <option value="Légère_Heaume">Cuir avec Heaume</option>
-                                                                    <option value="Moyenne">Mailles sans Heaume</option>
-                                                                    <option value="Moyenne_Heaume">Mailles avec Heaume</option>
-                                                                    <option value="Lourde">Harnois sans Heaume</option>
-                                                                    <option value="Lourde_Heaume">Harnois avec Heaume</option>
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                        <!-- Stats (Durabilité & Malus) dans bandeau grisé -->
-                                                        <tr>
-                                                            <td style="padding-top: 4px;">
-                                                                <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
-                                                                    <div class="flex items-center">
-                                                                        <span class="font-title font-bold uppercase text-[8px] text-black mr-2">Durabilité</span>
-                                                                        <span id="dur-display" class="font-digit font-bold text-sm text-black">0/0</span>
-                                                                    </div>
-                                                                    <div class="flex items-center">
-                                                                        <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
-                                                                        <span id="magic-malus-armor" class="font-digit font-bold text-sm text-black">0</span>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-
-                                    </td>
-
-                                    <!-- TALENTS (DROITE) -->
-                                    <td style="width: 35%; padding-left: 2%; border-left: 2px solid rgba(0, 0, 0, 0.2); vertical-align: top;">
-                                        <h2 class="font-title text-sm font-black uppercase border-b-2 border-black/40 pb-1 mb-2 text-black">Talents</h2>
-                                        <div id="talents-container"></div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-
-                    <tr class="spacer-row"><td></td><td></td></tr>
-
-                    <!-- 4. NOTES -->
-                    <tr>
-                        <td colspan="2">
-                            <div style="width: 100%;">
-                                <h3 class="font-title text-xs font-black uppercase mb-1 text-black">Notes</h3>
-                                <textarea class="area-textarea"></textarea>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+        <div class="sheet-container">
+            <table style="width: 100%;">
                 
-                <!-- FOOTER -->
-                <div class="footer-absolute">
-                    <div class="text-[9px] text-center text-black uppercase font-black tracking-widest pt-1 border-t border-black/30">
-                        Grimoire SCCS VLU Officiel - Fiche Personnage
-                    </div>
-                    <div class="text-[7px] text-center text-black/80 uppercase tracking-wide mt-0.5 leading-tight">
-                        © 2024 Urnidzen - SCCS | <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" style="color: inherit; text-decoration: none;">CC BY-NC-SA 4.0</a> (Non commercial) | Illustrations générées par IA
-                    </div>
+                <!-- HEADER -->
+                <tr style="height: 175px;">
+                    <td style="width: 160px; padding-right: 25px;">
+                        <table style="width:100%; height:175px; border: 4px solid rgba(0, 0, 0, 0.6);">
+                            <tr>
+                                <td style="padding:4px;">
+                                    <div id="portrait-container" style="width:100%; height:100%; border: 2px dashed rgba(0, 0, 0, 0.4); display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="vertical-align: bottom;">
+                        <table style="height: 100%;">
+                            <tr>
+                                <td colspan="3" style="vertical-align: top;">
+                                    <div class="flex justify-between items-end">
+                                        <label class="block text-xs font-black uppercase tracking-[0.3em] font-title text-black">Nom du personnage</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="text" id="char-name" class="w-full bg-transparent border-b-4 border-black/60 text-4xl font-black py-1 font-title outline-none text-black placeholder-black" placeholder="" oninput="updateProfileName(this.value)">
+                                        <div class="header-actions ml-2">
+                                            <button onclick="resetSheet()" class="btn-action btn-reset" title="Vider">↺</button>
+                                            <button onclick="deleteCurrentProfile()" class="btn-action btn-delete" title="Supprimer">🗑️</button>
+                                            <span style="color:#000; font-size:1.1rem; cursor:default;">|</span> 
+                                            <button onclick="exportBackup()" class="btn-action btn-export" title="Sauvegarder">💾</button>
+                                            <button onclick="triggerImport()" class="btn-action btn-import" title="Charger">📂</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="height: 50px;">
+                                <td style="padding-right: 15px; vertical-align: bottom;">
+                                    <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Espèce</label>
+                                    <select id="race-select" class="identity-select" onchange="updateRace(); updatePortrait()">
+                                        <option value="HUMAIN">HUMAIN</option>
+                                        <option value="ELFE">ELFE</option>
+                                        <option value="NAIN">NAIN</option>
+                                        <option value="ORQUE">ORQUE</option>
+                                    </select>
+                                </td>
+                                <td style="padding-right: 15px; vertical-align: bottom;">
+                                    <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Genre</label>
+                                    <select id="gender-select" class="identity-select" onchange="updatePortrait()">
+                                        <option value="MASCULIN">MASCULIN</option>
+                                        <option value="FÉMININ">FÉMININ</option>
+                                    </select>
+                                </td>
+                                <td style="width: 70px; vertical-align: bottom;">
+                                    <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">PA</label>
+                                    <input type="number" id="val-pa" class="identity-input text-left" value="0">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="padding-top: 15px;">
+                                    <table>
+                                        <tr>
+                                            <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">COULEUR DES YEUX:</td>
+                                            <td class="border-b border-black/30"><input type="text" id="identity-eyes" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">CHEVEUX:</td>
+                                            <td class="border-b border-black/30"><input type="text" id="identity-hair" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="spacer-row"><td></td><td></td></tr>
+
+                <!-- 2. SECTION COMBAT -->
+                <tr>
+                    <td colspan="2">
+                        <table style="table-layout: fixed;">
+                            <tr>
+                                <!-- ATTAQUE -->
+                                <td style="width: 48%; padding-right: 2%;">
+                                    <h2 class="font-title text-xl font-black uppercase border-l-4 border-black pl-3 mb-2 text-black">⚔️ Attaque</h2>
+                                    <table style="width:100%; border:1px solid rgba(0, 0, 0, 0.3); background-color: rgba(0,0,0,0.05); border-radius:4px;">
+                                        <tr>
+                                            <td style="padding:10px;">
+                                                <table style="table-layout: fixed;">
+                                                    <tr>
+                                                        <td style="padding-right: 15px;">
+                                                            <p class="text-[9px] font-black uppercase mb-1 border-b border-black/40 text-black">Type</p>
+                                                            <table>
+                                                                <tr style="height: 34px;"><td class="label-cell">Direct</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Circulaire</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Saisie</td><td class="value-cell"><input type="number" id="stat-att-saisie" class="clean-input" value="0"></td></tr>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <p class="text-[9px] font-black uppercase mb-1 border-b border-black/40 text-black">Cible</p>
+                                                            <table>
+                                                                <tr style="height: 34px;"><td class="label-cell">Tête</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell"><input type="number" id="stat-att-tronc" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Membres</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                
+                                <!-- PROTECTION -->
+                                <td style="width: 48%; padding-left: 2%;">
+                                    <h2 class="font-title text-xl font-black uppercase border-l-4 border-black pl-3 mb-2 text-black">🛡️ Protection</h2>
+                                    <table style="width:100%; border:1px solid rgba(0, 0, 0, 0.3); background-color: rgba(0,0,0,0.05); border-radius:4px;">
+                                        <tr>
+                                            <td style="padding:10px;">
+                                                <table style="table-layout: fixed; width: 100%;">
+                                                    <tr>
+                                                        <td style="padding-right: 15px; vertical-align: top;">
+                                                            <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
+                                                                <div class="text-[9px] font-black uppercase text-black flex-grow">Défense</div>
+                                                            </div>
+                                                            <table style="width: 100%;">
+                                                                <tr style="height: 34px;"><td class="label-cell"><span style="font-size:0.7em; margin-right:1px;">vs</span> Direct</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell"><span style="font-size:0.7em; margin-right:1px;">vs</span> Circu.</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell"><span style="font-size:0.7em; margin-right:1px;">vs</span> Saisie</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
+                                                            </table>
+                                                        </td>
+                                                        <td style="vertical-align: top;">
+                                                            <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
+                                                                <div class="text-[9px] font-black uppercase text-black flex-grow">Résistance</div>
+                                                                <div class="text-[8px] font-black uppercase text-black text-center w-[32px] pb-[1px]">Nat.</div>
+                                                                <div class="text-[8px] font-black uppercase text-black text-center w-[38px] pb-[1px]">Arm.</div>
+                                                            </div>
+                                                            <table style="width: 100%;">
+                                                                <colgroup><col><col style="width: 32px;"><col style="width: 38px;"></colgroup>
+                                                                <tr style="height: 34px;"><td class="label-cell">Tête</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-tete" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-tete" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-tronc" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-tronc" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Membres</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-membres" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-membres" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="spacer-row"><td></td><td></td></tr>
+
+                <!-- 3. ÉQUIPEMENT & TALENTS -->
+                <tr>
+                    <td colspan="2">
+                        <table style="table-layout: fixed;">
+                            <tr>
+                                <!-- COLONNE ARSENAL (GAUCHE) -->
+                                <td style="width: 65%; padding-right: 2%;">
+                                    
+                                    <!-- BLOC FUSIONNÉ : ARMES (Set 1 & 2) -->
+                                    <table style="width:100%; margin-bottom: 8px;">
+                                        <tr>
+                                            <td class="box-cell">
+                                                <!-- Titre Principal (Sans le sous-titre) -->
+                                                <div class="mb-2 border-b border-black/20 pb-1 flex justify-between items-end">
+                                                    <span class="font-title font-black uppercase text-xs text-black">Armes</span>
+                                                </div>
+
+                                                <!-- COMPOSITION 1 -->
+                                                <table style="width:100%; table-layout: fixed;">
+                                                    <tr>
+                                                        <td style="width:50%; padding-right:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
+                                                            <select id="weapon-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                                <!-- Rempli par JS -->
+                                                            </select>
+                                                        </td>
+                                                        <td style="width:50%; padding-left:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
+                                                            <select id="offhand-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                                <!-- Rempli par JS -->
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" style="padding-top:4px;">
+                                                            <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
+                                                                <div class="flex items-center">
+                                                                    <!-- Ajout de l'ID pour le label Initiative 1 -->
+                                                                    <span id="init-label-1" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
+                                                                    <span id="init-val-1" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
+                                                                    <span id="magic-malus-1" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                <!-- SÉPARATEUR VISUEL (Proposition 1) -->
+                                                <div class="pl-1 my-1">
+                                                    <span class="text-[9px] font-bold text-black italic lowercase">ou</span>
+                                                </div>
+
+                                                <!-- COMPOSITION 2 -->
+                                                <table style="width:100%; table-layout: fixed;">
+                                                    <tr>
+                                                        <td style="width:50%; padding-right:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
+                                                            <select id="weapon-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                                <!-- Rempli par JS -->
+                                                            </select>
+                                                        </td>
+                                                        <td style="width:50%; padding-left:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
+                                                            <select id="offhand-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                                <!-- Rempli par JS -->
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" style="padding-top:4px;">
+                                                            <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
+                                                                <div class="flex items-center">
+                                                                    <!-- Ajout de l'ID pour le label Initiative 2 -->
+                                                                    <span id="init-label-2" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
+                                                                    <span id="init-val-2" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
+                                                                    <span id="magic-malus-2" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- PROTECTION -->
+                                    <table style="width:100%; margin-bottom: 8px;">
+                                        <tr>
+                                            <td class="box-cell">
+                                                <!-- Titre Principal -->
+                                                <div class="mb-2 border-b border-black/20 pb-1 flex justify-between items-end">
+                                                    <span class="font-title font-black uppercase text-xs text-black">Protection</span>
+                                                </div>
+
+                                                <table style="width:100%;">
+                                                    <tr>
+                                                        <td>
+                                                            <label class="block text-[8px] font-black uppercase text-black">Type d'armure</label>
+                                                            <select id="armor-select" class="w-full bg-transparent font-title font-bold text-base border-b border-black/40 outline-none text-black" onchange="updateUI()">
+                                                                <option value="Aucune">Sans Armure</option>
+                                                                <option value="Légère">Cuir sans Heaume</option>
+                                                                <option value="Légère_Heaume">Cuir avec Heaume</option>
+                                                                <option value="Moyenne">Mailles sans Heaume</option>
+                                                                <option value="Moyenne_Heaume">Mailles avec Heaume</option>
+                                                                <option value="Lourde">Harnois sans Heaume</option>
+                                                                <option value="Lourde_Heaume">Harnois avec Heaume</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Stats (Durabilité & Malus) dans bandeau grisé -->
+                                                    <tr>
+                                                        <td style="padding-top: 4px;">
+                                                            <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-2">Durabilité</span>
+                                                                    <span id="dur-display" class="font-digit font-bold text-sm text-black">0/0</span>
+                                                                </div>
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
+                                                                    <span id="magic-malus-armor" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+
+                                <!-- TALENTS (DROITE) -->
+                                <td style="width: 35%; padding-left: 2%; border-left: 2px solid rgba(0, 0, 0, 0.2); vertical-align: top;">
+                                    <h2 class="font-title text-sm font-black uppercase border-b-2 border-black/40 pb-1 mb-2 text-black">Talents</h2>
+                                    <div id="talents-container"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="spacer-row"><td></td><td></td></tr>
+
+                <!-- 4. NOTES -->
+                <tr>
+                    <td colspan="2">
+                        <div style="width: 100%;">
+                            <h3 class="font-title text-xs font-black uppercase mb-1 text-black">Notes</h3>
+                            <textarea class="area-textarea"></textarea>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- FOOTER -->
+            <div class="footer-absolute">
+                <div class="text-[9px] text-center text-black uppercase font-black tracking-widest pt-1 border-t border-black/30">
+                    Grimoire SCCS VLU Officiel - Fiche Personnage
+                </div>
+                <div class="text-[7px] text-center text-black/80 uppercase tracking-wide mt-0.5 leading-tight">
+                    © 2024 Urnidzen - SCCS | <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" style="color: inherit; text-decoration: none;">CC BY-NC-SA 4.0</a> (Non commercial) | Illustrations générées par IA
                 </div>
             </div>
         </div>
     </div>
 
     <!-- SIDEBAR NAVIGATION DOCUMENTS -->
-    <aside class="sidebar-right no-print" id="sidebarRight">
-        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-family: 'Cinzel', serif; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7;">Documents</h3>
-            <button onclick="toggleMobileMenu()" class="lg:hidden" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">✕</button>
+    <aside class="sidebar-right no-print">
+        <div style="margin-bottom: 1.5rem;">
+            <h3 style="font-family: 'Cinzel', serif; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; opacity: 0.7; border-bottom: 1px solid rgba(0,0,0,0.2); padding-bottom: 0.5rem;">Documents</h3>
         </div>
         <nav style="display: flex; flex-direction: column; gap: 0.25rem;">
             <a href="index.html" class="file-link text-sm flex items-center gap-2">
@@ -873,55 +673,6 @@
     </aside>
 
     <script>
-        // === FONCTIONS MOBILES ===
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebarRight');
-            const overlay = document.querySelector('.mobile-menu-overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-
-        function toggleBinderMenu() {
-            const nav = document.getElementById('mobileBinderNav');
-            const overlay = document.querySelector('.mobile-menu-overlay');
-            nav.classList.toggle('active');
-            overlay.classList.toggle('active');
-            updateMobileBinderList();
-        }
-
-        function closeMobileMenus() {
-            document.getElementById('sidebarRight').classList.remove('active');
-            document.getElementById('mobileBinderNav').classList.remove('active');
-            document.querySelector('.mobile-menu-overlay').classList.remove('active');
-        }
-
-        function scrollToTop() {
-            const wrapper = document.getElementById('sheetWrapper');
-            wrapper.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-        }
-
-        function updateMobileBinderList() {
-            const list = document.getElementById('mobileBinderList');
-            list.innerHTML = '';
-            
-            Object.keys(binderData.profiles).forEach(id => {
-                const profile = binderData.profiles[id];
-                const isActive = (id === binderData.activeId);
-                const item = document.createElement('div');
-                item.className = `mobile-binder-item ${isActive ? 'active' : ''}`;
-                item.innerHTML = `
-                    <span>${profile.name || "Sans nom"}</span>
-                    ${isActive ? '<span>✓</span>' : ''}
-                `;
-                item.onclick = () => {
-                    handleTabClick(id, isActive);
-                    closeMobileMenus();
-                };
-                list.appendChild(item);
-            });
-        }
-
-        // === CODE EXISTANT (conservé intégralement) ===
         const CUSTOM_PORTRAITS_URLS = {
             "HUMAIN_MASCULIN": "portraits/portrait_homme_humain.png",
             "HUMAIN_FÉMININ": "portraits/portrait_femme_humain.png",
@@ -941,6 +692,7 @@
             }
         };
 
+        // --- GESTION DU CLASSEUR ET DE LA SAUVEGARDE ---
         const BINDER_STORAGE_KEY = 'sccs_binder_data_v4';
         let binderData = {
             activeId: null,
@@ -1009,7 +761,6 @@
             saveBinderData();
             renderTabs();
             loadProfile(id);
-            updateMobileBinderList();
         }
 
         function createNewProfile() {
@@ -1022,7 +773,6 @@
             resetSheet(false);
             document.getElementById('char-name').value = "Nouveau";
             autoSaveCurrentProfile();
-            updateMobileBinderList();
         }
 
         function deleteCurrentProfile() {
@@ -1031,7 +781,6 @@
                    resetSheet(true);
                    document.getElementById('char-name').value = "Nouveau";
                    autoSaveCurrentProfile();
-                   updateMobileBinderList();
                 }
                 return;
             }
@@ -1043,7 +792,6 @@
             saveBinderData();
             renderTabs();
             loadProfile(binderData.activeId);
-            updateMobileBinderList();
         }
 
         function exportBackup() {
@@ -1079,7 +827,6 @@
                         saveBinderData(); 
                         renderTabs();
                         loadProfile(binderData.activeId);
-                        updateMobileBinderList();
                         alert("Sauvegarde chargée avec succès !");
                     }
                 } catch (err) {
@@ -1112,7 +859,6 @@
             const currentTabName = document.querySelector('.binder-tab.active')?.innerText;
             if (binderData.profiles[binderData.activeId].name !== currentTabName) {
                 renderTabs();
-                updateMobileBinderList();
             }
             saveBinderData();
         }
@@ -1123,17 +869,20 @@
             const profile = binderData.profiles[id];
             if (!profile) return;
             
+            // Reset
             document.querySelectorAll('input, textarea').forEach(el => {
                 el.value = '';
             });
             document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
             document.querySelectorAll('input[type=number]').forEach(el => el.value = '0');
             
+            // Defaults
             if(document.getElementById('weapon-select-1')) document.getElementById('weapon-select-1').value = "Main Libre";
             if(document.getElementById('weapon-select-2')) document.getElementById('weapon-select-2').value = "Main Libre";
 
             const data = profile.data || {};
 
+            // Load
             Object.keys(data).forEach(key => {
                 if (key.startsWith('__clean_input_')) {
                     const idx = parseInt(key.replace('__clean_input_', ''));
@@ -1160,6 +909,7 @@
                 updateRace(); 
             }
 
+            // Init dynamic lists
             updateOffhandOptions(1);
             updateOffhandOptions(2);
             updateUI();
@@ -1184,8 +934,10 @@
             if (clearStorage) autoSaveCurrentProfile();
         }
 
+        // --- DONNÉES & RÈGLES ---
         const WEAPONS_DATA = {
             "Distance": { label: "Armes à Distance", stats: { init: "1/7", magie: -1 }, items: ["Arc", "Arbalète", "Fronde"] },
+            // MODIFICATION : Fusion du Bâton en une seule entrée
             "Focalisateur": { label: "Focalisateurs", stats: { init: "6", magie: 0 }, items: ["Grimoire", "Chapelet", "Bâton"] },
             "Longue": { label: "Armes Longues (2 mains)", stats: { init: "4", magie: -1 }, items: ["Lance (Longue)", "Épée à deux mains", "Hache à deux mains", "Masse à deux mains"] },
             "Moyenne": { label: "Armes Moyennes (1 main)", stats: { init: "5", magie: -1 }, items: ["Épée", "Hache", "Masse", "Lance (1 main)", "Fléau"] },
@@ -1242,7 +994,9 @@
         }
 
         function getWeaponStats(weaponName) {
+            // MODIFICATION : Suppression de la gestion complexe du Bâton ici, gérée dans updateUI
             if (weaponName === "Grimoire" || weaponName === "Chapelet" || weaponName === "Bâton") return { init: "6", magie: 0 };
+
             for (const [key, category] of Object.entries(WEAPONS_DATA)) {
                 if (category.items.includes(weaponName)) return category.stats;
             }
@@ -1260,18 +1014,24 @@
             const weaponSelect = document.getElementById(`weapon-select-${index}`);
             const offhandSelect = document.getElementById(`offhand-select-${index}`);
             if (!weaponSelect || !offhandSelect) return;
+
             const weaponName = weaponSelect.value;
             const category = getWeaponCategory(weaponName);
             const currentOffhand = offhandSelect.value;
+            
             offhandSelect.innerHTML = ''; 
             offhandSelect.disabled = false;
+            
             let options = [];
             if (category === "Distance" || category === "Longue") {
+                // MODIFICATION : Remplacement de "Occupée (2 mains)" par "Occupée"
                 options.push("Occupée");
                 offhandSelect.disabled = true; 
             } 
             else if (category === "Focalisateur") {
+                // MODIFICATION : Pour le Bâton, simplification : Occupée remplace Main Libre et Prise à 2 mains
                 if (weaponName === "Bâton") {
+                    // Changement de label demandé : "Occupée ou Libre"
                     options.push("Occupée ou Libre", "Bouclier", "Torche");
                 } else {
                     options.push("Main Libre (Incantation)", "Bouclier", "Torche");
@@ -1287,11 +1047,13 @@
                     if (wp !== "Main Libre" && wp !== "Torche" && wp !== "Bouclier (Offensif)") options.push(wp); 
                 });
             }
+
             options.forEach(opt => {
                 const el = document.createElement('option');
                 el.value = opt; el.textContent = opt;
                 offhandSelect.appendChild(el);
             });
+
             if (Array.from(offhandSelect.options).some(o => o.value === currentOffhand)) offhandSelect.value = currentOffhand;
             else offhandSelect.selectedIndex = 0;
         }
@@ -1327,34 +1089,58 @@
         }
 
         function updateUI() {
+            // Update Sets
             [1, 2].forEach(index => {
                 const weaponSelect = document.getElementById(`weapon-select-${index}`);
                 const offhandSelect = document.getElementById(`offhand-select-${index}`);
                 const initLabel = document.getElementById(`init-label-${index}`);
+                
                 if (weaponSelect && offhandSelect) {
                     const activeEl = document.activeElement;
                     if (activeEl === weaponSelect) updateOffhandOptions(index);
+                    
                     const weaponName = weaponSelect.value;
                     const offhandName = offhandSelect.value;
                     const weaponStats = getWeaponStats(weaponName);
                     const cat = getWeaponCategory(weaponName);
+                    
+                    // Logic Magic Check
                     const isRightFree = weaponName === "Main Libre";
-                    const isLeftFree = offhandName && (offhandName.includes("Libre") || offhandName === "Occupée" || offhandName === "Occupée ou Libre");
+                    // MODIFICATION : "Occupée" et "Occupée ou Libre" sont considérés comme valides pour incanter
+                    const isLeftFree = offhandName && (
+                        offhandName.includes("Libre") || 
+                        offhandName === "Occupée" ||
+                        offhandName === "Occupée ou Libre"
+                    );
                     const hasFreeHand = isRightFree || isLeftFree;
+                    
+                    // Catalyst check:
                     const isRightCatalyst = weaponName !== "Main Libre" && weaponName !== "Torche";
+                    // MODIFICATION : Ajout de "Occupée ou Libre" dans les exclusions (ce n'est pas un objet)
                     const isLeftCatalyst = offhandName && offhandName !== "Main Libre" && offhandName !== "Main Libre (Incantation)" && offhandName !== "Bouclier" && offhandName !== "Torche" && offhandName !== "Occupée" && offhandName !== "Occupée ou Libre";
+                    
                     const hasCatalyst = isRightCatalyst || isLeftCatalyst;
                     const canCast = hasFreeHand && hasCatalyst;
+
+                    // Init Display
                     const initSpan = document.getElementById(`init-val-${index}`);
                     const rawInit = weaponStats.init;
+                    
                     if (initSpan) {
+                        // On force la taille et la police pour correspondre exactement au Malus Magie (text-sm, Spectral)
                         initSpan.className = "font-digit font-bold text-sm text-black"; 
+
                         if (canCast) {
                             if (initLabel) initLabel.style.display = 'none'; 
+                            
+                            // Affichage formaté : INITIATIVE : ARME X / SORT 2 (libre) 8 (engagé)
                             let weaponInitDisplay = rawInit;
+                            
+                            // CAS PARTICULIER BÂTON
                             if (weaponName === "Bâton") {
                                 weaponInitDisplay = `5 <span class="font-body font-bold text-[10px]">(1 main)</span> 4 <span class="font-body font-bold text-[10px]">(2 mains)</span>`;
                             }
+
                             initSpan.innerHTML = `
                                 <span class="font-title font-bold text-[8px] mr-1">INITIATIVE :</span>
                                 <span class="font-title font-bold text-[8px] mr-1">ARME</span>${weaponInitDisplay}
@@ -1363,27 +1149,34 @@
                             `;
                         } else {
                             if (initLabel) initLabel.style.display = 'inline'; 
+                            
+                            // Affichage standard : X
                             let standardDisplay = rawInit;
                             if (rawInit.includes('/')) {
                                 const [v1, v2] = rawInit.split('/');
                                 standardDisplay = `${v1} <span class="font-body font-bold text-[10px]">(libre)</span> ${v2} <span class="font-body font-bold text-[10px]">(engagé)</span>`;
                             } 
+                            // CAS PARTICULIER BÂTON (Même en affichage standard)
                             else if (weaponName === "Bâton") {
                                 standardDisplay = `5 <span class="font-body font-bold text-[10px]">(1 main)</span> 4 <span class="font-body font-bold text-[10px]">(2 mains)</span>`;
                             }
+                            
+                            // On applique simplement le chiffre (ou la chaîne formatée)
                             initSpan.innerHTML = standardDisplay;
                         }
                     }
+
+                    // Magic Malus Display
                     const magicSpan = document.getElementById(`magic-malus-${index}`);
                     if(magicSpan) {
                         if (!hasFreeHand) {
                             magicSpan.innerText = "lancement de sort impossible";
-                            magicSpan.style.color = "#dc2626";
+                            magicSpan.style.color = "#dc2626"; // Red
                             magicSpan.style.fontStyle = "normal";
                             magicSpan.style.fontSize = "0.6rem"; 
                         } else if (!hasCatalyst) {
                             magicSpan.innerText = "lancement de sort impossible";
-                            magicSpan.style.color = "#dc2626";
+                            magicSpan.style.color = "#dc2626"; // Red
                             magicSpan.style.fontStyle = "normal";
                             magicSpan.style.fontSize = "0.6rem";
                         } else {
@@ -1396,20 +1189,27 @@
                     }
                 }
             });
+
+            // Armor
             const armorEl = document.getElementById('armor-select');
             if (armorEl) {
                 const armor = armorEl.value;
                 const armorData = RULES.ARMORS[armor];
                 const baseRes = armorData ? armorData.res : 0;
                 const headRes = armor.includes("_Heaume") ? baseRes : 0;
+                
                 document.getElementById('res-arm-tete').innerText = headRes;
                 document.getElementById('res-arm-tronc').innerText = baseRes;
                 document.getElementById('res-arm-membres').innerText = baseRes;
+
                 let malusArmure = 0;
                 if (armorData && armorData.malus && armorData.malus.includes("magie")) malusArmure = -1;
                 document.getElementById('magic-malus-armor').innerText = (malusArmure >= 0 ? "+" : "") + malusArmure;
+
                 const maxDur = armorData ? armorData.dur : 0;
                 document.getElementById('dur-display').innerText = `${maxDur}/${maxDur}`;
+
+                // Talents
                 const container = document.getElementById('talents-container');
                 if (container) {
                     let html = `
@@ -1418,6 +1218,7 @@
                         <tr style="border-bottom: 1px solid rgba(0, 0, 0, 0.4);">
                             <td></td><td class="text-[8px] font-black uppercase text-black text-center"></td><td class="text-[8px] font-black uppercase text-black text-center">Arm.</td><td></td><td class="text-[8px] font-black uppercase text-black text-center">Tot.</td>
                         </tr>`;
+
                     talentsList.forEach(t => {
                         const isChecked = state.talents[t.id];
                         let baseScore = isChecked ? 1 : 0; 
@@ -1428,6 +1229,7 @@
                         }
                         let totalScore = baseScore + armorMalus;
                         const colorClass = 'text-black';
+
                         html += `
                         <tr style="cursor:pointer;" onclick="toggleTalent('${t.id}')" onmouseover="this.style.backgroundColor='rgba(0,0,0,0.05)'" onmouseout="this.style.backgroundColor='transparent'">
                             <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); vertical-align:middle;">
@@ -1450,7 +1252,6 @@
             try {
                 initWeaponSelect();
                 initBinder();
-                updateMobileBinderList();
             } catch (e) { console.error("Erreur d'initialisation:", e); }
         };
     </script>
@@ -1462,3 +1263,5 @@
 </footer>
 </body>
 </html>
+
+
