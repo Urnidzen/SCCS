@@ -18,7 +18,7 @@
         html, body { 
             height: 100%; 
             width: 100%;
-            overflow: hidden; /* Empêche le scroll global du navigateur */
+            overflow: hidden; 
         }
 
         body {
@@ -31,7 +31,7 @@
 
         h1, h2, h3, h4, .font-cinzel { font-family: 'Cinzel', serif; letter-spacing: 0.05em; }
 
-        /* ===== SIDEBAR (Inchangé) ===== */
+        /* ===== SIDEBAR ===== */
         .sidebar-container {
             position: fixed;
             left: 0; top: 0; height: 100vh;
@@ -85,7 +85,7 @@
             line-height: 1.2;
         }
 
-        /* ===== SEARCH & LIST (Inchangé) ===== */
+        /* ===== SEARCH & LIST ===== */
         .search-container {
             margin-bottom: 20px;
             padding-bottom: 15px;
@@ -141,58 +141,36 @@
             margin-left: 320px; 
             height: 100vh;
             width: calc(100% - 320px);
-            
-            /* Paramètres Scroll Snap Vertical */
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
-            
             transition: margin-left 0.3s, width 0.3s;
-            
-            /* Masquer scrollbar */
             scrollbar-width: none; 
             -ms-overflow-style: none;
         }
         
-        .main-container::-webkit-scrollbar { 
-            display: none; 
-        }
-
-        .main-container.sidebar-closed { 
-            margin-left: 0; 
-            width: 100%;
-        }
+        .main-container::-webkit-scrollbar { display: none; }
+        .main-container.sidebar-closed { margin-left: 0; width: 100%; }
 
         /* Wrappers */
         .book-spreads-wrapper {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
+            display: flex; flex-direction: column; width: 100%;
         }
 
-        /* Une unité de double-page (100vh exact) */
         .book-spread {
-            display: flex; 
-            gap: 0; 
-            width: 100%; 
-            height: 100vh; /* Force la pleine hauteur */
-            scroll-snap-align: start; /* Aimantation */
-            scroll-snap-stop: always; /* Arrêt forcé */
-            flex-shrink: 0;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            z-index: 1;
-            overflow: hidden;
+            display: flex; gap: 0; width: 100%; height: 100vh; 
+            scroll-snap-align: start; scroll-snap-stop: always; 
+            flex-shrink: 0; position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 1; overflow: hidden;
         }
 
         .page {
-            flex: 1; 
-            height: 100vh;
+            flex: 1; height: 100vh;
             background: #f4ecd8;
             background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            padding: 50px 60px 40px 60px; /* Top, Right, Bottom, Left */
-            position: relative;
-            overflow: hidden;
+            /* Padding Bottom augmenté à 85px pour laisser place aux mentions légales */
+            padding: 50px 60px 85px 60px; 
+            position: relative; overflow: hidden;
         }
 
         .page-left { 
@@ -204,14 +182,11 @@
         }
 
         .content-wrapper { 
-            width: 100%; 
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            /* Important: permet aux enfants de s'empiler naturellement */
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
         }
 
-        /* ===== STYLES DE CONTENU (Préservés) ===== */
+        /* ===== CONTENU ===== */
         .content-section { margin-bottom: 1.5rem; }
         .content-section h2 { font-size: 1.5rem; border-bottom: 2px solid #1c1917; padding-bottom: 0.5rem; margin-bottom: 1rem; }
         
@@ -224,12 +199,24 @@
         .rule-box { border-left: 4px solid #7c2d12; background: rgba(124, 45, 18, 0.05); padding: 1rem; margin: 1.2rem 0; }
 
         img, table {
-            max-width: 100%;
-            height: auto;
-            display: block;
+            max-width: 100%; height: auto; display: block;
         }
 
-        /* Numéro de page */
+        /* Pied de page et Mentions légales */
+        .legal-notice {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 0.6rem;
+            color: rgba(28, 25, 23, 0.6);
+            left: 0;
+            pointer-events: none;
+            line-height: 1.4;
+            padding: 0 20px;
+        }
+
         .page-number {
             position: absolute;
             bottom: 15px;
@@ -246,10 +233,9 @@
             .sidebar-container { transform: translateX(-320px); }
             .sidebar-container.open { transform: translateX(0); }
             .main-container { margin-left: 0 !important; width: 100% !important; }
-            
             .book-spread { flex-direction: column; }
-            .page { padding: 30px 20px; width: 100%; }
-            .page-right { display: none; } /* En mobile, une spread = 1 page physique */
+            .page { padding: 30px 20px 85px 20px; width: 100%; }
+            .page-right { display: none; }
         }
     </style>
 </head>
@@ -294,6 +280,14 @@
         let isMobile = window.innerWidth <= 1024;
         let currentIndex = [];
         let rawContentCache = ""; 
+
+        // Mentions légales à insérer partout
+        const LEGAL_HTML = `
+            <div class="legal-notice">
+                Copiez, modifiez, enrichissez ! seul le commerce est interdit.<br>
+                © 2024 Urnidzen | Licence CC BY-NC-SA 4.0 | Images assistées par IA
+            </div>
+        `;
 
         function init() {
             renderDocumentsList();
@@ -357,11 +351,9 @@
                 const parser = new DOMParser();
                 const docElement = parser.parseFromString(html, 'text/html');
                 
-                // Index
                 const indexScript = docElement.getElementById('doc-index');
                 currentIndex = indexScript ? JSON.parse(indexScript.textContent).index : [];
 
-                // Nettoyage
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = (docElement.body && docElement.body.innerHTML) ? docElement.body.innerHTML : html;
                 tempDiv.querySelectorAll('script, .sidebar, header, nav').forEach(el => el.remove());
@@ -375,9 +367,7 @@
             }
         }
 
-        // ===== MOTEUR DE PAGINATION AVANCÉ (Hybrid Block/Atom) =====
-        
-        // Variables globales pour le processus de pagination
+        // ===== MOTEUR DE PAGINATION (Hybrid Block/Atom) =====
         let pgnState = {
             wrapper: null,
             currentSpread: null,
@@ -391,22 +381,15 @@
             pgnState.wrapper = document.getElementById('bookSpreadsWrapper');
             const staging = document.getElementById('hiddenStaging');
             
-            // 1. Initialisation
             staging.innerHTML = htmlContent;
             pgnState.wrapper.innerHTML = ''; 
             pgnState.pageCount = 1;
-            pgnState.isRightPage = false; // Toujours commencer à gauche
+            pgnState.isRightPage = false; 
 
-            // Créer la première page
             createNewSpread();
-
-            // 2. Préparer la file d'attente
-            // On transforme la HTMLCollection en tableau pour pouvoir manipuler la file
             pgnState.elementsQueue = Array.from(staging.children);
 
-            // 3. Boucle de traitement
             while (pgnState.elementsQueue.length > 0) {
-                // On prend le premier élément
                 let element = pgnState.elementsQueue.shift();
                 processElement(element);
             }
@@ -420,6 +403,7 @@
                 spread.innerHTML = `
                     <div class="page page-left">
                         <div class="content-wrapper"></div>
+                        ${LEGAL_HTML}
                         <div class="page-number">- ${pgnState.pageCount} -</div>
                     </div>
                 `;
@@ -427,10 +411,12 @@
                 spread.innerHTML = `
                     <div class="page page-left">
                         <div class="content-wrapper"></div>
+                        ${LEGAL_HTML}
                         <div class="page-number">- ${pgnState.pageCount} -</div>
                     </div>
                     <div class="page page-right">
                         <div class="content-wrapper"></div>
+                        ${LEGAL_HTML}
                         <div class="page-number">- ${pgnState.pageCount + 1} -</div>
                     </div>
                 `;
@@ -438,24 +424,19 @@
             
             pgnState.wrapper.appendChild(spread);
             pgnState.currentSpread = spread;
-            // Par défaut on pointe sur la gauche
             pgnState.currentPageContent = spread.querySelector('.page-left .content-wrapper');
             pgnState.isRightPage = false;
         }
 
         function advancePage() {
             if (isMobile) {
-                // Mobile: Toujours nouvelle spread
                 pgnState.pageCount++;
                 createNewSpread();
             } else {
-                // Desktop
                 if (!pgnState.isRightPage) {
-                    // Passer à droite
                     pgnState.isRightPage = true;
                     pgnState.currentPageContent = pgnState.currentSpread.querySelector('.page-right .content-wrapper');
                 } else {
-                    // Nouvelle spread
                     pgnState.pageCount += 2;
                     createNewSpread();
                 }
@@ -463,74 +444,45 @@
         }
 
         function processElement(element) {
-            // Cloner l'élément pour le tester sans détruire l'original si besoin de démembrer
-            // On doit cloner car appendChild déplace le nœud
             let node = element.cloneNode(true);
-            
             pgnState.currentPageContent.appendChild(node);
 
-            // Vérifier overflow
+            // Vérification de l'overflow (tient compte du padding augmenté)
             if (isOverflowing(pgnState.currentPageContent)) {
-                // Ça déborde !
                 pgnState.currentPageContent.removeChild(node);
 
-                // TEST CRITIQUE : Est-ce un "Bloc Géant" (> 100vh) ou juste un "Reste qui ne rentre pas" ?
-                // Pour savoir, on teste sur une page vide théorique
-                // Astuce: Si la page actuelle est vide (pas d'enfants), c'est qu'il est géant
                 const isPageEmpty = pgnState.currentPageContent.children.length === 0;
 
                 if (!isPageEmpty) {
-                    // Cas A : La page n'est pas vide, le bloc ne rentre juste pas ici.
-                    // On change de page et on réessaie.
                     advancePage();
-                    // On remet l'élément en tête de file pour être re-traité sur la nouvelle page
                     pgnState.elementsQueue.unshift(element); 
                 } else {
-                    // Cas B : La page est vide ET ça déborde. C'est un BLOC GÉANT.
                     handleGiantBlock(element);
                 }
             }
         }
 
         function handleGiantBlock(element) {
-            // C'est ici qu'on applique la logique "Démembrement" ou "Scroll interne"
-            
-            // 1. Est-ce un élément atomique (img, table, video) ?
             const tagName = element.tagName.toLowerCase();
+            // Cas atomique : Scroll interne
             if (['img', 'table', 'video', 'iframe', 'svg'].includes(tagName) || element.classList.contains('atomic')) {
-                // Force le scroll interne
                 let node = element.cloneNode(true);
                 node.style.maxHeight = "100%";
                 node.style.overflowY = "auto";
-                node.style.display = "block"; // Assure que max-height fonctionne
-                
+                node.style.display = "block";
                 pgnState.currentPageContent.appendChild(node);
-                
-                // Si ça déborde encore (marges...), on force overflow hidden sur le parent momentanément ou on accepte le crop
-                // Mais avec max-height 100%, ça devrait aller.
-                
-                advancePage(); // L'élément a pris toute la page, on passe à la suivante
+                advancePage();
                 return;
             }
 
-            // 2. C'est un conteneur (div, section, ul, etc.) -> DÉMEMBREMENT
-            // On extrait les enfants et on les met en tête de file
+            // Cas conteneur : Démembrement
             const children = Array.from(element.children);
-            
             if (children.length > 0) {
-                // On injecte les enfants au début de la queue
-                // Attention : On perd le wrapper (la div parente).
-                // Si la div avait un style (ex: .card), on pourrait essayer de le recréer,
-                // mais pour garantir la visibilité, on priorise le contenu brut.
-                
-                // Optionnel : Si l'élément avait un titre, on peut essayer de garder une structure logique
-                // Mais ici on "aplatit" la structure.
                 for (let i = children.length - 1; i >= 0; i--) {
                     pgnState.elementsQueue.unshift(children[i]);
                 }
             } else {
-                // C'est un bloc de texte géant sans enfants HTML (ex: <p> avec 500 lignes)
-                // Cas rare mais possible. On le force en scroll interne.
+                // Texte géant seul
                 let node = element.cloneNode(true);
                 node.style.maxHeight = "100%";
                 node.style.overflowY = "auto";
@@ -540,12 +492,10 @@
         }
 
         function isOverflowing(container) {
-            // Tolérance de 2px pour les arrondis de navigateurs
             return container.scrollHeight > container.clientHeight + 2;
         }
 
-
-        // ===== EVENTS & UTILS =====
+        // ===== EVENTS =====
         function scrollToElement(id) {
             const cleanId = id.replace('section-', '');
             const target = document.getElementById(cleanId) || document.getElementById(id);
@@ -560,7 +510,6 @@
             document.getElementById('sidebarContainer').classList.toggle('closed', !sidebarOpen);
             document.getElementById('mainContainer').classList.toggle('sidebar-closed', !sidebarOpen);
             
-            // Recalcul après animation (nécessaire car la largeur change la hauteur du texte)
             if (!isMobile) {
                 setTimeout(() => { if(rawContentCache) paginateContent(rawContentCache); }, 350);
             }
