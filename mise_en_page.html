@@ -11,7 +11,6 @@
             --parchment: #f4ecd8;
             --dark-ink: #1c1917;
             --accent: #7c2d12;
-            --page-width: 210mm;
             --page-height: 297mm;
         }
 
@@ -220,11 +219,14 @@
             display: flex;
             gap: 0;
             min-height: calc(100vh - 40px);
+            width: 100%;
+            max-width: none;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
 
         .page {
-            width: var(--page-width);
+            width: 100%;
+            max-width: none;
             min-height: var(--page-height);
             background: #f4ecd8;
             background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
@@ -395,7 +397,6 @@
 
             .page {
                 width: 100%;
-                max-width: var(--page-width);
                 min-height: auto;
                 height: auto;
                 padding: 20px;
@@ -456,6 +457,7 @@
             display: none !important;
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
