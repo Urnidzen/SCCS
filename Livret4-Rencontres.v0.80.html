@@ -1,0 +1,106 @@
+<script type="application/json" id="doc-index">
+{
+    "id": "livret4",
+    "icon": "⚔️",
+    "title": "Livret 4",
+    "subtitle": "Rencontres",
+    "index": [
+        {"id": "responsabilite", "title": "Responsabilité du MJ", "level": 1},
+        {"id": "principes", "title": "Principes", "level": 2},
+        {"id": "identification", "title": "Dangerosité", "level": 1},
+        {"id": "chiffre", "title": "Chiffre (X) & Bonus (+)", "level": 2},
+        {"id": "comparaison", "title": "Règle de Comparaison", "level": 1},
+        {"id": "cas1", "title": "1. Ennemi > PJ", "level": 2},
+        {"id": "cas2", "title": "2. Ennemi = PJ", "level": 2},
+        {"id": "cas3", "title": "3. Ennemi < PJ", "level": 2}
+    ]
+}
+</script>
+
+<div class="content-section" id="section-responsabilite">
+    <h2>Note sur la Responsabilité du MJ</h2>
+    
+    <div class="content-card">
+        <p class="mb-4">Le Bestiaire n'est pas destiné à être utilisé de manière aléatoire ou automatique. Le MJ est le seul garant de l'équilibre, de la cohérence et du plaisir de jeu.</p>
+    </div>
+
+    <div class="rule-box" id="section-principes">
+        <h3>Principes</h3>
+        <ul class="dash-list space-y-4">
+            <li>
+                <strong>Cohérence et Réalisme:</strong> L'adaptation ne doit pas sacrifier la logique de l'univers. Le nombre et la force des adversaires doivent rester crédibles selon le contexte.
+            </li>
+            <li>
+                <strong>Cohérence des Groupements:</strong> Les créatures d'un même lieu doivent former un écosystème logique. Pas de cohabitation absurde (ours/araignées) sans justification narrative.
+            </li>
+            <li>
+                <strong>Arbitrage et Viabilité:</strong> Favoriser une difficulté qui permet de triompher, en surveillant l'état du groupe. L'aventure doit être viable, mais méritée.
+            </li>
+            <li>
+                <strong>Agence et Survie:</strong> Si une situation est logiquement "suicidaire", le MJ ne doit pas la corriger artificiellement. C'est aux joueurs de ruser ou fuir.
+            </li>
+            <li>
+                <strong>Interdiction de l'Aléatoire Pur:</strong> Une rencontre ne doit jamais être le fruit d'un simple "jet de dé" si cela menace la cohérence ou l'équilibre.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="content-section" id="section-identification">
+    <h2>Identification de la Dangerosité</h2>
+    
+    <div class="content-card">
+        <p class="mb-4">Chaque créature possède un score de Dangerosité affiché sous la forme <strong>X</strong> ou <strong>X+</strong> :</p>
+        
+        <ul class="dash-list space-y-4" id="section-chiffre">
+            <li>
+                <strong>Le Chiffre (X):</strong> Correspond au Score Total d'Attaque le plus élevé (Type + Cible). Détermine si la créature rivalise techniquement avec les PJ.
+            </li>
+            <li>
+                <strong>Les Bonus (+):</strong> Indique que la créature est plus dangereuse que son chiffre (Armure, Furtivité, etc.).
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="content-section" id="section-comparaison">
+    <h2>La Règle de Comparaison (Équilibrage)</h2>
+    
+    <div class="mb-4">
+        <p class="italic">Le MJ compare le <strong>Meilleur Score d'Attaque du Groupe PJ</strong> au <strong>Chiffre de Dangerosité</strong> de l'ennemi le plus fort.</p>
+    </div>
+
+    <div class="content-card" id="section-cas1" style="border-left: 4px solid #7f1d1d; background: rgba(127, 29, 29, 0.05);">
+        <h3 style="color: #7f1d1d;">1. Si Max Ennemi > Max PJ</h3>
+        <p class="font-bold mb-2">RENCONTRE MORTELLE (À Éviter).</p>
+        <p class="italic opacity-80">Exemple: 2 Novices (+1) contre 1 Araignée Colossale (Dangerosité 2).</p>
+    </div>
+
+    <div class="content-card" id="section-cas2" style="border-left: 4px solid #9a3412; background: rgba(154, 52, 18, 0.05);">
+        <h3 style="color: #9a3412;">2. Si Max Ennemi = Max PJ</h3>
+        <ul class="dash-list space-y-2 mt-2">
+            <li>
+                <strong>Groupe Adverse de Taille Égale:</strong> <span style="color: #7f1d1d;">MORTELLE (À Éviter).</span><br>
+                <span class="italic text-sm">Ex: 2 Novices (+1) vs 2 Bandits (Dang 1).</span>
+            </li>
+            <li>
+                <strong>Groupe Adverse de Taille Inférieure:</strong> <span style="color: #9a3412;">DANGEREUSE.</span><br>
+                <span class="italic text-sm">Ex: 2 Novices (+1) vs 1 Ours (Dang 1+).</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content-card" id="section-cas3" style="border-left: 4px solid #14532d; background: rgba(20, 83, 45, 0.05);">
+        <h3 style="color: #14532d;">3. Si Max Ennemi < Max PJ</h3>
+        <ul class="dash-list space-y-2 mt-2">
+            <li>
+                <strong>Groupe Adverse en Surnombre:</strong> <span style="color: #14532d;">ÉQUILIBRÉE.</span><br>
+                <span class="italic text-sm">Ex: 2 Novices (+1) vs 4 Rats (Dang 0).</span>
+            </li>
+            <li>
+                <strong>Autres cas (Taille Égale ou Inférieure):</strong> <span style="color: #14532d;">FACILE.</span><br>
+                <span class="italic text-sm">Ex: 2 Novices (+1) vs 2 Paysans (Dang 0).</span>
+            </li>
+        </ul>
+    </div>
+</div>
