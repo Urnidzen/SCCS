@@ -1,0 +1,229 @@
+<script type="application/json" id="doc-index">
+{
+    "id": "livret3",
+    "icon": "🛡️",
+    "title": "Livret 3",
+    "subtitle": "Équipement",
+    "index": [
+        {"id": "armures", "title": "A. Armures et Boucliers", "level": 1},
+        {"id": "armures-table", "title": "1. Tableau des Armures", "level": 2},
+        {"id": "boucliers-table", "title": "2. Tableau des Boucliers", "level": 2},
+        {"id": "regle-usure", "title": "3. Règle d'Usure", "level": 2},
+        {"id": "armes", "title": "B. Armes", "level": 1},
+        {"id": "armes-intro", "title": "Règles de Focalisation", "level": 2},
+        {"id": "armes-manufacturees", "title": "1. Armes manufacturées", "level": 2},
+        {"id": "armes-naturelles", "title": "2. Armes Naturelles", "level": 2},
+        {"id": "objets", "title": "C. Objets Magiques", "level": 1},
+        {"id": "principes", "title": "1. Principes de Création", "level": 2},
+        {"id": "consommables", "title": "2. Consommables", "level": 2},
+        {"id": "discretion", "title": "3. Discrétion et Assaut", "level": 2},
+        {"id": "prestige", "title": "4. Armurerie de Prestige", "level": 2},
+        {"id": "connaissance", "title": "5. Instruments", "level": 2}
+    ]
+}
+</script>
+
+<div class="content-section" id="section-armures">
+    <h2>A. Armures et Boucliers</h2>
+    <p class="mb-4 italic">Le port d'une armure confère une protection vitale (Résistance), mais impose des contraintes sur la mobilité et la perception du personnage.</p>
+    
+    <h3 id="section-armures-table">1. Tableau des Armures</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Type d'Armure</th>
+                <th>Durabilité</th>
+                <th>Bonus de Résistance</th>
+                <th>Malus (Conséquence Mécanique)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Légère sans casque (Cuirs)</strong></td>
+                <td style="text-align: center;">6</td>
+                <td>+1 (Tronc et Membres)</td>
+                <td>-1 Magie (si cible ennemie), -1 Acrobatie et Athlétisme.</td>
+            </tr>
+            <tr>
+                <td><strong>Moyenne sans casque (Mailles)</strong></td>
+                <td style="text-align: center;">8</td>
+                <td>+2 (Tronc et Membres)</td>
+                <td>-1 Magie (si cible ennemie), -1 Acrobatie, Athlétisme, Mécanique et Subtilité.</td>
+            </tr>
+            <tr>
+                <td><strong>Lourde sans casque (Plaques)</strong></td>
+                <td style="text-align: center;">10</td>
+                <td>+3 (Tronc et Membres)</td>
+                <td>-1 Magie (si cible ennemie), -1 Acrobatie, Athlétisme, Mécanique, Subtilité et Perception.</td>
+            </tr>
+            <tr>
+                <td><strong>Casque (Variable)</strong></td>
+                <td style="text-align: center;">= Type</td>
+                <td>= Type d'armure (tête)</td>
+                <td>-1 Perception et Acrobatie.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 id="section-boucliers-table">2. Tableau des Boucliers</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Équipement</th>
+                <th>Durabilité</th>
+                <th>Bonus</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Bouclier</strong></td>
+                <td style="text-align: center;">12</td>
+                <td>+1 Défense vs Direct (sauf dos si actif, ou vs dos si porté au dos).</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="rule-box" id="section-regle-usure">
+        <h4>3. Règle d'Usure (Durabilité)</h4>
+        <p class="mb-4">Lorsque le personnage subit une attaque, l'armure perd <strong>1 Point de Durabilité</strong> si elle est "nécessaire" pour éviter l'Impact (transformer une Supériorité en Égalité ou Défense).</p>
+        <p><strong>• Bris de l'armure :</strong> Si la Durabilité tombe à 0, l'armure est inutilisable et ne confère plus aucun bonus jusqu'à réparation.</p>
+    </div>
+</div>
+
+<div class="content-section" id="section-armes">
+    <h2>B. Armes</h2>
+    
+    <div class="content-card" id="section-armes-intro">
+        <h3>Règles de Focalisation Magique</h3>
+        <p>Lancer un sort requiert <strong>une main libre</strong> ET un <strong>catalyseur</strong> (arme manufacturée, objet ou focalisateur). Si le catalyseur n'est pas un focalisateur dédié, appliquez un <strong>Malus de -1</strong>.</p>
+    </div>
+
+    <h3 id="section-armes-manufacturees">1. Armes manufacturées et Objets</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th>Exemples</th>
+                <th>Contrainte / Avantage</th>
+                <th>Initiative</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Distance</strong></td>
+                <td>Arc, Arbalète</td>
+                <td>Encombrement / Munitions. Souvent 2 mains.</td>
+                <td>Prio 1 (libre) / Prio 7 (engagé)</td>
+            </tr>
+            <tr>
+                <td><strong>Focalisateur Magique</strong></td>
+                <td>Grimoire, Bâton</td>
+                <td>1 main objet + 1 main libre.</td>
+                <td>Prio 2 (libre) / Prio 8 (pression)</td>
+            </tr>
+            <tr>
+                <td><strong>Longue (2 mains)</strong></td>
+                <td>Lance, Épée 2M</td>
+                <td>Pas de bouclier actif.</td>
+                <td>Prio 4</td>
+            </tr>
+            <tr>
+                <td><strong>Moyenne (1 main)</strong></td>
+                <td>Épée, Hache</td>
+                <td>Permet usage bouclier.</td>
+                <td>Prio 5</td>
+            </tr>
+            <tr>
+                <td><strong>Courte</strong></td>
+                <td>Dague, Torche</td>
+                <td>Permet bouclier ou 2ème arme.</td>
+                <td>Prio 6</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 id="section-armes-naturelles">2. Armes Naturelles</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th>Exemples</th>
+                <th>Initiative</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Courte</strong></td>
+                <td>Poing, Pied, Saisie</td>
+                <td>Prio 6</td>
+            </tr>
+            <tr>
+                <td><strong>Variable</strong></td>
+                <td>Griffes, Queue (Monstres)</td>
+                <td>Selon taille du monstre</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="content-section" id="section-objets">
+    <h2>C. Objets Magiques</h2>
+    <p class="mb-4">Artefacts rares, matériaux légendaires et secrets de fabrication.</p>
+
+    <div class="content-card" id="section-principes">
+        <h3>1. Principes de Création</h3>
+        <ul class="dash-list space-y-2">
+            <li><strong>Bonus Limité:</strong> Max +1 à une stat ou un talent (sauf exceptionnels).</li>
+            <li><strong>Compétence:</strong> Nécessite un Talent approprié (Mécanique, Survie, etc.).</li>
+            <li><strong>Matériaux:</strong> Exige un composant rare (monstre ou minerai).</li>
+        </ul>
+    </div>
+
+    <div id="section-consommables">
+        <h3>2. Consommables et Reliques</h3>
+        <div class="content-card">
+            <h4>Sang d'Ogre Mage</h4>
+            <p><strong>Effet:</strong> Capacité permanente de lancer des sorts sans arme et sans malus de catalyseur.</p>
+            <p><strong>Création:</strong> Essence d'Ogre Mage (Savoir 1) + Rituel d'absorption.</p>
+        </div>
+    </div>
+
+    <div id="section-discretion">
+        <h3>3. Discrétion et Assaut</h3>
+        <div class="content-card">
+            <h4>Cape de soie d'araignée caméléon</h4>
+            <p><strong>Effet:</strong> +1 pour se cacher.</p>
+        </div>
+        <div class="content-card">
+            <h4>Épée ou Hache Lunaire</h4>
+            <p><strong>Effet:</strong> +1 Attaque Circulaire. (Métal: Fer Lunaire).</p>
+        </div>
+        <div class="content-card">
+            <h4>Lance Diamantine</h4>
+            <p><strong>Effet:</strong> +1 Attaque Directe. (Pointe dureté absolue).</p>
+        </div>
+    </div>
+
+    <div id="section-prestige">
+        <h3>4. Armurerie de Prestige</h3>
+        <div class="content-card">
+            <h4>Cotte de maille / Harnois Elfique (Mithril)</h4>
+            <p><strong>Effet:</strong> Aucun malus de magie ou de talents (Acrobatie, etc.).</p>
+        </div>
+        <div class="content-card">
+            <h4>Harnois Nain (Adamantite)</h4>
+            <p><strong>Effet:</strong> +1 Résistance (Total +4) et Durabilité 20.</p>
+            <p class="italic">Contrainte: Nécessite Athlétisme +1 minimum.</p>
+        </div>
+        <div class="content-card">
+            <h4>Armure d'écaille de Dragon</h4>
+            <p><strong>Effet:</strong> Protection d'un Harnois (+3) avec les malus légers d'un Cuir. Pas de malus magie.</p>
+        </div>
+    </div>
+
+    <div class="content-card" id="section-connaissance">
+        <h3>5. Instruments de Connaissance</h3>
+        <h4>Grimoire de l'Érudit</h4>
+        <p><strong>Effet:</strong> +1 en Savoir Académique.</p>
+    </div>
+</div>
