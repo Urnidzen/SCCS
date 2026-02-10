@@ -261,13 +261,13 @@
             column-gap: 40px;
             column-fill: auto;
             height: 100%;
-            width: 100%; /* Force le wrapper à prendre toute la largeur */
+            width: 100%;
         }
 
         .content-section {
             break-inside: avoid;
             margin-bottom: 2rem;
-            width: 100%; /* Force la section à prendre toute la largeur */
+            width: 100%;
         }
 
         .content-section h2 {
@@ -292,19 +292,16 @@
             margin-bottom: 1.5rem;
             border-radius: 4px;
             break-inside: avoid;
-            width: 100%; /* Force la carte à prendre toute la largeur de la colonne */
-            display: block; /* Assure le comportement bloc */
         }
 
         /* Styles spécifiques pour Livret 2 et contenu injecté */
         table {
-            width: 100%; /* Déjà présent mais confirmé ici */
+            width: 100%;
             border-collapse: collapse;
             margin: 1rem 0;
             background: rgba(255, 255, 255, 0.2);
             font-size: 0.9rem;
             break-inside: avoid;
-            display: table; /* Assure le comportement tableau */
         }
 
         th {
@@ -329,16 +326,36 @@
             padding: 1rem;
             margin: 1.5rem 0;
             break-inside: avoid;
-            width: 100%; /* Force à prendre toute la largeur */
-            display: block;
         }
 
-        /* Forcer tous les paragraphes et listes à occuper la largeur */
+        /* ===== CORRECTIONS POUR ÉTIRER LE CONTENU SUR TOUTE LA LARGEUR ===== */
+        /* Boîtes blanches et conteneurs : pleine largeur de la colonne */
+        .content-wrapper .content-card,
+        .content-wrapper .rule-box {
+            width: 100%;
+            max-width: none;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* Texte (paragraphes, listes, titres) : pleine largeur */
         .content-wrapper p,
         .content-wrapper ul,
-        .content-wrapper ol {
+        .content-wrapper ol,
+        .content-wrapper h2,
+        .content-wrapper h3 {
             width: 100%;
-            display: block;
+            max-width: none;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* Tableaux : taille naturelle, pas d'étirement excessif */
+        .content-wrapper table {
+            width: auto;
+            max-width: 100%;
+            margin-left: 0;
+            margin-right: auto;
         }
 
         /* Listes */
@@ -429,14 +446,6 @@
 
             .content-wrapper {
                 column-count: 1;
-                width: 100%;
-            }
-            
-            /* En mobile, on garde les 100% mais sans les colonnes */
-            .content-section,
-            .content-card,
-            .rule-box,
-            table {
                 width: 100%;
             }
         }
