@@ -1,859 +1,142 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCS - Livret 2 : Création & Évolution</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --parchment: #f4ecd8;
-            --dark-ink: #1c1917;
-            --accent: #7c2d12;
-            --highlight: #2c2520;
-            --page-width: 210mm;
-            --page-height: 297mm;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #2c2520;
-            background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
-            font-family: 'Cormorant Garamond', serif;
-            color: var(--dark-ink);
-            line-height: 1.6;
-            overflow: hidden;
-            height: 100vh;
-        }
-
-        h1, h2, h3, h4, .font-cinzel {
-            font-family: 'Cinzel', serif;
-            letter-spacing: 0.05em;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar-container {
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100vh;
-            z-index: 100;
-            display: flex;
-            transform: translateX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-container.closed {
-            transform: translateX(-320px);
-        }
-
-        .sidebar {
-            width: 320px;
-            height: 100%;
-            background: #f4ecd8;
-            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            border-right: 3px solid #1c1917;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.3);
-        }
-
-        /* ===== EXCROISSANCE ===== */
-        .tab-handle {
-            width: 40px;
-            height: 120px;
-            background: #7c2d12;
-            border-radius: 0 12px 12px 0;
-            align-self: center;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 3px 0 10px rgba(0,0,0,0.4);
-            transition: all 0.2s;
-            margin-left: -1px;
-        }
-
-        .tab-handle:hover {
-            background: #9a3b18;
-            width: 45px;
-        }
-
-        .tab-text {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            color: #f4ecd8;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
-            transform: rotate(180deg);
-        }
-
-        /* ===== SEARCH ===== */
-        .search-container {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(0,0,0,0.2);
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #1c1917;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.9);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #7c2d12;
-        }
-
-        /* ===== DOCUMENTS LIST ===== */
-        .doc-item {
-            margin-bottom: 8px;
-        }
-
-        .doc-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            background: rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .doc-header:hover {
-            background: rgba(124, 45, 18, 0.1);
-        }
-
-        .doc-header.active {
-            background: rgba(124, 45, 18, 0.2);
-            border-left: 4px solid #7c2d12;
-        }
-
-        .doc-icon {
-            font-size: 1.2rem;
-        }
-
-        .doc-title {
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .doc-subtitle {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 2px;
-        }
-
-        /* ===== INDEX / TOC ===== */
-        .doc-index {
-            margin-top: 8px;
-            margin-left: 10px;
-            padding-left: 15px;
-            border-left: 2px solid rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .doc-index.expanded {
-            display: block;
-        }
-
-        .index-item {
-            padding: 8px 10px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s;
-            margin-bottom: 4px;
-        }
-
-        .index-item:hover {
-            background: rgba(124, 45, 18, 0.1);
-            padding-left: 15px;
-        }
-
-        .index-item.level-2 {
-            padding-left: 20px;
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-
-        /* ===== MAIN CONTENT AREA ===== */
-        .main-container {
-            margin-left: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            gap: 20px;
-            transition: margin-left 0.3s;
-        }
-
-        .main-container.sidebar-open {
-            margin-left: 320px;
-        }
-
-        /* ===== PAGES ===== */
-        .book-spread {
-            display: flex;
-            gap: 20px;
-            height: calc(100vh - 40px);
-            max-width: calc(var(--page-width) * 2 + 60px);
-        }
-
-        .page {
-            width: var(--page-width);
-            height: var(--page-height);
-            max-height: calc(100vh - 40px);
-            background: #f4ecd8;
-            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            box-shadow: 0 0 20px rgba(0,0,0,0.4);
-            overflow-y: auto;
-            padding: 40px;
-            position: relative;
-        }
-
-        .page::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .page::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
-        }
-
-        .page::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.2);
-            border-radius: 4px;
-        }
-
-        /* Page shadow effect */
-        .page::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            box-shadow: inset 0 0 60px rgba(0,0,0,0.05);
-            pointer-events: none;
-        }
-
-        /* ===== CONTENT STYLES ===== */
-        .content-section {
-            margin-bottom: 2rem;
-        }
-
-        .content-section h2 {
-            font-size: 1.5rem;
-            border-bottom: 2px solid #1c1917;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .content-section h3 {
-            font-size: 1.2rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .content-card {
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: 4px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            background: rgba(255, 255, 255, 0.2);
-            font-size: 0.9rem;
-        }
-
-        th {
-            background: rgba(0,0,0,0.07);
-            text-align: left;
-            padding: 10px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            border: 1px solid rgba(0,0,0,0.2);
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 10px;
-            border: 1px solid rgba(0,0,0,0.1);
-            vertical-align: top;
-        }
-
-        .rule-box {
-            border-left: 4px solid #7c2d12;
-            background: rgba(124, 45, 18, 0.05);
-            padding: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        /* ===== MOBILE STYLES ===== */
-        @media (max-width: 1024px) {
-            .sidebar-container {
-                transform: translateX(-320px);
-            }
-
-            .sidebar-container.open {
-                transform: translateX(0);
-            }
-
-            .main-container {
-                margin-left: 0 !important;
-            }
-
-            .book-spread {
-                flex-direction: column;
-                align-items: center;
-                gap: 30px;
-                height: auto;
-                overflow-y: auto;
-                padding: 20px 0;
-            }
-
-            .page {
-                max-height: none;
-                height: auto;
-                min-height: var(--page-height);
-            }
-
-            .page:nth-child(2) {
-                display: none; /* Une seule page sur mobile */
-            }
-        }
-
-        /* ===== PRINT STYLES ===== */
-        @media print {
-            body {
-                background: white;
-            }
-
-            .sidebar-container,
-            .tab-handle {
-                display: none !important;
-            }
-
-            .main-container {
-                margin-left: 0 !important;
-            }
-
-            .book-spread {
-                display: block;
-            }
-
-            .page {
-                width: 210mm;
-                height: 297mm;
-                box-shadow: none;
-                page-break-after: always;
-                overflow: visible;
-            }
-
-            .page:nth-child(2) {
-                display: block !important;
-            }
-        }
-
-        /* ===== UTILITIES ===== */
-        .hidden-item {
-            display: none !important;
-        }
-
-        ul.dash-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        ul.dash-list > li::before {
-            content: "• ";
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        ol.decimal {
-            padding-left: 1.5rem;
-        }
-
-        .text-sm {
-            font-size: 0.875rem;
-        }
-
-        .italic {
-            font-style: italic;
-        }
-
-        .font-bold {
-            font-weight: 700;
-        }
-
-        .mb-4 {
-            margin-bottom: 1rem;
-        }
-
-        .mb-6 {
-            margin-bottom: 1.5rem;
-        }
-
-        .mt-4 {
-            margin-top: 1rem;
-        }
-
-        .pl-4 {
-            padding-left: 1rem;
-        }
-
-        .space-y-2 > * + * {
-            margin-top: 0.5rem;
-        }
-    </style>
-<base target="_blank">
-</head>
-<body>
-
-    <!-- SIDEBAR WITH TAB HANDLE -->
-    <div class="sidebar-container" id="sidebarContainer">
-        <div class="sidebar">
-            <!-- Search -->
-            <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher...">
-            </div>
-
-            <!-- Documents List -->
-            <div id="documentsList">
-                <!-- Documents will be populated by JS -->
-            </div>
-        </div>
-
-        <!-- Tab Handle -->
-        <div class="tab-handle" id="tabHandle">
-            <span class="tab-text">Documents & Index</span>
-        </div>
+<!-- LIVRET 2 - CRÉATION & ÉVOLUTION -->
+<!-- Index JSON pour navigation -->
+<script type="application/json" id="doc-index">
+{
+    "id": "livret2",
+    "icon": "📖",
+    "title": "Livret 2",
+    "subtitle": "Création & Évolution",
+    "index": [
+        {"id": "talents", "title": "1. Talents et Statistiques", "level": 1},
+        {"id": "talents-list", "title": "Les 7 Talents", "level": 2},
+        {"id": "valeurs", "title": "Valeurs des Statistiques", "level": 2},
+        {"id": "creation", "title": "2. Création de personnage", "level": 1},
+        {"id": "espece", "title": "Étape 1 : Espèce", "level": 2},
+        {"id": "genre", "title": "Étape 2 : Genre", "level": 2},
+        {"id": "nom", "title": "Étape 3 : Nom", "level": 2},
+        {"id": "apparence", "title": "Étape 4 : Apparence", "level": 2},
+        {"id": "depart", "title": "Étape 5 : Équipement", "level": 2},
+        {"id": "progression", "title": "3. Progression", "level": 1},
+        {"id": "pa", "title": "Points d'Amélioration", "level": 2},
+        {"id": "usage", "title": "Règle de l'Usage", "level": 2}
+    ]
+}
+</script>
+
+<!-- CONTENU HTML -->
+<div class="content-section" id="section-talents">
+    <h2>1. Talents et Statistiques de combat</h2>
+    
+    <div class="content-card" id="section-talents-list">
+        <h3>Les Talents</h3>
+        <ol class="decimal space-y-2">
+            <li><strong>Athlétisme:</strong> Force et endurance.</li>
+            <li><strong>Acrobatie:</strong> Équilibre et discrétion.</li>
+            <li><strong>Mécanique:</strong> Outils et ingénierie.</li>
+            <li><strong>Subtilité:</strong> Vol et manipulation fine.</li>
+            <li><strong>Perception:</strong> Sens et détection.</li>
+            <li><strong>Survie:</strong> Nature et pistage.</li>
+            <li><strong>Savoir Académique:</strong> Théorie et histoire.</li>
+        </ol>
+        <p class="italic mt-4" style="background: rgba(255,255,255,0.4); padding: 10px; border-left: 3px solid #1c1917;">
+            Chaque Talent à +1 permet de réussir automatiquement les épreuves faciles (Difficulté 0) et de tenter les épreuves ardues (Difficulté 1).
+        </p>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-container sidebar-open" id="mainContainer">
-        <div class="book-spread">
-            <!-- Left Page -->
-            <div class="page" id="pageLeft">
-                <div id="contentLeft"></div>
-            </div>
+    <h3 id="section-valeurs">Les Valeurs des Statistiques de combat</h3>
+    <p class="mb-4">Au nombre de 12 (6 attaques: 3 Types et 3 Cibles, et 6 protections), leur valeur représente vos aptitudes au combat:</p>
+    <ul class="dash-list space-y-2">
+        <li><strong>0 (Non-initié):</strong> Valeur par défaut.</li>
+        <li><strong>+1 (Initié):</strong> Entraînement de base.</li>
+        <li><strong>+2 (Expert):</strong> Aventurier expérimenté.</li>
+        <li><strong>+3 (Maître):</strong> Élite.</li>
+    </ul>
+</div>
 
-            <!-- Right Page -->
-            <div class="page" id="pageRight">
-                <div id="contentRight"></div>
-            </div>
-        </div>
+<div class="content-section" id="section-creation">
+    <h2>2. Création de personnage</h2>
+    
+    <h3 id="section-espece">Étape 1 : Choisissez une espèce</h3>
+    <p class="mb-4">Vous débutez en ayant hérité des facultés innées de vos ancêtres:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Race</th>
+                <th>Talents</th>
+                <th>Statistiques</th>
+                <th>Rôle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Elfe</strong></td>
+                <td>Acrobatie +1, Perception +1, Survie +1</td>
+                <td>2 au choix à +1</td>
+                <td>Furtif et fin limier</td>
+            </tr>
+            <tr>
+                <td><strong>Nain</strong></td>
+                <td>Athlétisme +1, Mécanique +1, Savoir +1</td>
+                <td>2 au choix à +1</td>
+                <td>Pilier et ingénieur</td>
+            </tr>
+            <tr>
+                <td><strong>Orque</strong></td>
+                <td>Athlétisme +1, Survie +1</td>
+                <td>Saisie +1 et 2 autres</td>
+                <td>Corps-à-corps résilient</td>
+            </tr>
+            <tr>
+                <td><strong>Humain</strong></td>
+                <td>2 au choix à +1</td>
+                <td>2 au choix à +1</td>
+                <td>Adaptable et polyvalent</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="content-card" id="section-genre">
+        <h4>Étape 2 : Déterminez son genre</h4>
+        <p>(féminin, masculin).</p>
     </div>
 
-    <script>
-        // ===== DOCUMENTS DATA =====
-        const documents = [
-            {
-                id: 'livret1',
-                icon: '⚙️',
-                title: 'Livret 1',
-                subtitle: 'Mécanismes',
-                file: 'Livret1-Mecanismes.v0.84.html',
-                index: [
-                    { id: 'intro', title: 'Introduction', level: 1 },
-                    { id: 'systeme', title: 'Système de jeu', level: 1 },
-                    { id: 'des', title: 'Les Dés', level: 2 },
-                    { id: 'difficulte', title: 'Difficultés', level: 2 }
-                ]
-            },
-            {
-                id: 'livret2',
-                icon: '📖',
-                title: 'Livret 2',
-                subtitle: 'Création & Évolution',
-                file: 'Livret2-Creation.v0.73.html',
-                active: true,
-                index: [
-                    { id: 'talents', title: '1. Talents et Statistiques', level: 1 },
-                    { id: 'talents-list', title: 'Les 7 Talents', level: 2 },
-                    { id: 'valeurs', title: 'Valeurs des Statistiques', level: 2 },
-                    { id: 'creation', title: '2. Création de personnage', level: 1 },
-                    { id: 'espece', title: 'Étape 1 : Espèce', level: 2 },
-                    { id: 'genre', title: 'Étape 2 : Genre', level: 2 },
-                    { id: 'nom', title: 'Étape 3 : Nom', level: 2 },
-                    { id: 'apparence', title: 'Étape 4 : Apparence', level: 2 },
-                    { id: 'depart', title: 'Étape 5 : Équipement', level: 2 },
-                    { id: 'progression', title: '3. Progression', level: 1 },
-                    { id: 'pa', title: "Points d'Amélioration", level: 2 },
-                    { id: 'usage', title: "Règle de l'Usage", level: 2 }
-                ]
-            },
-            {
-                id: 'livret3',
-                icon: '🛡️',
-                title: 'Livret 3',
-                subtitle: 'Équipement',
-                file: 'Livret3-Equipement.v0.77.html',
-                index: [
-                    { id: 'armes', title: 'Armes', level: 1 },
-                    { id: 'armures', title: 'Armures', level: 1 },
-                    { id: 'objets', title: 'Objets divers', level: 1 }
-                ]
-            },
-            {
-                id: 'livret4',
-                icon: '⚔️',
-                title: 'Livret 4',
-                subtitle: 'Rencontres',
-                file: 'Livret4-Rencontres.v0.79.html',
-                index: [
-                    { id: 'combat', title: 'Système de Combat', level: 1 },
-                    { id: 'initiative', title: 'Initiative', level: 2 },
-                    { id: 'tours', title: 'Déroulement des Tours', level: 2 }
-                ]
-            },
-            {
-                id: 'livret5',
-                icon: '🐾',
-                title: 'Livret 5',
-                subtitle: 'Bestiaire',
-                file: 'Livret5-Bestiaire.v0.79.html',
-                index: [
-                    { id: 'humanoïdes', title: 'Humanoïdes', level: 1 },
-                    { id: 'bêtes', title: 'Bêtes', level: 1 },
-                    { id: 'monstres', title: 'Monstres', level: 1 }
-                ]
-            },
-            {
-                id: 'fiche',
-                icon: '📝',
-                title: 'Fiche de Personnage',
-                subtitle: 'Interactive',
-                file: 'Fiche de personnage.v0.86.html',
-                index: [
-                    { id: 'infos', title: 'Informations', level: 1 },
-                    { id: 'stats', title: 'Statistiques', level: 1 },
-                    { id: 'equipement', title: 'Équipement', level: 1 }
-                ]
-            }
-        ];
+    <div class="content-card" id="section-nom">
+        <h4>Étape 3 : Donnez lui un Nom</h4>
+    </div>
 
-        // ===== CONTENT DATA (Livret 2) =====
-        const livret2Content = {
-            talents: `
-                <div class="content-section">
-                    <h2>1. Talents et Statistiques de combat</h2>
+    <div class="content-card" id="section-apparence">
+        <h4>Étape 4 : Décrivez son apparence</h4>
+        <p>Âge apparent, couleur des cheveux et des yeux, signes distinctifs.</p>
+    </div>
 
-                    <div class="content-card">
-                        <h3>Les Talents</h3>
-                        <ol class="decimal space-y-2">
-                            <li><strong>Athlétisme:</strong> Force et endurance.</li>
-                            <li><strong>Acrobatie:</strong> Équilibre et discrétion.</li>
-                            <li><strong>Mécanique:</strong> Outils et ingénierie.</li>
-                            <li><strong>Subtilité:</strong> Vol et manipulation fine.</li>
-                            <li><strong>Perception:</strong> Sens et détection.</li>
-                            <li><strong>Survie:</strong> Nature et pistage.</li>
-                            <li><strong>Savoir Académique:</strong> Théorie et histoire.</li>
-                        </ol>
-                        <p class="italic mt-4" style="background: rgba(255,255,255,0.4); padding: 10px; border-left: 3px solid #1c1917;">
-                            Chaque Talent à +1 permet de réussir automatiquement les épreuves faciles (Difficulté 0) et de tenter les épreuves ardues (Difficulté 1).
-                        </p>
-                    </div>
+    <div class="rule-box" id="section-depart">
+        <h4>Étape 5 : Équipement de Départ</h4>
+        <ol class="decimal space-y-2">
+            <li>Une arme au choix (Distance, Longue, Moyenne ou Courte).</li>
+            <li>Sans armure.</li>
+            <li>Autre: suivant accord du MJ.</li>
+        </ol>
+    </div>
+</div>
 
-                    <h3 id="valeurs-stat">Les Valeurs des Statistiques de combat</h3>
-                    <p class="mb-4">Au nombre de 12 (6 attaques: 3 Types et 3 Cibles, et 6 protections), leur valeur représente vos aptitudes au combat:</p>
-                    <ul class="dash-list space-y-2">
-                        <li><strong>0 (Non-initié):</strong> Valeur par défaut.</li>
-                        <li><strong>+1 (Initié):</strong> Entraînement de base.</li>
-                        <li><strong>+2 (Expert):</strong> Aventurier expérimenté.</li>
-                        <li><strong>+3 (Maître):</strong> Élite.</li>
-                    </ul>
-                </div>
-            `,
-            creation: `
-                <div class="content-section">
-                    <h2>2. Création de personnage</h2>
+<div class="content-section" id="section-progression">
+    <h2>3. Progression du Personnage</h2>
+    
+    <div class="content-card" id="section-pa">
+        <h3>Gain de Points d'Amélioration (PA)</h3>
+        <p class="mb-4">À la fin de chaque séance significative, le joueur gagne <strong>1 PA</strong>.</p>
 
-                    <h3>Étape 1 : Choisissez une espèce</h3>
-                    <p class="mb-4">Vous débutez en ayant hérité des facultés innées de vos ancêtres:</p>
+        <h3>Dépense des PA</h3>
+        <ul class="dash-list space-y-2">
+            <li><strong>Statistiques de Combat:</strong> Coût = Niveau cible (ex: +1 → +2 coûte 2 PA).</li>
+            <li><strong>Talents d'Exploration:</strong> Acquérir un nouveau Talent (0 → +1) coûte 1 PA.</li>
+        </ul>
+        <p class="italic text-sm mt-4">Note: Un talent ne peut pas dépasser +1.</p>
+    </div>
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Race</th>
-                                <th>Talents</th>
-                                <th>Statistiques</th>
-                                <th>Rôle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Elfe</strong></td>
-                                <td>Acrobatie +1, Perception +1, Survie +1</td>
-                                <td>2 au choix à +1</td>
-                                <td>Furtif et fin limier</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Nain</strong></td>
-                                <td>Athlétisme +1, Mécanique +1, Savoir +1</td>
-                                <td>2 au choix à +1</td>
-                                <td>Pilier et ingénieur</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Orque</strong></td>
-                                <td>Athlétisme +1, Survie +1</td>
-                                <td>Saisie +1 et 2 autres</td>
-                                <td>Corps-à-corps résilient</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Humain</strong></td>
-                                <td>2 au choix à +1</td>
-                                <td>2 au choix à +1</td>
-                                <td>Adaptable et polyvalent</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="content-card">
-                        <h4>Étape 2 : Déterminez son genre</h4>
-                        <p>(féminin, masculin).</p>
-                    </div>
-
-                    <div class="content-card">
-                        <h4>Étape 3 : Donnez lui un Nom</h4>
-                    </div>
-
-                    <div class="content-card">
-                        <h4>Étape 4 : Décrivez son apparence</h4>
-                        <p>Âge apparent, couleur des cheveux et des yeux, signes distinctifs.</p>
-                    </div>
-
-                    <div class="rule-box">
-                        <h4>Étape 5 : Équipement de Départ</h4>
-                        <ol class="decimal space-y-2">
-                            <li>Une arme au choix (Distance, Longue, Moyenne ou Courte).</li>
-                            <li>Sans armure.</li>
-                            <li>Autre: suivant accord du MJ.</li>
-                        </ol>
-                    </div>
-                </div>
-            `,
-            progression: `
-                <div class="content-section">
-                    <h2>3. Progression du Personnage</h2>
-
-                    <div class="content-card">
-                        <h3>Gain de Points d'Amélioration (PA)</h3>
-                        <p class="mb-4">À la fin de chaque séance significative, le joueur gagne <strong>1 PA</strong>.</p>
-
-                        <h3>Dépense des PA</h3>
-                        <ul class="dash-list space-y-2">
-                            <li><strong>Statistiques de Combat:</strong> Coût = Niveau cible (ex: +1 → +2 coûte 2 PA).</li>
-                            <li><strong>Talents d'Exploration:</strong> Acquérir un nouveau Talent (0 → +1) coûte 1 PA.</li>
-                        </ul>
-                        <p class="italic text-sm mt-4">Note: Un talent ne peut pas dépasser +1.</p>
-                    </div>
-
-                    <div class="rule-box">
-                        <h3>Règle de l'Usage</h3>
-                        <p>L'amélioration doit être justifiée soit par une pratique marquante lors de la séance précédente, soit par un mentorat durant un temps mort.</p>
-                    </div>
-                </div>
-            `
-        };
-
-        // ===== STATE =====
-        let currentDoc = 'livret2';
-        let sidebarOpen = true;
-
-        // ===== INITIALIZATION =====
-        function init() {
-            renderDocumentsList();
-            loadDocument('livret2');
-            setupEventListeners();
-            checkMobile();
-        }
-
-        // ===== RENDER DOCUMENTS LIST =====
-        function renderDocumentsList() {
-            const container = document.getElementById('documentsList');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-            container.innerHTML = documents.map(doc => {
-                const isActive = doc.id === currentDoc;
-                const matchesSearch = !searchTerm || 
-                    doc.title.toLowerCase().includes(searchTerm) || 
-                    doc.subtitle.toLowerCase().includes(searchTerm) ||
-                    doc.index.some(item => item.title.toLowerCase().includes(searchTerm));
-
-                if (!matchesSearch) return '';
-
-                return `
-                    <div class="doc-item" data-id="${doc.id}">
-                        <div class="doc-header ${isActive ? 'active' : ''}" onclick="selectDocument('${doc.id}')">
-                            <span class="doc-icon">${doc.icon}</span>
-                            <div>
-                                <div class="doc-title">${doc.title}</div>
-                                <div class="doc-subtitle">${doc.subtitle}</div>
-                            </div>
-                        </div>
-                        <div class="doc-index ${isActive ? 'expanded' : ''}" id="index-${doc.id}">
-                            ${doc.index.map(item => `
-                                <div class="index-item level-${item.level}" onclick="scrollToSection('${item.id}')">
-                                    ${item.title}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ===== SELECT DOCUMENT =====
-        function selectDocument(docId) {
-            currentDoc = docId;
-            renderDocumentsList();
-            loadDocument(docId);
-        }
-
-        // ===== LOAD DOCUMENT CONTENT =====
-        function loadDocument(docId) {
-            // For now, only Livret 2 has full content
-            if (docId === 'livret2') {
-                const allContent = livret2Content.talents + livret2Content.creation + livret2Content.progression;
-                splitContentAcrossPages(allContent);
-            } else {
-                // Placeholder for other documents
-                const placeholder = `
-                    <div class="content-section">
-                        <h2>${documents.find(d => d.id === docId).title}</h2>
-                        <p class="italic">Chargement du contenu...</p>
-                        <p>Ce document sera chargé depuis: ${documents.find(d => d.id === docId).file}</p>
-                    </div>
-                `;
-                document.getElementById('contentLeft').innerHTML = placeholder;
-                document.getElementById('contentRight').innerHTML = '';
-            }
-        }
-
-        // ===== SPLIT CONTENT ACROSS PAGES =====
-        function splitContentAcrossPages(htmlContent) {
-            // Simple split: put first half on left, second half on right
-            // In a real implementation, this would measure actual height
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = htmlContent;
-            tempDiv.style.position = 'absolute';
-            tempDiv.style.visibility = 'hidden';
-            tempDiv.style.width = '210mm';
-            document.body.appendChild(tempDiv);
-
-            const sections = Array.from(tempDiv.children);
-            const midPoint = Math.ceil(sections.length / 2);
-
-            const leftContent = sections.slice(0, midPoint).map(s => s.outerHTML).join('');
-            const rightContent = sections.slice(midPoint).map(s => s.outerHTML).join('');
-
-            document.getElementById('contentLeft').innerHTML = leftContent;
-            document.getElementById('contentRight').innerHTML = rightContent || '<div style="height: 50px;"></div>';
-
-            document.body.removeChild(tempDiv);
-        }
-
-        // ===== SCROLL TO SECTION =====
-        function scrollToSection(sectionId) {
-            const element = document.getElementById(sectionId) || 
-                           document.querySelector(`[id="${sectionId}"]`);
-            if (element) {
-                // Determine which page contains this section
-                const leftPage = document.getElementById('pageLeft');
-                const rightPage = document.getElementById('pageRight');
-
-                if (leftPage.contains(element)) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else if (rightPage.contains(element)) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-
-            // On mobile, close sidebar after selection
-            if (window.innerWidth <= 1024) {
-                toggleSidebar();
-            }
-        }
-
-        // ===== TOGGLE SIDEBAR =====
-        function toggleSidebar() {
-            sidebarOpen = !sidebarOpen;
-            const container = document.getElementById('sidebarContainer');
-            const main = document.getElementById('mainContainer');
-
-            if (sidebarOpen) {
-                container.classList.remove('closed');
-                container.classList.add('open');
-                main.classList.add('sidebar-open');
-            } else {
-                container.classList.add('closed');
-                container.classList.remove('open');
-                main.classList.remove('sidebar-open');
-            }
-        }
-
-        // ===== CHECK MOBILE =====
-        function checkMobile() {
-            if (window.innerWidth <= 1024) {
-                sidebarOpen = false;
-                document.getElementById('sidebarContainer').classList.add('closed');
-                document.getElementById('mainContainer').classList.remove('sidebar-open');
-            }
-        }
-
-        // ===== EVENT LISTENERS =====
-        function setupEventListeners() {
-            // Tab handle click
-            document.getElementById('tabHandle').addEventListener('click', toggleSidebar);
-
-            // Search input
-            document.getElementById('searchInput').addEventListener('input', renderDocumentsList);
-
-            // Window resize
-            window.addEventListener('resize', () => {
-                if (window.innerWidth > 1024 && !sidebarOpen) {
-                    sidebarOpen = true;
-                    document.getElementById('sidebarContainer').classList.remove('closed');
-                    document.getElementById('mainContainer').classList.add('sidebar-open');
-                } else if (window.innerWidth <= 1024 && sidebarOpen) {
-                    toggleSidebar();
-                }
-            });
-
-            // Click outside to close on mobile
-            document.getElementById('mainContainer').addEventListener('click', (e) => {
-                if (window.innerWidth <= 1024 && sidebarOpen) {
-                    toggleSidebar();
-                }
-            });
-        }
-
-        // ===== START =====
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+    <div class="rule-box" id="section-usage">
+        <h3>Règle de l'Usage</h3>
+        <p>L'amélioration doit être justifiée soit par une pratique marquante lors de la séance précédente, soit par un mentorat durant un temps mort.</p>
+    </div>
+</div>
