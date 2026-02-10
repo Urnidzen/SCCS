@@ -225,8 +225,9 @@
         }
 
         .page {
-            width: 100%;
-            max-width: none;
+            flex: 1;              /* Chaque page prend 50% de l'espace disponible */
+            width: auto;          /* Supprime la contrainte de largeur fixe */
+            max-width: none;      /* Supprime toute limitation max-width */
             min-height: var(--page-height);
             background: #f4ecd8;
             background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
