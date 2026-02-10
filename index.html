@@ -298,6 +298,10 @@
 
         /* ===== AJOUT SPÉCIFIQUE IMPRESSION ===== */
         @media print {
+            @page {
+               margin: 0;
+            }
+            
             /* 1. Réinitialisation structurelle */
             html, body, .main-container, .book-spreads-wrapper {
                 height: auto !important;
@@ -333,7 +337,7 @@
                 height: auto !important;
                 /* C'est ICI le correctif : on force une hauteur minimale d'une page complète */
                 /* Cela empêche le contenu suivant de remonter sur la même feuille */
-                min-height: 99vh !important; 
+                min-height: 100vh !important; 
                 width: 100% !important;
                 display: block !important;
                 border: none !important;
