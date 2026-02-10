@@ -19,7 +19,6 @@
             background-color: transparent; 
             font-family: 'Cormorant Garamond', serif;
             color: #000000;
-            /* La hauteur n'est plus fixée à 100vh pour laisser le contenu couler naturellement */
             overflow: visible; 
         }
 
@@ -33,14 +32,20 @@
             background-blend-mode: multiply;
             position: relative; 
             overflow: hidden; 
-            margin: 0 auto; /* Centrage */
+            
+            /* CENTRAGE ET ORIGINE DU ZOOM */
+            margin: 0 auto; 
+            transform-origin: top center; /* Le zoom part du haut vers le bas */
+            transition: transform 0.1s ease-out; /* Fluidité légère */
         }
 
         .layout-wrapper {
             width: 100%;
+            /* On laisse le JS gérer la hauteur via le zoom */
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            overflow: hidden; /* Important pour cacher ce qui dépasserait avant le calcul */
         }
 
         /* --- STYLES INTERNES --- */
@@ -61,7 +66,6 @@
         .btn-action:hover { opacity: 1; }
         .btn-reset:hover { color: #ea580c; }
         .btn-export:hover { color: #2563eb; }
-        /* Nouveau bouton print interne */
         .btn-print:hover { color: #1e293b; } 
 
         .stat-digit {
@@ -128,16 +132,29 @@
             filter: sepia(0.2) contrast(1.1) brightness(0.9); mix-blend-mode: multiply;
         }
 
-        /* Cacher les boutons à l'impression */
+        /* CONFIGURATION IMPRESSION : Rétablir la vérité */
         @media print {
             .header-actions { display: none !important; }
+            
+            /* On annule tout zoom à l'impression */
+            .sheet-container {
+                transform: none !important;
+                margin: 0 !important;
+                width: 794px !important;
+                height: 1123px !important;
+                page-break-after: always;
+            }
+            .layout-wrapper {
+                height: auto !important;
+                display: block !important;
+            }
         }
     </style>
 </head>
 <body class="font-body text-black">
 
     <div class="layout-wrapper">
-        <div class="sheet-container">
+        <div class="sheet-container zoom-target">
             <input type="file" data-id="file-upload" style="display:none" accept=".json">
 
             <table style="width: 100%;">
@@ -437,27 +454,16 @@
 
     <script>
     (function() {
-        // 1. Récupération de la "racine" de la fiche (le wrapper créé par index.html)
-        // document.currentScript désigne CE script en cours d'exécution.
-        // On remonte au wrapper .sheet-wrapper-direct qui contient ce script.
         const root = document.currentScript.closest('.sheet-wrapper-direct');
-        
-        // Sécurité : si on ouvre le fichier seul (pas via index.html), root est null.
-        if (!root) {
-            console.warn("Fiche ouverte hors du Codex ou erreur de contexte.");
-            // Fallback pour dev : on prend le body comme root
-        }
+        if (!root) console.warn("Fiche ouverte hors du Codex ou erreur de contexte.");
         const context = root || document.body;
 
-        // Fonction "Helper" pour remplacer document.getElementById
-        // Elle cherche uniquement DANS la fiche actuelle
         const find = (id) => context.querySelector(`[data-id="${id}"]`);
+        const findClass = (cls) => context.querySelector(`.${cls}`);
         const findAll = (selector) => context.querySelectorAll(selector);
 
-        // Récupération de l'UID (stocké dans le wrapper par index.html)
         const currentUid = root ? root.getAttribute('data-uid') : null;
 
-        // Configuration visuelle (identique)
         const CUSTOM_PORTRAITS_URLS = {
             "HUMAIN_MASCULIN": "portraits/portrait_homme_humain.png",
             "HUMAIN_FÉMININ": "portraits/portrait_femme_humain.png",
@@ -477,11 +483,52 @@
             }
         };
 
-        // --- INIT ---
+        // --- FONCTION DE ZOOM INTELLIGENT ---
+        function adjustZoom() {
+            // 1. Trouver la fiche et son conteneur parent
+            const sheet = findClass('zoom-target');
+            if (!sheet || !root) return;
+
+            // Si on est en train d'imprimer (media print), on annule le zoom manuellement (sécurité)
+            if (window.matchMedia('print').matches) {
+                sheet.style.transform = 'none';
+                root.style.height = 'auto';
+                return;
+            }
+
+            // 2. Mesurer l'espace disponible (Le parent injecté par index.html)
+            // On retire un peu de marge (ex: 20px) pour l'esthétique
+            const availableW = root.clientWidth; 
+            const availableH = window.innerHeight; // On utilise la hauteur écran pour que ça rentre sans scroll
+
+            // 3. Dimensions cibles (A4 fixe)
+            const targetW = 794;
+            const targetH = 1123;
+
+            // 4. Calcul du ratio (Le plus petit des deux pour que tout rentre)
+            // On ajoute une marge de sécurité (0.95) pour ne pas coller aux bords
+            const scaleW = availableW / targetW;
+            const scaleH = availableH / targetH;
+            const scale = Math.min(scaleW, scaleH) * 0.95;
+
+            // 5. Application du zoom
+            sheet.style.transform = `scale(${scale})`;
+
+            // 6. Ajustement de la hauteur du conteneur parent
+            // Comme le "scale" réduit visuellement la fiche mais garde la place d'origine dans le DOM,
+            // il faut réduire artificiellement la hauteur du conteneur pour supprimer le vide en bas.
+            const newHeight = targetH * scale;
+            root.style.height = Math.floor(newHeight + 50) + 'px'; // +50px pour un peu d'air en bas
+            
+            // Centrage vertical si nécessaire (Optionnel)
+            // root.style.display = 'flex';
+            // root.style.flexDirection = 'column';
+            // root.style.justifyContent = 'center';
+        }
+
         function init() {
             initWeaponSelect();
             
-            // Écouteurs d'événements (Scope local)
             const raceSel = find('race-select');
             if(raceSel) raceSel.onchange = () => { updateRace(); updatePortrait(); };
             
@@ -491,28 +538,28 @@
             const nameInput = find('char-name');
             if(nameInput) nameInput.oninput = (e) => updateProfileName(e.target.value);
 
-            // Boutons d'action
             const btnReset = context.querySelector('[data-action="reset"]');
             if(btnReset) btnReset.onclick = resetSheet;
 
             const btnExport = context.querySelector('[data-action="export"]');
             if(btnExport) btnExport.onclick = exportSingleJSON;
 
-            // Chargement des données
             if (currentUid && typeof SCCS_Registre !== 'undefined') {
                 loadFromRegistry(currentUid);
                 setupAutoSave();
             }
+
+            // Lancer le zoom au démarrage et à chaque redimensionnement
+            adjustZoom();
+            window.addEventListener('resize', adjustZoom);
         }
 
-        // --- CHARGEMENT ---
         function loadFromRegistry(uid) {
             const profile = SCCS_Registre.getProfile(uid);
             if (!profile) return;
 
             const data = profile.content || {};
             
-            // Remplissage des champs
             findAll('input, textarea').forEach(el => { el.value = ''; });
             findAll('select').forEach(el => el.selectedIndex = 0);
             findAll('input[type=number]').forEach(el => el.value = '0');
@@ -520,11 +567,10 @@
             if(find('weapon-select-1')) find('weapon-select-1').value = "Main Libre";
             if(find('weapon-select-2')) find('weapon-select-2').value = "Main Libre";
 
-            // Injection des données
             Object.keys(data).forEach(key => {
                 if (key.startsWith('__clean_input_')) {
                     const idx = parseInt(key.replace('__clean_input_', ''));
-                    const els = findAll('.clean-input:not([data-id])'); // Modifié pour exclure ceux avec data-id
+                    const els = findAll('.clean-input:not([data-id])');
                     if (els[idx]) els[idx].value = data[key];
                 } 
                 else if (key.startsWith('__area_')) {
@@ -533,7 +579,7 @@
                     if (els[idx]) els[idx].value = data[key];
                 }
                 else {
-                    const el = find(key); // Utilise notre helper find()
+                    const el = find(key);
                     if (el) {
                         if (el.type === 'checkbox') el.checked = data[key];
                         else el.value = data[key];
@@ -564,14 +610,12 @@
             if (!currentUid || typeof SCCS_Registre === 'undefined') return;
 
             const data = {};
-            // Collecte des IDs via data-id
             findAll('input[data-id], select[data-id], textarea[data-id]').forEach(el => {
                 const id = el.getAttribute('data-id');
                 if(el.type === 'checkbox') data[id] = el.checked;
                 else data[id] = el.value;
             });
             
-            // Collecte des champs sans IDs
             findAll('.clean-input:not([data-id])').forEach((el, index) => {
                 data[`__clean_input_${index}`] = el.value;
             });
@@ -617,7 +661,6 @@
             document.body.removeChild(a);
         }
 
-        // --- RÈGLES ---
         const WEAPONS_DATA = {
             "Distance": { label: "Armes à Distance", stats: { init: "1/7", magie: -1 }, items: ["Arc", "Arbalète", "Fronde"] },
             "Focalisateur": { label: "Focalisateurs", stats: { init: "6", magie: 0 }, items: ["Grimoire", "Chapelet", "Bâton"] },
@@ -671,19 +714,12 @@
                     select.appendChild(group);
                 }
                 select.value = "Main Libre";
-                
-                // Add change listener locally
                 select.onchange = updateUI;
-                
-                // Add offhand listener
                 const off = find(`offhand-select-${index}`);
                 if(off) off.onchange = updateUI;
             });
-            
-            // Armor listener
             const arm = find('armor-select');
             if(arm) arm.onchange = updateUI;
-            
             updateUI();
         }
 
@@ -767,10 +803,6 @@
             updateUI();
         }
 
-        // Nous devons attacher toggleTalent au scope global de la fiche, mais onclick="toggleTalent()" dans le HTML cherchera dans Window.
-        // Solution : On crée les lignes de talent dynamiquement, on peut attacher l'event listener directement au DOM element.
-        // Voir fonction updateUI ci-dessous.
-
         function updateUI() {
             [1, 2].forEach(index => {
                 const weaponSelect = find(`weapon-select-${index}`);
@@ -778,7 +810,6 @@
                 const initLabel = find(`init-label-${index}`);
                 
                 if (weaponSelect && offhandSelect) {
-                    // Update offhand si focus (simulation simple)
                     if (document.activeElement === weaponSelect) updateOffhandOptions(index);
                     
                     const weaponName = weaponSelect.value;
@@ -856,9 +887,7 @@
 
                 const container = find('talents-container');
                 if (container) {
-                    // On vide et on reconstruit proprement avec des createElement pour attacher les events
                     container.innerHTML = '';
-                    
                     const table = document.createElement('table');
                     table.style.cssText = "width:100%; border-collapse:collapse; table-layout:fixed;";
                     table.innerHTML = `
@@ -904,9 +933,7 @@
             }
         }
 
-        // Démarrage immédiat
         init();
-
     })();
     </script>
 </body>
