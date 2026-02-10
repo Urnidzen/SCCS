@@ -92,7 +92,8 @@
             min-width: 30px !important;
             max-width: 30px !important;
             height: 30px !important;
-            background: transparent !important; 
+            background: transparent !important;
+            background-color: transparent !important;
             border: none !important; 
             outline: none !important;
             text-align: center !important; 
@@ -105,6 +106,16 @@
             vertical-align: middle !important;
             display: block !important;
             box-sizing: border-box !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: textfield !important;
+            appearance: none !important;
+        }
+        
+        /* Suppression des flèches spinner sur Chrome/Safari */
+        .clean-input::-webkit-outer-spin-button,
+        .clean-input::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
         }
         
         .identity-select, .identity-input {
