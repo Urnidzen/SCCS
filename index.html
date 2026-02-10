@@ -28,76 +28,101 @@
             line-height: 1.6;
         }
 
-        /* ===== CONTENEUR PRINCIPAL (SNAP) ===== */
+        /* ===== CONTENEUR PRINCIPAL AVEC SNAP VERTICAL ===== */
         .main-container {
             margin-left: 320px;
             height: 100vh;
             overflow-y: scroll;
-            scroll-snap-type: y mandatory; /* Force l'arrêt pile sur un livre */
+            scroll-snap-type: y mandatory; /* Verrouille le défilement sur chaque double-page */
             transition: margin-left 0.3s;
             scroll-behavior: smooth;
         }
 
         .main-container.sidebar-closed { margin-left: 0; }
 
-        /* ===== CHAQUE DOUBLE-PAGE (OU PAGE UNIQUE MOBILE) ===== */
+        /* ===== STRUCTURE DU LIVRE (DOUBLE-PAGE) ===== */
         .book-spread {
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            scroll-snap-align: start; /* Aimante le bloc au haut de l'écran */
-            box-sizing: border-box;
+            scroll-snap-align: start; /* Aimante le haut du livre au haut de l'écran */
         }
 
         .book-inner {
             display: flex;
             width: 100%;
-            max-width: 1200px;
-            height: 90vh; /* Laisse un peu de marge visuelle */
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            max-width: 1300px;
+            height: 92vh;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
             background: var(--parchment);
             background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            border: 1px solid rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.3);
             position: relative;
+            border-radius: 4px;
         }
 
         .page {
             flex: 1;
-            padding: 40px 50px;
-            overflow: hidden; /* Nécessaire pour que le JS calcule le débordement */
+            padding: 50px 60px 100px 60px; /* Padding généreux en bas pour footer */
+            overflow: hidden; /* Crucial pour le calcul de pagination JS */
             position: relative;
         }
 
-        /* Effet de reliure centrale */
+        /* Effets de pliure centrale */
         .page-left { 
-            border-right: 1px solid rgba(0,0,0,0.1); 
-            box-shadow: inset -15px 0 30px rgba(0,0,0,0.05); 
+            border-right: 1px solid rgba(0,0,0,0.15); 
+            box-shadow: inset -20px 0 40px rgba(0,0,0,0.05); 
         }
         .page-right { 
-            box-shadow: inset 15px 0 30px rgba(0,0,0,0.05); 
+            box-shadow: inset 20px 0 40px rgba(0,0,0,0.05); 
         }
 
-        /* Typographie du contenu */
-        h1, h2, h3 { font-family: 'Cinzel', serif; margin-bottom: 1.2rem; color: var(--accent); border-bottom: 1px solid rgba(0,0,0,0.1); }
-        p { margin-bottom: 1rem; text-align: justify; font-size: 1.1rem; }
-        .rule-box { border-left: 4px solid var(--accent); background: rgba(124, 45, 18, 0.05); padding: 1rem; margin: 1rem 0; }
+        /* ===== FOOTER & COPYRIGHT ===== */
+        .page-footer {
+            position: absolute;
+            bottom: 35px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: bold;
+            opacity: 0.6;
+            color: var(--accent);
+        }
+
+        .copyright-notice {
+            position: absolute;
+            bottom: 12px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.7rem;
+            font-family: 'Cormorant Garamond', serif;
+            opacity: 0.5;
+            letter-spacing: 0.02em;
+        }
+
+        /* Contenu typographique */
+        h1, h2, h3 { font-family: 'Cinzel', serif; margin-bottom: 1.5rem; color: var(--accent); border-bottom: 1px solid rgba(124, 45, 18, 0.2); }
+        p { margin-bottom: 1.2rem; text-align: justify; font-size: 1.15rem; }
+        .rule-box { border-left: 4px solid var(--accent); background: rgba(124, 45, 18, 0.04); padding: 1.2rem; margin: 1.5rem 0; font-style: italic; }
 
         /* ===== SIDEBAR ===== */
         .sidebar-container { position: fixed; left: 0; top: 0; height: 100vh; z-index: 100; display: flex; transform: translateX(0); transition: transform 0.3s ease; }
         .sidebar-container.closed { transform: translateX(-320px); }
-        .sidebar { width: 320px; height: 100%; background: #f4ecd8; background-image: url("https://www.transparenttextures.com/patterns/parchment.png"); border-right: 3px solid #1c1917; overflow-y: auto; padding: 20px; }
-        .tab-handle { width: 40px; height: 100px; background: #f5f5f0; border: 2px solid #1c1917; border-left: none; border-radius: 0 12px 12px 0; align-self: center; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: -2px; box-shadow: 5px 0 10px rgba(0,0,0,0.3); }
-        .tab-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 700; }
+        .sidebar { width: 320px; height: 100%; background: #f4ecd8; border-right: 3px solid #1c1917; overflow-y: auto; padding: 25px; box-shadow: 10px 0 20px rgba(0,0,0,0.2); }
+        .tab-handle { width: 45px; height: 110px; background: #f5f5f0; border: 2px solid #1c1917; border-left: none; border-radius: 0 12px 12px 0; align-self: center; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: -2px; }
+        .tab-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'Cinzel', serif; font-size: 0.75rem; font-weight: 700; color: #1c1917; }
 
+        /* ===== RESPONSIVE MOBILE ===== */
         @media (max-width: 1024px) {
             .sidebar-container { transform: translateX(-320px); }
-            .sidebar-container.open { transform: translateX(0); }
             .main-container { margin-left: 0 !important; }
-            .book-inner { flex-direction: column; height: 95vh; }
-            .page-right { display: none; } /* On ne garde qu'une page par bloc de snap sur mobile */
-            .page { padding: 30px; }
+            .book-inner { flex-direction: column; height: 96vh; }
+            .page-right { display: none; } /* On affiche une seule page à la fois sur mobile */
+            .page { padding: 30px 30px 80px 30px; }
         }
     </style>
 </head>
@@ -106,131 +131,142 @@
     <div class="sidebar-container" id="sidebarContainer">
         <div class="sidebar">
             <div class="mb-6 border-b-2 border-black pb-4">
+                <h2 class="font-cinzel text-xl mb-4 text-center">Codex SCCS</h2>
                 <input type="text" id="searchInput" class="w-full p-2 border border-black rounded bg-white/50" placeholder="Rechercher...">
             </div>
             <div id="documentsList"></div>
         </div>
-        <div class="tab-handle" id="tabHandle">
-            <span class="tab-text">INDEX DU CODEX</span>
-        </div>
+        <div class="tab-handle" id="tabHandle"><span class="tab-text">SOMMAIRE</span></div>
     </div>
 
     <div class="main-container" id="mainContainer">
         </div>
 
     <script>
+        // Configuration des documents
         const documents = [
-            { id: 'intro', file: 'introduction.v0.01.html', icon: '📜', title: 'Introduction', subtitle: 'Bienvenue' },
-            { id: 'livret1', file: 'Livret1-Mecanismes.v0.85.html', icon: '⚙️', title: 'Livret 1', subtitle: 'Mécanismes' },
-            { id: 'livret2', file: 'Livret2-Creation.v0.74.html', icon: '📖', title: 'Livret 2', subtitle: 'Création' }
+            { id: 'intro', file: 'introduction.v0.01.html', icon: '📜', title: 'Introduction' },
+            { id: 'livret1', file: 'Livret1-Mecanismes.v0.85.html', icon: '⚙️', title: 'Livret 1' },
+            { id: 'livret2', file: 'Livret2-Creation.v0.74.html', icon: '📖', title: 'Livret 2' },
+            { id: 'livret3', file: 'Livret3-Equipement.v0.78.html', icon: '🛡️', title: 'Livret 3' }
         ];
 
         let currentDocId = 'intro';
+        let globalPageCount = 0;
 
+        // Fonction pour charger un document
         async function loadDocument(docId) {
             currentDocId = docId;
+            globalPageCount = 0; // Reset numérotation
             const container = document.getElementById('mainContainer');
             container.innerHTML = "<div class='text-white p-20 font-cinzel text-center'>Ouverture du grimoire...</div>";
 
             try {
                 const response = await fetch(documents.find(d => d.id === docId).file);
+                if (!response.ok) throw new Error("Fichier non trouvé");
                 const html = await response.text();
                 
-                const parser = new DOMParser();
-                const docElement = parser.parseFromString(html, 'text/html');
-                const content = docElement.body.innerHTML;
-
-                paginate(content);
+                // On stocke le HTML brut pour le resize
+                document.body.dataset.lastHtml = html;
+                paginate(html);
             } catch (error) {
-                container.innerHTML = "<div class='text-white p-20'>Le parchemin est illisible (Erreur de chargement).</div>";
+                container.innerHTML = `<div class='text-white p-20 font-cinzel text-center'>Erreur : ${error.message}</div>`;
             }
         }
 
+        // Création d'un bloc "Livre ouvert"
+        function createSpread(isMobile) {
+            const spread = document.createElement('div');
+            spread.className = 'book-spread';
+            
+            const p1 = ++globalPageCount;
+            const p2 = isMobile ? null : ++globalPageCount;
+
+            spread.innerHTML = `
+                <div class="book-inner">
+                    <div class="page page-left">
+                        <div class="page-footer">- ${p1} -</div>
+                    </div>
+                    ${isMobile ? '' : `
+                    <div class="page page-right">
+                        <div class="page-footer">- ${p2} -</div>
+                    </div>`}
+                    <div class="copyright-notice">
+                        © 2024 Urnidzen - SCCS | Licence CC BY-NC-SA 4.0 | Images générées par IA
+                    </div>
+                </div>
+            `;
+            document.getElementById('mainContainer').appendChild(spread);
+            return isMobile ? [spread.querySelector('.page-left')] : [spread.querySelector('.page-left'), spread.querySelector('.page-right')];
+        }
+
+        // Logique de pagination intelligente
         function paginate(html) {
             const container = document.getElementById('mainContainer');
             container.innerHTML = '';
             const isMobile = window.innerWidth <= 1024;
 
-            // Création d'un élément invisible pour mesurer les tailles de texte réelles
+            // Élément temporaire pour mesurer la hauteur réelle du contenu
             const ghost = document.createElement('div');
             ghost.style.visibility = 'hidden';
             ghost.style.position = 'absolute';
-            ghost.style.top = '0';
-            // On ajuste la largeur du simulateur selon le mode (bureau ou mobile)
-            ghost.style.width = isMobile ? (window.innerWidth - 80) + 'px' : '500px'; 
-            ghost.className = "font-serif text-lg"; // Doit matcher le style réel
+            ghost.style.width = isMobile ? (window.innerWidth - 60) + 'px' : '520px'; 
+            ghost.className = "font-serif text-lg p-10"; // Doit imiter le style des pages
             ghost.innerHTML = html;
             document.body.appendChild(ghost);
 
             const elements = Array.from(ghost.children);
-            
-            function createSpread() {
-                const spread = document.createElement('div');
-                spread.className = 'book-spread';
-                spread.innerHTML = `
-                    <div class="book-inner">
-                        <div class="page page-left"></div>
-                        ${isMobile ? '' : '<div class="page page-right"></div>'}
-                    </div>
-                `;
-                container.appendChild(spread);
-                return isMobile ? [spread.querySelector('.page-left')] : [spread.querySelector('.page-left'), spread.querySelector('.page-right')];
-            }
-
-            let currentPages = createSpread();
-            let pageIdx = 0;
-            let targetPage = currentPages[pageIdx];
+            let pages = createSpread(isMobile);
+            let currentIdx = 0;
+            let targetPage = pages[currentIdx];
 
             elements.forEach(el => {
                 const clone = el.cloneNode(true);
                 targetPage.appendChild(clone);
 
-                // Si l'élément fait déborder la page (marge de sécurité de 40px)
-                if (targetPage.scrollHeight > targetPage.clientHeight - 40) {
-                    targetPage.removeChild(clone); // On retire l'élément qui déborde
+                // Si le contenu dépasse (marge de sécurité pour le footer)
+                if (targetPage.scrollHeight > targetPage.clientHeight - 90) {
+                    targetPage.removeChild(clone);
+                    currentIdx++;
 
-                    pageIdx++;
-                    if (pageIdx < currentPages.length) {
-                        // On passe à la page de droite
-                        targetPage = currentPages[pageIdx];
-                    } else {
-                        // On crée un nouveau bloc de deux pages
-                        currentPages = createSpread();
-                        pageIdx = 0;
-                        targetPage = currentPages[pageIdx];
+                    if (currentIdx >= pages.length) {
+                        pages = createSpread(isMobile);
+                        currentIdx = 0;
                     }
+                    targetPage = pages[currentIdx];
                     targetPage.appendChild(clone);
                 }
             });
 
             document.body.removeChild(ghost);
-            renderList();
+            renderSidebar();
         }
 
-        function renderList() {
+        // Mise à jour de la liste latérale
+        function renderSidebar() {
             const list = document.getElementById('documentsList');
             list.innerHTML = documents.map(doc => `
-                <div class="p-3 mb-2 cursor-pointer border border-black/10 rounded hover:bg-black/5 ${doc.id === currentDocId ? 'bg-orange-900/10 border-l-4 border-l-orange-900' : ''}" 
+                <div class="p-3 mb-2 cursor-pointer border border-black/10 rounded transition-all hover:bg-orange-900/5 ${doc.id === currentDocId ? 'bg-orange-900/10 border-l-4 border-l-orange-900 font-bold' : ''}" 
                      onclick="loadDocument('${doc.id}')">
-                    <span class="text-xl">${doc.icon}</span>
-                    <span class="font-cinzel font-bold text-sm ml-2">${doc.title}</span>
+                    <span class="mr-2">${doc.icon}</span> ${doc.title}
                 </div>
             `).join('');
         }
 
-        // --- Event Handlers ---
+        // Event Listeners
         document.getElementById('tabHandle').addEventListener('click', () => {
             document.getElementById('sidebarContainer').classList.toggle('closed');
             document.getElementById('mainContainer').classList.toggle('sidebar-closed');
         });
 
         window.addEventListener('resize', () => {
-            // Empêche les déclenchements intempestifs sur mobile (clavier, etc.)
             clearTimeout(window.resizeTimer);
-            window.resizeTimer = setTimeout(() => paginate(document.body.dataset.rawHtml || ""), 250);
+            window.resizeTimer = setTimeout(() => {
+                if(document.body.dataset.lastHtml) paginate(document.body.dataset.lastHtml);
+            }, 300);
         });
 
-        // Lancement initial
+        // Chargement initial
         loadDocument('intro');
     </script>
 </body>
