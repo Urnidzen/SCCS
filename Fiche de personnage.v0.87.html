@@ -19,8 +19,8 @@
             background-color: transparent; 
             font-family: 'Cormorant Garamond', serif;
             color: #000000;
-            height: 100vh;
-            overflow: hidden; 
+            /* La hauteur n'est plus fixée à 100vh pour laisser le contenu couler naturellement */
+            overflow: visible; 
         }
 
         /* Conteneur A4 Fixe */
@@ -33,11 +33,11 @@
             background-blend-mode: multiply;
             position: relative; 
             overflow: hidden; 
+            margin: 0 auto; /* Centrage */
         }
 
         .layout-wrapper {
             width: 100%;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -61,7 +61,8 @@
         .btn-action:hover { opacity: 1; }
         .btn-reset:hover { color: #ea580c; }
         .btn-export:hover { color: #2563eb; }
-        .btn-import:hover { color: #16a34a; }
+        /* Nouveau bouton print interne */
+        .btn-print:hover { color: #1e293b; } 
 
         .stat-digit {
             font-family: 'Spectral', serif !important; font-weight: 700 !important; 
@@ -126,13 +127,18 @@
             width: 100%; height: 100%; object-fit: cover;
             filter: sepia(0.2) contrast(1.1) brightness(0.9); mix-blend-mode: multiply;
         }
+
+        /* Cacher les boutons à l'impression */
+        @media print {
+            .header-actions { display: none !important; }
+        }
     </style>
 </head>
 <body class="font-body text-black">
 
     <div class="layout-wrapper">
         <div class="sheet-container">
-            <input type="file" id="file-upload" style="display:none" accept=".json" onchange="handleFileUpload(this)">
+            <input type="file" data-id="file-upload" style="display:none" accept=".json">
 
             <table style="width: 100%;">
                 <tr style="height: 175px;">
@@ -140,7 +146,7 @@
                         <table style="width:100%; height:175px; border: 4px solid rgba(0, 0, 0, 0.6);">
                             <tr>
                                 <td style="padding:4px;">
-                                    <div id="portrait-container" style="width:100%; height:100%; border: 2px dashed rgba(0, 0, 0, 0.4); display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>
+                                    <div data-id="portrait-container" style="width:100%; height:100%; border: 2px dashed rgba(0, 0, 0, 0.4); display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>
                                 </td>
                             </tr>
                         </table>
@@ -153,11 +159,12 @@
                                         <label class="block text-xs font-black uppercase tracking-[0.3em] font-title text-black">Nom du personnage</label>
                                     </div>
                                     <div class="flex items-center">
-                                        <input type="text" id="char-name" class="w-full bg-transparent border-b-4 border-black/60 text-4xl font-black py-1 font-title outline-none text-black placeholder-black" placeholder="" oninput="updateProfileName(this.value)">
-                                        <div class="header-actions ml-2">
-                                            <button onclick="resetSheet()" class="btn-action btn-reset" title="Effacer le contenu">↺</button>
+                                        <input type="text" data-id="char-name" class="w-full bg-transparent border-b-4 border-black/60 text-4xl font-black py-1 font-title outline-none text-black placeholder-black" placeholder="">
+                                        <div class="header-actions ml-2 sheet-ui-controls">
+                                            <button data-action="reset" class="btn-action btn-reset" title="Effacer le contenu">↺</button>
                                             <span style="color:#000; font-size:1.1rem; cursor:default;">|</span> 
-                                            <button onclick="exportSingleJSON()" class="btn-action btn-export" title="Sauvegarder JSON local">💾</button>
+                                            <button data-action="export" class="btn-action btn-export" title="Sauvegarder JSON local">💾</button>
+                                            <button data-action="print" class="btn-action btn-print" title="Imprimer cette fiche" onclick="window.print()">🖨️</button>
                                         </div>
                                     </div>
                                 </td>
@@ -165,7 +172,7 @@
                             <tr style="height: 50px;">
                                 <td style="padding-right: 15px; vertical-align: bottom;">
                                     <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Espèce</label>
-                                    <select id="race-select" class="identity-select" onchange="updateRace(); updatePortrait()">
+                                    <select data-id="race-select" class="identity-select">
                                         <option value="HUMAIN">HUMAIN</option>
                                         <option value="ELFE">ELFE</option>
                                         <option value="NAIN">NAIN</option>
@@ -174,14 +181,14 @@
                                 </td>
                                 <td style="padding-right: 15px; vertical-align: bottom;">
                                     <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Genre</label>
-                                    <select id="gender-select" class="identity-select" onchange="updatePortrait()">
+                                    <select data-id="gender-select" class="identity-select">
                                         <option value="MASCULIN">MASCULIN</option>
                                         <option value="FÉMININ">FÉMININ</option>
                                     </select>
                                 </td>
                                 <td style="width: 70px; vertical-align: bottom;">
                                     <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">PA</label>
-                                    <input type="number" id="val-pa" class="identity-input text-left" value="0">
+                                    <input type="number" data-id="val-pa" class="identity-input text-left" value="0">
                                 </td>
                             </tr>
                             <tr>
@@ -189,11 +196,11 @@
                                     <table>
                                         <tr>
                                             <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">COULEUR DES YEUX:</td>
-                                            <td class="border-b border-black/30"><input type="text" id="identity-eyes" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
+                                            <td class="border-b border-black/30"><input type="text" data-id="identity-eyes" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
                                         </tr>
                                         <tr>
                                             <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">CHEVEUX:</td>
-                                            <td class="border-b border-black/30"><input type="text" id="identity-hair" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
+                                            <td class="border-b border-black/30"><input type="text" data-id="identity-hair" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -220,14 +227,14 @@
                                                             <table>
                                                                 <tr style="height: 34px;"><td class="label-cell">Direct</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
                                                                 <tr style="height: 34px;"><td class="label-cell">Circulaire</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                <tr style="height: 34px;"><td class="label-cell">Saisie</td><td class="value-cell"><input type="number" id="stat-att-saisie" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Saisie</td><td class="value-cell"><input type="number" data-id="stat-att-saisie" class="clean-input" value="0"></td></tr>
                                                             </table>
                                                         </td>
                                                         <td>
                                                             <p class="text-[9px] font-black uppercase mb-1 border-b border-black/40 text-black">Cible</p>
                                                             <table>
                                                                 <tr style="height: 34px;"><td class="label-cell">Tête</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
-                                                                <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell"><input type="number" id="stat-att-tronc" class="clean-input" value="0"></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell"><input type="number" data-id="stat-att-tronc" class="clean-input" value="0"></td></tr>
                                                                 <tr style="height: 34px;"><td class="label-cell">Membres</td><td class="value-cell"><input type="number" class="clean-input" value="0"></td></tr>
                                                             </table>
                                                         </td>
@@ -263,9 +270,9 @@
                                                             </div>
                                                             <table style="width: 100%;">
                                                                 <colgroup><col><col style="width: 32px;"><col style="width: 38px;"></colgroup>
-                                                                <tr style="height: 34px;"><td class="label-cell">Tête</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-tete" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-tete" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
-                                                                <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-tronc" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-tronc" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
-                                                                <tr style="height: 34px;"><td class="label-cell">Membres</td><td class="value-cell" style="padding-right: 2px;"><input type="number" id="res-nat-membres" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span id="res-arm-membres" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Tête</td><td class="value-cell" style="padding-right: 2px;"><input type="number" data-id="res-nat-tete" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span data-id="res-arm-tete" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Tronc</td><td class="value-cell" style="padding-right: 2px;"><input type="number" data-id="res-nat-tronc" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span data-id="res-arm-tronc" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
+                                                                <tr style="height: 34px;"><td class="label-cell">Membres</td><td class="value-cell" style="padding-right: 2px;"><input type="number" data-id="res-nat-membres" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: bottom; text-align: left; padding-left: 2px; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">+</span><span data-id="res-arm-membres" class="font-digit font-bold text-black text-[1.6rem] leading-[1.2] align-baseline">0</span></td></tr>
                                                             </table>
                                                         </td>
                                                     </tr>
@@ -296,12 +303,12 @@
                                                     <tr>
                                                         <td style="width:50%; padding-right:5px;">
                                                             <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
-                                                            <select id="weapon-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                            <select data-id="weapon-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate">
                                                             </select>
                                                         </td>
                                                         <td style="width:50%; padding-left:5px;">
                                                             <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
-                                                            <select id="offhand-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                            <select data-id="offhand-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate">
                                                             </select>
                                                         </td>
                                                     </tr>
@@ -309,12 +316,12 @@
                                                         <td colspan="2" style="padding-top:4px;">
                                                             <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
                                                                 <div class="flex items-center">
-                                                                    <span id="init-label-1" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
-                                                                    <span id="init-val-1" class="font-digit font-bold text-sm text-black">0</span>
+                                                                    <span data-id="init-label-1" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
+                                                                    <span data-id="init-val-1" class="font-digit font-bold text-sm text-black">0</span>
                                                                 </div>
                                                                 <div class="flex items-center">
                                                                     <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
-                                                                    <span id="magic-malus-1" class="font-digit font-bold text-sm text-black">0</span>
+                                                                    <span data-id="magic-malus-1" class="font-digit font-bold text-sm text-black">0</span>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -329,12 +336,12 @@
                                                     <tr>
                                                         <td style="width:50%; padding-right:5px;">
                                                             <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
-                                                            <select id="weapon-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                            <select data-id="weapon-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate">
                                                             </select>
                                                         </td>
                                                         <td style="width:50%; padding-left:5px;">
                                                             <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
-                                                            <select id="offhand-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate" onchange="updateUI()">
+                                                            <select data-id="offhand-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate">
                                                             </select>
                                                         </td>
                                                     </tr>
@@ -342,12 +349,12 @@
                                                         <td colspan="2" style="padding-top:4px;">
                                                             <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
                                                                 <div class="flex items-center">
-                                                                    <span id="init-label-2" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
-                                                                    <span id="init-val-2" class="font-digit font-bold text-sm text-black">0</span>
+                                                                    <span data-id="init-label-2" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
+                                                                    <span data-id="init-val-2" class="font-digit font-bold text-sm text-black">0</span>
                                                                 </div>
                                                                 <div class="flex items-center">
                                                                     <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
-                                                                    <span id="magic-malus-2" class="font-digit font-bold text-sm text-black">0</span>
+                                                                    <span data-id="magic-malus-2" class="font-digit font-bold text-sm text-black">0</span>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -368,7 +375,7 @@
                                                     <tr>
                                                         <td>
                                                             <label class="block text-[8px] font-black uppercase text-black">Type d'armure</label>
-                                                            <select id="armor-select" class="w-full bg-transparent font-title font-bold text-base border-b border-black/40 outline-none text-black" onchange="updateUI()">
+                                                            <select data-id="armor-select" class="w-full bg-transparent font-title font-bold text-base border-b border-black/40 outline-none text-black">
                                                                 <option value="Aucune">Sans Armure</option>
                                                                 <option value="Légère">Cuir sans Heaume</option>
                                                                 <option value="Légère_Heaume">Cuir avec Heaume</option>
@@ -384,11 +391,11 @@
                                                             <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
                                                                 <div class="flex items-center">
                                                                     <span class="font-title font-bold uppercase text-[8px] text-black mr-2">Durabilité</span>
-                                                                    <span id="dur-display" class="font-digit font-bold text-sm text-black">0/0</span>
+                                                                    <span data-id="dur-display" class="font-digit font-bold text-sm text-black">0/0</span>
                                                                 </div>
                                                                 <div class="flex items-center">
                                                                     <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
-                                                                    <span id="magic-malus-armor" class="font-digit font-bold text-sm text-black">0</span>
+                                                                    <span data-id="magic-malus-armor" class="font-digit font-bold text-sm text-black">0</span>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -401,7 +408,7 @@
 
                                 <td style="width: 35%; padding-left: 2%; border-left: 2px solid rgba(0, 0, 0, 0.2); vertical-align: top;">
                                     <h2 class="font-title text-sm font-black uppercase border-b-2 border-black/40 pb-1 mb-2 text-black">Talents</h2>
-                                    <div id="talents-container"></div>
+                                    <div data-id="talents-container"></div>
                                 </td>
                             </tr>
                         </table>
@@ -429,10 +436,28 @@
     </div>
 
     <script>
-        // === LOGIQUE DE GESTION PAR "REGISTRE.JS" ===
-        let currentUid = null;
+    (function() {
+        // 1. Récupération de la "racine" de la fiche (le wrapper créé par index.html)
+        // document.currentScript désigne CE script en cours d'exécution.
+        // On remonte au wrapper .sheet-wrapper-direct qui contient ce script.
+        const root = document.currentScript.closest('.sheet-wrapper-direct');
+        
+        // Sécurité : si on ouvre le fichier seul (pas via index.html), root est null.
+        if (!root) {
+            console.warn("Fiche ouverte hors du Codex ou erreur de contexte.");
+            // Fallback pour dev : on prend le body comme root
+        }
+        const context = root || document.body;
 
-        // Configuration visuelle
+        // Fonction "Helper" pour remplacer document.getElementById
+        // Elle cherche uniquement DANS la fiche actuelle
+        const find = (id) => context.querySelector(`[data-id="${id}"]`);
+        const findAll = (selector) => context.querySelectorAll(selector);
+
+        // Récupération de l'UID (stocké dans le wrapper par index.html)
+        const currentUid = root ? root.getAttribute('data-uid') : null;
+
+        // Configuration visuelle (identique)
         const CUSTOM_PORTRAITS_URLS = {
             "HUMAIN_MASCULIN": "portraits/portrait_homme_humain.png",
             "HUMAIN_FÉMININ": "portraits/portrait_femme_humain.png",
@@ -453,21 +478,32 @@
         };
 
         // --- INIT ---
-        window.onload = function() {
+        function init() {
             initWeaponSelect();
             
-            // Récupération de l'ID depuis l'URL (envoyé par le Livre)
-            const params = new URLSearchParams(window.location.search);
-            currentUid = params.get('uid');
+            // Écouteurs d'événements (Scope local)
+            const raceSel = find('race-select');
+            if(raceSel) raceSel.onchange = () => { updateRace(); updatePortrait(); };
+            
+            const genderSel = find('gender-select');
+            if(genderSel) genderSel.onchange = () => updatePortrait();
 
+            const nameInput = find('char-name');
+            if(nameInput) nameInput.oninput = (e) => updateProfileName(e.target.value);
+
+            // Boutons d'action
+            const btnReset = context.querySelector('[data-action="reset"]');
+            if(btnReset) btnReset.onclick = resetSheet;
+
+            const btnExport = context.querySelector('[data-action="export"]');
+            if(btnExport) btnExport.onclick = exportSingleJSON;
+
+            // Chargement des données
             if (currentUid && typeof SCCS_Registre !== 'undefined') {
                 loadFromRegistry(currentUid);
-                // Activer l'écouteur de changement global
                 setupAutoSave();
-            } else {
-                console.warn("Fiche ouverte sans ID ou Registre manquant.");
             }
-        };
+        }
 
         // --- CHARGEMENT ---
         function loadFromRegistry(uid) {
@@ -477,28 +513,27 @@
             const data = profile.content || {};
             
             // Remplissage des champs
-            document.querySelectorAll('input, textarea').forEach(el => { el.value = ''; });
-            document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
-            document.querySelectorAll('input[type=number]').forEach(el => el.value = '0');
+            findAll('input, textarea').forEach(el => { el.value = ''; });
+            findAll('select').forEach(el => el.selectedIndex = 0);
+            findAll('input[type=number]').forEach(el => el.value = '0');
 
-            // Valeurs par défaut armes
-            if(document.getElementById('weapon-select-1')) document.getElementById('weapon-select-1').value = "Main Libre";
-            if(document.getElementById('weapon-select-2')) document.getElementById('weapon-select-2').value = "Main Libre";
+            if(find('weapon-select-1')) find('weapon-select-1').value = "Main Libre";
+            if(find('weapon-select-2')) find('weapon-select-2').value = "Main Libre";
 
             // Injection des données
             Object.keys(data).forEach(key => {
                 if (key.startsWith('__clean_input_')) {
                     const idx = parseInt(key.replace('__clean_input_', ''));
-                    const els = document.querySelectorAll('.clean-input:not([id])');
+                    const els = findAll('.clean-input:not([data-id])'); // Modifié pour exclure ceux avec data-id
                     if (els[idx]) els[idx].value = data[key];
                 } 
                 else if (key.startsWith('__area_')) {
                     const idx = parseInt(key.replace('__area_', ''));
-                    const els = document.querySelectorAll('.area-textarea:not([id])');
+                    const els = findAll('.area-textarea');
                     if (els[idx]) els[idx].value = data[key];
                 }
                 else {
-                    const el = document.getElementById(key);
+                    const el = find(key); // Utilise notre helper find()
                     if (el) {
                         if (el.type === 'checkbox') el.checked = data[key];
                         else el.value = data[key];
@@ -506,23 +541,20 @@
                 }
             });
 
-            // Restauration Talents
             if (data.__state_talents) {
                 state.talents = JSON.parse(JSON.stringify(data.__state_talents));
             } else {
-                updateRace(); // Défaut
+                updateRace(); 
             }
 
-            // Mise à jour visuelle
             updateOffhandOptions(1);
             updateOffhandOptions(2);
             updateUI();
             updatePortrait();
         }
 
-        // --- SAUVEGARDE AUTOMATIQUE ---
         function setupAutoSave() {
-            document.querySelectorAll('input, select, textarea').forEach(el => {
+            findAll('input, select, textarea').forEach(el => {
                 el.addEventListener('input', triggerSave);
                 el.addEventListener('change', triggerSave);
             });
@@ -532,36 +564,34 @@
             if (!currentUid || typeof SCCS_Registre === 'undefined') return;
 
             const data = {};
-            // Collecte des IDs
-            document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
-                if(el.type === 'checkbox') data[el.id] = el.checked;
-                else data[el.id] = el.value;
+            // Collecte des IDs via data-id
+            findAll('input[data-id], select[data-id], textarea[data-id]').forEach(el => {
+                const id = el.getAttribute('data-id');
+                if(el.type === 'checkbox') data[id] = el.checked;
+                else data[id] = el.value;
             });
+            
             // Collecte des champs sans IDs
-            document.querySelectorAll('.clean-input:not([id])').forEach((el, index) => {
+            findAll('.clean-input:not([data-id])').forEach((el, index) => {
                 data[`__clean_input_${index}`] = el.value;
             });
-             document.querySelectorAll('.area-textarea:not([id])').forEach((el, index) => {
+             findAll('.area-textarea:not([data-id])').forEach((el, index) => {
                 data[`__area_${index}`] = el.value;
             });
             
             data.__state_talents = state.talents;
 
-            // Récupération du nom pour le sommaire
-            const nameVal = document.getElementById('char-name').value || "Sans Nom";
-
-            // Envoi au Cerveau
+            const nameVal = find('char-name').value || "Sans Nom";
             SCCS_Registre.updateProfile(currentUid, data, nameVal);
         }
 
-        // --- ACTIONS LOCALES ---
         function updateProfileName(val) { triggerSave(); }
 
         function resetSheet() {
             if (!confirm("Voulez-vous vider les champs de cette fiche ?")) return;
-            document.querySelectorAll('input, textarea').forEach(el => { el.value = ''; });
-            document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
-            document.querySelectorAll('input[type=number]').forEach(el => el.value = '0');
+            findAll('input, textarea').forEach(el => { el.value = ''; });
+            findAll('select').forEach(el => el.selectedIndex = 0);
+            findAll('input[type=number]').forEach(el => el.value = '0');
             state.talents = {
                 athletisme: false, acrobatie: false, mecanique: false,
                 subtilite: false, perception: false, survie: false,
@@ -576,7 +606,6 @@
             if (!currentUid) return;
             const profile = SCCS_Registre.getProfile(currentUid);
             if (!profile) return;
-            
             const dataStr = JSON.stringify(profile, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -588,7 +617,7 @@
             document.body.removeChild(a);
         }
 
-        // --- LOGIQUE MÉTIER (RÈGLES JDR) ---
+        // --- RÈGLES ---
         const WEAPONS_DATA = {
             "Distance": { label: "Armes à Distance", stats: { init: "1/7", magie: -1 }, items: ["Arc", "Arbalète", "Fronde"] },
             "Focalisateur": { label: "Focalisateurs", stats: { init: "6", magie: 0 }, items: ["Grimoire", "Chapelet", "Bâton"] },
@@ -627,7 +656,7 @@
 
         function initWeaponSelect() {
             [1, 2].forEach(index => {
-                const select = document.getElementById(`weapon-select-${index}`);
+                const select = find(`weapon-select-${index}`);
                 if (!select) return;
                 select.innerHTML = '';
                 for (const [key, category] of Object.entries(WEAPONS_DATA)) {
@@ -642,12 +671,24 @@
                     select.appendChild(group);
                 }
                 select.value = "Main Libre";
+                
+                // Add change listener locally
+                select.onchange = updateUI;
+                
+                // Add offhand listener
+                const off = find(`offhand-select-${index}`);
+                if(off) off.onchange = updateUI;
             });
+            
+            // Armor listener
+            const arm = find('armor-select');
+            if(arm) arm.onchange = updateUI;
+            
             updateUI();
         }
 
         function getWeaponStats(weaponName) {
-            if (weaponName === "Grimoire" || weaponName === "Chapelet" || weaponName === "Bâton") return { init: "6", magie: 0 };
+            if (["Grimoire","Chapelet","Bâton"].includes(weaponName)) return { init: "6", magie: 0 };
             for (const [key, category] of Object.entries(WEAPONS_DATA)) {
                 if (category.items.includes(weaponName)) return category.stats;
             }
@@ -662,8 +703,8 @@
         }
 
         function updateOffhandOptions(index) {
-            const weaponSelect = document.getElementById(`weapon-select-${index}`);
-            const offhandSelect = document.getElementById(`offhand-select-${index}`);
+            const weaponSelect = find(`weapon-select-${index}`);
+            const offhandSelect = find(`offhand-select-${index}`);
             if (!weaponSelect || !offhandSelect) return;
 
             const weaponName = weaponSelect.value;
@@ -679,20 +720,16 @@
                 offhandSelect.disabled = true; 
             } 
             else if (category === "Focalisateur") {
-                if (weaponName === "Bâton") {
-                    options.push("Occupée ou Libre", "Bouclier", "Torche");
-                } else {
-                    options.push("Main Libre (Incantation)", "Bouclier", "Torche");
-                }
+                if (weaponName === "Bâton") options.push("Occupée ou Libre", "Bouclier", "Torche");
+                else options.push("Main Libre (Incantation)", "Bouclier", "Torche");
             }
             else if (category === "Moyenne") {
                 options.push("Main Libre", "Bouclier", "Torche");
             }
             else { 
                 options.push("Main Libre", "Bouclier", "Torche");
-                const shortWeapons = WEAPONS_DATA["Courte"].items;
-                shortWeapons.forEach(wp => {
-                    if (wp !== "Main Libre" && wp !== "Torche" && wp !== "Bouclier (Offensif)") options.push(wp); 
+                WEAPONS_DATA["Courte"].items.forEach(wp => {
+                    if (!["Main Libre","Torche","Bouclier (Offensif)"].includes(wp)) options.push(wp); 
                 });
             }
 
@@ -707,9 +744,9 @@
         }
 
         function updatePortrait() {
-            const race = document.getElementById('race-select')?.value;
-            const gender = document.getElementById('gender-select')?.value;
-            const container = document.getElementById('portrait-container');
+            const race = find('race-select')?.value;
+            const gender = find('gender-select')?.value;
+            const container = find('portrait-container');
             if(!race || !gender || !container) return;
             const key = `${race}_${gender}`;
             if (CUSTOM_PORTRAITS_URLS[key]) {
@@ -720,31 +757,29 @@
         }
 
         function updateRace() {
-            const race = document.getElementById('race-select')?.value;
+            const race = find('race-select')?.value;
             if (!race) return;
             Object.keys(state.talents).forEach(k => state.talents[k] = false);
             if (RULES.RACES[race]) RULES.RACES[race].forEach(tid => state.talents[tid] = true);
-            const saisieField = document.getElementById('stat-att-saisie');
+            const saisieField = find('stat-att-saisie');
             if(saisieField) saisieField.value = (race === "ORQUE") ? 1 : 0;
             triggerSave();
             updateUI();
         }
 
-        function toggleTalent(id) {
-            state.talents[id] = !state.talents[id];
-            triggerSave();
-            updateUI();
-        }
+        // Nous devons attacher toggleTalent au scope global de la fiche, mais onclick="toggleTalent()" dans le HTML cherchera dans Window.
+        // Solution : On crée les lignes de talent dynamiquement, on peut attacher l'event listener directement au DOM element.
+        // Voir fonction updateUI ci-dessous.
 
         function updateUI() {
             [1, 2].forEach(index => {
-                const weaponSelect = document.getElementById(`weapon-select-${index}`);
-                const offhandSelect = document.getElementById(`offhand-select-${index}`);
-                const initLabel = document.getElementById(`init-label-${index}`);
+                const weaponSelect = find(`weapon-select-${index}`);
+                const offhandSelect = find(`offhand-select-${index}`);
+                const initLabel = find(`init-label-${index}`);
                 
                 if (weaponSelect && offhandSelect) {
-                    const activeEl = document.activeElement;
-                    if (activeEl === weaponSelect) updateOffhandOptions(index);
+                    // Update offhand si focus (simulation simple)
+                    if (document.activeElement === weaponSelect) updateOffhandOptions(index);
                     
                     const weaponName = weaponSelect.value;
                     const offhandName = offhandSelect.value;
@@ -752,91 +787,81 @@
                     const cat = getWeaponCategory(weaponName);
                     
                     const isRightFree = weaponName === "Main Libre";
-                    const isLeftFree = offhandName && (
-                        offhandName.includes("Libre") || 
-                        offhandName === "Occupée" ||
-                        offhandName === "Occupée ou Libre"
-                    );
+                    const isLeftFree = offhandName && (offhandName.includes("Libre") || offhandName.includes("Occupée"));
                     const hasFreeHand = isRightFree || isLeftFree;
                     
-                    const isRightCatalyst = weaponName !== "Main Libre" && weaponName !== "Torche";
-                    const isLeftCatalyst = offhandName && offhandName !== "Main Libre" && offhandName !== "Main Libre (Incantation)" && offhandName !== "Bouclier" && offhandName !== "Torche" && offhandName !== "Occupée" && offhandName !== "Occupée ou Libre";
+                    const isRightCatalyst = !["Main Libre","Torche"].includes(weaponName);
+                    const isLeftCatalyst = offhandName && !["Main Libre","Main Libre (Incantation)","Bouclier","Torche","Occupée","Occupée ou Libre"].includes(offhandName);
                     
                     const hasCatalyst = isRightCatalyst || isLeftCatalyst;
                     const canCast = hasFreeHand && hasCatalyst;
 
-                    const initSpan = document.getElementById(`init-val-${index}`);
+                    const initSpan = find(`init-val-${index}`);
                     const rawInit = weaponStats.init;
                     
                     if (initSpan) {
-                        initSpan.className = "font-digit font-bold text-sm text-black"; 
-
                         if (canCast) {
                             if (initLabel) initLabel.style.display = 'none'; 
                             let weaponInitDisplay = rawInit;
-                            if (weaponName === "Bâton") {
-                                weaponInitDisplay = `5 <span class="font-body font-bold text-[10px]">(1 main)</span> 4 <span class="font-body font-bold text-[10px]">(2 mains)</span>`;
-                            }
+                            if (weaponName === "Bâton") weaponInitDisplay = `5 <span class="font-body font-bold text-[10px]">(1m)</span> 4 <span class="font-body font-bold text-[10px]">(2m)</span>`;
+                            
                             initSpan.innerHTML = `
-                                <span class="font-title font-bold text-[8px] mr-1">INITIATIVE :</span>
+                                <span class="font-title font-bold text-[8px] mr-1">INIT:</span>
                                 <span class="font-title font-bold text-[8px] mr-1">ARME</span>${weaponInitDisplay}
                                 <span class="mx-1 opacity-50 font-sans">/</span>
-                                <span class="font-title font-bold text-[8px] mr-1">SORT</span>2 <span class="font-body font-bold text-[10px]">(libre)</span> 8 <span class="font-body font-bold text-[10px]">(engagé)</span>
+                                <span class="font-title font-bold text-[8px] mr-1">SORT</span>2 <span class="font-body font-bold text-[10px]">(lib)</span> 8 <span class="font-body font-bold text-[10px]">(eng)</span>
                             `;
                         } else {
                             if (initLabel) initLabel.style.display = 'inline'; 
                             let standardDisplay = rawInit;
                             if (rawInit.includes('/')) {
                                 const [v1, v2] = rawInit.split('/');
-                                standardDisplay = `${v1} <span class="font-body font-bold text-[10px]">(libre)</span> ${v2} <span class="font-body font-bold text-[10px]">(engagé)</span>`;
+                                standardDisplay = `${v1} <span class="font-body font-bold text-[10px]">(lib)</span> ${v2} <span class="font-body font-bold text-[10px]">(eng)</span>`;
                             } 
-                            else if (weaponName === "Bâton") {
-                                standardDisplay = `5 <span class="font-body font-bold text-[10px]">(1 main)</span> 4 <span class="font-body font-bold text-[10px]">(2 mains)</span>`;
-                            }
                             initSpan.innerHTML = standardDisplay;
                         }
                     }
 
-                    const magicSpan = document.getElementById(`magic-malus-${index}`);
+                    const magicSpan = find(`magic-malus-${index}`);
                     if(magicSpan) {
                         if (!hasFreeHand || !hasCatalyst) {
-                            magicSpan.innerText = "lancement de sort impossible";
+                            magicSpan.innerText = "imp.";
                             magicSpan.style.color = "#dc2626";
-                            magicSpan.style.fontStyle = "normal";
-                            magicSpan.style.fontSize = "0.6rem"; 
                         } else {
                             const val = (cat === "Focalisateur") ? 0 : weaponStats.magie;
                             magicSpan.innerText = val;
                             magicSpan.style.color = "#000000";
-                            magicSpan.style.fontStyle = "normal";
-                            magicSpan.style.fontSize = ""; 
                         }
                     }
                 }
             });
 
-            const armorEl = document.getElementById('armor-select');
+            const armorEl = find('armor-select');
             if (armorEl) {
                 const armor = armorEl.value;
                 const armorData = RULES.ARMORS[armor];
                 const baseRes = armorData ? armorData.res : 0;
                 const headRes = armor.includes("_Heaume") ? baseRes : 0;
                 
-                document.getElementById('res-arm-tete').innerText = headRes;
-                document.getElementById('res-arm-tronc').innerText = baseRes;
-                document.getElementById('res-arm-membres').innerText = baseRes;
+                find('res-arm-tete').innerText = headRes;
+                find('res-arm-tronc').innerText = baseRes;
+                find('res-arm-membres').innerText = baseRes;
 
                 let malusArmure = 0;
                 if (armorData && armorData.malus && armorData.malus.includes("magie")) malusArmure = -1;
-                document.getElementById('magic-malus-armor').innerText = (malusArmure >= 0 ? "+" : "") + malusArmure;
+                find('magic-malus-armor').innerText = (malusArmure >= 0 ? "+" : "") + malusArmure;
 
                 const maxDur = armorData ? armorData.dur : 0;
-                document.getElementById('dur-display').innerText = `${maxDur}/${maxDur}`;
+                find('dur-display').innerText = `${maxDur}/${maxDur}`;
 
-                const container = document.getElementById('talents-container');
+                const container = find('talents-container');
                 if (container) {
-                    let html = `
-                    <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+                    // On vide et on reconstruit proprement avec des createElement pour attacher les events
+                    container.innerHTML = '';
+                    
+                    const table = document.createElement('table');
+                    table.style.cssText = "width:100%; border-collapse:collapse; table-layout:fixed;";
+                    table.innerHTML = `
                         <colgroup><col style="width: auto;"><col style="width: 25px;"><col style="width: 25px;"><col style="width: 15px;"><col style="width: 35px;"></colgroup>
                         <tr style="border-bottom: 1px solid rgba(0, 0, 0, 0.4);">
                             <td></td><td class="text-[8px] font-black uppercase text-black text-center"></td><td class="text-[8px] font-black uppercase text-black text-center">Arm.</td><td></td><td class="text-[8px] font-black uppercase text-black text-center">Tot.</td>
@@ -851,25 +876,38 @@
                             armorMalus = -count;
                         }
                         let totalScore = baseScore + armorMalus;
-                        const colorClass = 'text-black';
 
-                        html += `
-                        <tr style="cursor:pointer;" onclick="toggleTalent('${t.id}')" onmouseover="this.style.backgroundColor='rgba(0,0,0,0.05)'" onmouseout="this.style.backgroundColor='transparent'">
+                        const row = document.createElement('tr');
+                        row.style.cursor = 'pointer';
+                        row.onmouseover = () => row.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                        row.onmouseout = () => row.style.backgroundColor = 'transparent';
+                        row.onclick = () => {
+                            state.talents[t.id] = !state.talents[t.id];
+                            triggerSave();
+                            updateUI();
+                        };
+
+                        row.innerHTML = `
                             <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); vertical-align:middle;">
                                 <div class="check-box ${isChecked ? 'active' : ''}"></div>
                                 <span style="font-weight:700; text-transform:uppercase; font-size:0.8rem; color:#000000; vertical-align:middle;">${t.label}</span>
                             </td>
                             <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:600; font-size:1rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000;">${baseScore}</td>
                             <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:600; font-size:1rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000;">${armorMalus}</td>
-                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:600; font-size:1rem; vertical-align:middle; font-family: 'Spectral', serif;" class="${colorClass}">=</td>
-                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:700; font-size:1.3rem; vertical-align:middle; font-family: 'Spectral', serif;" class="${colorClass}">${totalScore}</td>
-                        </tr>`;
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:600; font-size:1rem; vertical-align:middle; font-family: 'Spectral', serif;">=</td>
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:700; font-size:1.3rem; vertical-align:middle; font-family: 'Spectral', serif;">${totalScore}</td>
+                        `;
+                        table.appendChild(row);
                     });
-                    html += '</table>';
-                    container.innerHTML = html;
+                    container.appendChild(table);
                 }
             }
         }
+
+        // Démarrage immédiat
+        init();
+
+    })();
     </script>
 </body>
 </html>
