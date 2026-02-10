@@ -6,6 +6,8 @@
     <title>SCCS - Codex Officiel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="registre.js"></script>
+
     <style>
         :root {
             --parchment: #f4ecd8;
@@ -167,8 +169,7 @@
             flex: 1; height: 100vh;
             background: #f4ecd8;
             background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            /* Padding ajusté pour pied de page */
-            padding: 50px 60px 120px 60px; 
+            padding: 50px 60px 120px 60px; /* Padding bas 120px */
             position: relative; overflow: hidden;
             display: flex; flex-direction: column; justify-content: flex-start;
         }
@@ -203,22 +204,22 @@
         }
 
         /* ===== STYLE SPÉCIAL FICHE PERSO (IFRAME) ===== */
-        #sheetContainer {
+        /* Conteneur de l'iframe */
+        .sheet-container-frame {
             display: flex; 
             align-items: center; 
             justify-content: center;
-            padding: 0; /* On gère le padding manuellement pour le centrage */
+            padding: 0; 
             overflow: hidden;
         }
 
-        #charSheetFrame {
+        .char-sheet-frame {
             border: none;
             box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            /* La taille A4 exacte en pixels (96dpi) */
-            width: 794px; /* 210mm */
-            height: 1123px; /* 297mm */
+            width: 794px; /* A4 Largeur (96dpi) */
+            height: 1123px; /* A4 Hauteur */
             transform-origin: center center;
-            background: #fff; /* Fond blanc au cas où */
+            background: #fff;
         }
 
         .sheet-placeholder-text {
@@ -228,6 +229,30 @@
             margin-top: 30vh;
             padding: 0 40px;
         }
+
+        /* Styles pour la page "Nouveau Personnage" */
+        .new-char-btn {
+            background: transparent;
+            border: 2px solid #7c2d12;
+            color: #7c2d12;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .new-char-btn:hover {
+            background: #7c2d12;
+            color: #f4ecd8;
+        }
+
+        .big-plus { font-size: 2rem; }
 
         /* ===== FOOTER ===== */
         .legal-notice {
@@ -266,7 +291,7 @@
             .page { padding: 30px 20px 120px 20px; width: 100%; }
             .page-right { display: none; }
             
-            /* Pour la fiche en mobile, on force l'affichage de la page droite si active */
+            /* En mode fiche mobile, on cache la gauche et montre la droite */
             .book-spread.sheet-mode .page-left { display: none; }
             .book-spread.sheet-mode .page-right { display: flex; width: 100%; height: 100vh; }
         }
@@ -305,7 +330,8 @@
             { id: 'livret3', file: 'Livret3-Equipement.v0.78.html', icon: '🛡️', title: 'Livret 3', subtitle: 'Équipement' },
             { id: 'livret4', file: 'Livret4-Rencontres.v0.80.html', icon: '⚔️', title: 'Livret 4', subtitle: 'Rencontres' },
             { id: 'livret5', file: 'Livret5-Bestiaire.v0.80.html', icon: '🐾', title: 'Livret 5', subtitle: 'Bestiaire' },
-            { id: 'fiche', file: 'Fiche de personnage.v0.87.html', icon: '📝', title: 'Fiche de Personnage', subtitle: 'Interactive' },
+            // Note : Pour la fiche, le fichier est désormais la v0.87
+            { id: 'fiche', file: 'Fiche de personnage.v0.87.html', icon: '📝', title: 'Registre des Héros', subtitle: 'Fiches Personnages' },
             { id: 'contact', file: 'contact.html', icon: '💬', title: 'Contact & Discutions', subtitle: "Échangez sur le SCCS" }
         ];
 
@@ -380,9 +406,9 @@
             const wrapper = document.getElementById('bookSpreadsWrapper');
             wrapper.innerHTML = '<div style="padding:40px; text-align:center; color:#7c2d12;">Chargement...</div>';
 
-            // === CAS SPÉCIAL : FICHE DE PERSONNAGE ===
+            // === CAS SPÉCIAL : LE REGISTRE DES HÉROS ===
             if (docId === 'fiche') {
-                renderSheetFrame(doc.file);
+                renderRegistryChapter(doc.file);
                 return;
             }
 
@@ -409,105 +435,129 @@
             }
         }
 
-        // ===== MOTEUR D'AFFICHAGE FICHE (IFRAME ZOOM) =====
-        function renderSheetFrame(fileUrl) {
+        // ===== MOTEUR D'AFFICHAGE DU REGISTRE (MULTIPLES IFRAMES) =====
+        function renderRegistryChapter(baseFileUrl) {
             const wrapper = document.getElementById('bookSpreadsWrapper');
             wrapper.innerHTML = '';
-            currentIndex = []; // Pas d'index textuel pour la fiche
+            currentIndex = []; // Pas d'index textuel
 
-            // On crée une double page spéciale
-            const spread = document.createElement('div');
-            spread.className = 'book-spread sheet-mode';
+            // 1. Récupérer tous les héros depuis le Registre (Systeme.js)
+            const profiles = SCCS_Registre.getAllProfiles();
 
-            // Page Gauche : Explicative (ou vide décorative)
-            const leftContent = `
-                <div class="page page-left">
-                    <div class="content-wrapper" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                        <div class="sheet-placeholder-text">
-                            <h2 style="font-size:2rem; margin-bottom:1rem;">Registre des Héros</h2>
-                            <p>Utilisez la feuille ci-contre pour consigner les détails de votre aventure.</p>
-                            <p style="font-size:0.8rem; margin-top:2rem; opacity:0.7;">
-                                Note : Vos données sont sauvegardées automatiquement dans votre navigateur.
-                            </p>
+            // 2. Générer une double-page pour chaque héros existant
+            profiles.forEach((profile, index) => {
+                const spread = document.createElement('div');
+                spread.className = 'book-spread sheet-mode';
+                
+                // URL unique avec l'ID
+                const uniqueUrl = `${baseFileUrl}?uid=${profile.id}`;
+
+                const leftContent = `
+                    <div class="page page-left">
+                        <div class="content-wrapper" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <div class="sheet-placeholder-text">
+                                <h2 style="font-size:2rem; margin-bottom:0.5rem;">${profile.name || "Héros Inconnu"}</h2>
+                                <p style="font-size:0.9rem; opacity:0.7;">Fiche d'identité N° ${index + 1}</p>
+                                <div style="width:50px; height:2px; background:#7c2d12; margin:20px auto;"></div>
+                                <p>Modifiez la fiche ci-contre.<br>L'archiviste sauvegardera chaque lettre.</p>
+                                <button onclick="deleteHero('${profile.id}')" style="margin-top:40px; border:none; background:none; color:#dc2626; opacity:0.6; cursor:pointer; font-family:'Cinzel', serif; font-size:0.8rem;">[ Supprimer ce registre ]</button>
+                            </div>
                         </div>
+                        ${LEGAL_HTML}
+                        <div class="page-number">- ${ (index * 2) + 1 } -</div>
+                    </div>
+                `;
+
+                const rightContent = `
+                    <div class="page page-right sheet-container-frame">
+                        <iframe class="char-sheet-frame" src="${uniqueUrl}"></iframe>
+                        ${LEGAL_HTML}
+                        <div class="page-number">- ${ (index * 2) + 2 } -</div>
+                    </div>
+                `;
+
+                spread.innerHTML = isMobile ? rightContent : (leftContent + rightContent);
+                wrapper.appendChild(spread);
+            });
+
+            // 3. Ajouter la page "Nouvelle Inscription" à la fin
+            const newSpread = document.createElement('div');
+            newSpread.className = 'book-spread';
+            const pageNum = (profiles.length * 2) + 1;
+
+            const newPageContent = `
+                <div class="page" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <div style="text-align:center;">
+                        <h2 style="font-size:2rem; margin-bottom:1rem;">Fin du Registre</h2>
+                        <p>Il reste des pages vierges dans ce tome.</p>
+                        
+                        <button onclick="createNewHero()" class="new-char-btn">
+                            <span class="big-plus">+</span>
+                            <span>Inscrire un nouveau héros</span>
+                        </button>
                     </div>
                     ${LEGAL_HTML}
-                    <div class="page-number">- I -</div>
+                    <div class="page-number">- ${pageNum} -</div>
                 </div>
             `;
-
-            // Page Droite : L'Iframe
-            const rightContent = `
-                <div class="page page-right" id="sheetContainer">
-                    <iframe id="charSheetFrame" src="${fileUrl}"></iframe>
-                    ${LEGAL_HTML} <div class="page-number">- II -</div>
-                </div>
-            `;
-
-            spread.innerHTML = isMobile ? rightContent : (leftContent + rightContent);
-            wrapper.appendChild(spread);
-
-            // Attendre le chargement pour ajuster le zoom et masquer la sidebar interne
-            const iframe = document.getElementById('charSheetFrame');
-            iframe.onload = () => {
-                resizeSheet();
-                // Essayer de masquer la sidebar interne de la fiche pour éviter les doublons
-                try {
-                    const iDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const style = iDoc.createElement('style');
-                    // On cache la navigation interne (.sidebar-right) mais on garde les onglets classeur (.binder-sidebar)
-                    style.textContent = `
-                        .sidebar-right, .no-print { display: none !important; }
-                        body { background: transparent !important; }
-                    `;
-                    iDoc.head.appendChild(style);
-                } catch(e) {
-                    console.log("Cross-origin restriction (local test): " + e);
-                }
-            };
-        }
-
-        function resizeSheet() {
-            const container = document.getElementById('sheetContainer');
-            const iframe = document.getElementById('charSheetFrame');
-            if(!container || !iframe) return;
-
-            // Dimensions cibles (A4 pixels à 96 DPI)
-            const targetW = 794; 
-            const targetH = 1123;
-
-            // Espace disponible (hauteur - marges)
-            // On prend une marge de sécurité pour ne pas toucher le footer
-            const availableH = container.clientHeight - 130; 
-            const availableW = container.clientWidth - 40;
-
-            // Calcul du scale (priorité à la hauteur pour tout voir)
-            let scale = availableH / targetH;
             
-            // Si même avec ce scale ça dépasse en largeur (cas rare mobile très étroit), on réduit encore
-            if (targetW * scale > availableW) {
-                scale = availableW / targetW;
+            // Sur desktop on met ça à droite ou centré ? Centrons-le sur une page simple (gauche) pour finir
+            // Ou une double page vide à droite. Disons double page avec contenu à gauche.
+            if (isMobile) {
+                newSpread.innerHTML = newPageContent;
+            } else {
+                newSpread.innerHTML = newPageContent + `<div class="page page-right"></div>`;
             }
+            
+            wrapper.appendChild(newSpread);
 
-            // Application
-            iframe.style.transform = `scale(${scale})`;
+            // 4. Lancer le resize des iframes une fois chargées
+            const frames = document.querySelectorAll('.char-sheet-frame');
+            frames.forEach(frame => {
+                frame.onload = () => resizeAllSheets();
+            });
         }
 
+        // Actions du Registre
+        function createNewHero() {
+            SCCS_Registre.createProfile();
+            // Recharger la vue actuelle pour afficher la nouvelle page
+            loadDocument('fiche');
+        }
 
-        // ===== MOTEUR DE PAGINATION (TEXTE) =====
-        let pgnState = {
-            wrapper: null,
-            currentSpread: null,
-            currentPageContent: null,
-            isRightPage: false,
-            pageCount: 1,
-            elementsQueue: []
-        };
+        function deleteHero(id) {
+            if(confirm("Êtes-vous certain de vouloir brûler cette page ? Cette action est irréversible.")) {
+                SCCS_Registre.deleteProfile(id);
+                loadDocument('fiche');
+            }
+        }
+
+        // Resize global pour toutes les fiches visibles
+        function resizeAllSheets() {
+            const frames = document.querySelectorAll('.char-sheet-frame');
+            frames.forEach(iframe => {
+                const container = iframe.parentElement;
+                if(!container) return;
+
+                const targetW = 794; 
+                const targetH = 1123;
+                const availableH = container.clientHeight - 130; 
+                const availableW = container.clientWidth - 40;
+
+                let scale = availableH / targetH;
+                if (targetW * scale > availableW) {
+                    scale = availableW / targetW;
+                }
+                iframe.style.transform = `scale(${scale})`;
+            });
+        }
+
+        // ===== MOTEUR PAGINATION (TEXTE STANDARD) =====
+        let pgnState = { wrapper: null, currentSpread: null, currentPageContent: null, isRightPage: false, pageCount: 1, elementsQueue: [] };
 
         function paginateContent(htmlContent) {
             pgnState.wrapper = document.getElementById('bookSpreadsWrapper');
             const staging = document.getElementById('hiddenStaging');
-            
             staging.innerHTML = htmlContent;
             pgnState.wrapper.innerHTML = ''; 
             pgnState.pageCount = 1;
@@ -526,28 +576,11 @@
             const spread = document.createElement('div');
             spread.className = 'book-spread';
             
-            if (isMobile) {
-                spread.innerHTML = `
-                    <div class="page page-left">
-                        <div class="content-wrapper"></div>
-                        ${LEGAL_HTML}
-                        <div class="page-number">- ${pgnState.pageCount} -</div>
-                    </div>
-                `;
-            } else {
-                spread.innerHTML = `
-                    <div class="page page-left">
-                        <div class="content-wrapper"></div>
-                        ${LEGAL_HTML}
-                        <div class="page-number">- ${pgnState.pageCount} -</div>
-                    </div>
-                    <div class="page page-right">
-                        <div class="content-wrapper"></div>
-                        ${LEGAL_HTML}
-                        <div class="page-number">- ${pgnState.pageCount + 1} -</div>
-                    </div>
-                `;
-            }
+            const htmlLeft = `<div class="page page-left"><div class="content-wrapper"></div>${LEGAL_HTML}<div class="page-number">- ${pgnState.pageCount} -</div></div>`;
+            const htmlRight = `<div class="page page-right"><div class="content-wrapper"></div>${LEGAL_HTML}<div class="page-number">- ${pgnState.pageCount + 1} -</div></div>`;
+
+            if (isMobile) spread.innerHTML = htmlLeft;
+            else spread.innerHTML = htmlLeft + htmlRight;
             
             pgnState.wrapper.appendChild(spread);
             pgnState.currentSpread = spread;
@@ -573,11 +606,9 @@
         function processElement(element) {
             let node = element.cloneNode(true);
             pgnState.currentPageContent.appendChild(node);
-
             if (isOverflowing(pgnState.currentPageContent)) {
                 pgnState.currentPageContent.removeChild(node);
                 const isPageEmpty = pgnState.currentPageContent.children.length === 0;
-
                 if (!isPageEmpty) {
                     advancePage();
                     pgnState.elementsQueue.unshift(element); 
@@ -600,9 +631,7 @@
             }
             const children = Array.from(element.children);
             if (children.length > 0) {
-                for (let i = children.length - 1; i >= 0; i--) {
-                    pgnState.elementsQueue.unshift(children[i]);
-                }
+                for (let i = children.length - 1; i >= 0; i--) { pgnState.elementsQueue.unshift(children[i]); }
             } else {
                 let node = element.cloneNode(true);
                 node.style.maxHeight = "100%";
@@ -612,11 +641,8 @@
             }
         }
 
-        function isOverflowing(container) {
-            return container.scrollHeight > container.clientHeight + 2;
-        }
+        function isOverflowing(container) { return container.scrollHeight > container.clientHeight + 2; }
 
-        // ===== EVENTS =====
         function scrollToElement(id) {
             const cleanId = id.replace('section-', '');
             const target = document.getElementById(cleanId) || document.getElementById(id);
@@ -630,10 +656,8 @@
             sidebarOpen = !sidebarOpen;
             document.getElementById('sidebarContainer').classList.toggle('closed', !sidebarOpen);
             document.getElementById('mainContainer').classList.toggle('sidebar-closed', !sidebarOpen);
-            
-            // Recalcul en différé
             setTimeout(() => { 
-                if (currentDoc === 'fiche') resizeSheet();
+                if (currentDoc === 'fiche') resizeAllSheets();
                 else if (rawContentCache) paginateContent(rawContentCache); 
             }, 350);
         }
@@ -642,9 +666,8 @@
             const wasMobile = isMobile;
             isMobile = window.innerWidth <= 1024;
             if (isMobile && sidebarOpen && !wasMobile) toggleSidebar();
-            
             if (wasMobile !== isMobile) {
-                 if (currentDoc === 'fiche') loadDocument('fiche'); // Recharger la structure pour mobile/desktop
+                 if (currentDoc === 'fiche') loadDocument('fiche');
                  else if (rawContentCache) paginateContent(rawContentCache);
             }
         }
@@ -654,7 +677,7 @@
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
                 checkMobile();
-                if (currentDoc === 'fiche') resizeSheet();
+                if (currentDoc === 'fiche') resizeAllSheets();
                 else if (rawContentCache) paginateContent(rawContentCache);
             }, 300);
         });
