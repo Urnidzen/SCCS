@@ -305,6 +305,22 @@
             .book-spread.sheet-mode .page-right { display: flex; width: 100%; height: 100vh; }
         }
 
+        /* Mode fiche : suppression des marges généreuses */
+        .book-spread.sheet-mode .page-right {
+            padding: 10px !important;  /* Au lieu de 50px 60px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-spread.sheet-mode .page-right .content-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         /* ===== AJOUT SPÉCIFIQUE IMPRESSION ===== */
         @media print {
             @page {
@@ -656,14 +672,19 @@
 
                 const targetW = 794; 
                 const targetH = 1123;
-                const availableH = container.clientHeight - 130; 
-                const availableW = container.clientWidth - 40;
+                // Avant : -130 et -40, maintenant presque tout l'espace
+                const availableH = container.clientHeight - 20;  // Marge minimale
+                const availableW = container.clientWidth - 20;
 
-                let scale = availableH / targetH;
-                if (targetW * scale > availableW) {
-                    scale = availableW / targetW;
-                }
+                let scale = Math.min(availableH / targetH, availableW / targetW);
+        
+                // Empêcher l'échelle trop petite sur mobile
+                scale = Math.min(scale, 1.0); 
+        
                 iframe.style.transform = `scale(${scale})`;
+                // Important : fixer la taille réelle pour éviter les barres de défilement
+                iframe.style.width = `${targetW}px`;
+                iframe.style.height = `${targetH}px`;
             });
         }
 
