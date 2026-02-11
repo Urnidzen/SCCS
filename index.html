@@ -291,34 +291,6 @@
             font-family: 'Cinzel', serif;
             letter-spacing: 0.05em;
         }
-
-        /* Mode fiche : suppression totale des marges internes */
-        .book-spread.sheet-mode .page-right {
-            padding: 0 !important;
-            overflow: hidden; /* Empêche le scroll de la page */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Alignement en HAUT */
-        }
-
-        .book-spread.sheet-mode .sheet-container-frame {
-            width: 100%;
-            height: 100vh; /* Force la pleine hauteur visible */
-            display: flex;
-            justify-content: center; /* Centre horizontal */
-            align-items: flex-start; /* Alignement en haut */
-            position: relative;
-        }
-
-        .book-spread.sheet-mode .char-sheet-frame {
-            border: none;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            transform-origin: top center !important; /* Ancre le scale en haut au centre */
-            margin: 0 !important;
-            max-width: none !important;
-            max-height: none !important;
-        }
         
         @media (max-width: 1024px) {
             .sidebar-container { transform: translateX(-320px); }
@@ -333,22 +305,6 @@
             .book-spread.sheet-mode .page-right { display: flex; width: 100%; height: 100vh; }
         }
 
-        /* Mode fiche : suppression des marges généreuses */
-        .book-spread.sheet-mode .page-right {
-            padding: 10px !important;  /* Au lieu de 50px 60px */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .book-spread.sheet-mode .page-right .content-wrapper {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
         /* ===== AJOUT SPÉCIFIQUE IMPRESSION ===== */
         @media print {
             @page {
@@ -691,33 +647,22 @@
             }
         }
 
+        // Resize global pour toutes les fiches visibles
         function resizeAllSheets() {
             const frames = document.querySelectorAll('.char-sheet-frame');
             frames.forEach(iframe => {
                 const container = iframe.parentElement;
-                if (!container) return;
+                if(!container) return;
 
-                const targetW = 794;  // Largeur originale A4
-                const targetH = 1123; // Hauteur originale A4
-        
-                // Hauteur disponible (moins une petite marge pour le footer si besoin)
-                const availableH = container.clientHeight - 5; // 5px de sécurité
-        
-                // Scale pour remplir la HAUTEUR
+                const targetW = 794; 
+                const targetH = 1123;
+                const availableH = container.clientHeight - 130; 
+                const availableW = container.clientWidth - 40;
+
                 let scale = availableH / targetH;
-        
-                // Vérifier si ça dépasse en largeur (écran étroit)
-                const availableW = container.clientWidth;
-                const scaledW = targetW * scale;
-        
-                // Si trop large, on rescale basé sur la largeur pour éviter le scroll horizontal
-                if (scaledW > availableW) {
+                if (targetW * scale > availableW) {
                     scale = availableW / targetW;
                 }
-        
-                // Application
-                iframe.style.width = `${targetW}px`;
-                iframe.style.height = `${targetH}px`;
                 iframe.style.transform = `scale(${scale})`;
             });
         }
