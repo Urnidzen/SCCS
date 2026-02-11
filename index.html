@@ -221,12 +221,10 @@
         /* ===== STYLE SPÉCIAL FICHE PERSO (IFRAME) ===== */
         /* Conteneur de l'iframe */
         .sheet-container-frame {
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 0; 
-            overflow: hidden;
             position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
         }
 
         .char-sheet-frame {
@@ -669,16 +667,27 @@
                 const container = iframe.parentElement;
                 if(!container) return;
 
+                const targetW = 794; 
+                const targetH = 1123;
+        
+                // Récupérer les dimensions disponibles
+                const availableH = container.clientHeight; 
+                const availableW = container.clientWidth;
+
+                // Calculer le scale
                 const scale = Math.min(
                     availableH / targetH, 
                     availableW / targetW
                 );
 
-                // CRUCIAL : Sortir du flux + centrer parfaitement
+                // Appliquer le positionnement absolu avec centrage
                 iframe.style.position = 'absolute';
                 iframe.style.top = '50%';
                 iframe.style.left = '50%';
+                iframe.style.width = targetW + 'px';
+                iframe.style.height = targetH + 'px';
                 iframe.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                iframe.style.transformOrigin = 'center center';
             });
         }
 
