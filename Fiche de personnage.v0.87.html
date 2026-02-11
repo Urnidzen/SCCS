@@ -92,8 +92,7 @@
             min-width: 30px !important;
             max-width: 30px !important;
             height: 30px !important;
-            background: transparent !important;
-            background-color: transparent !important;
+            background: transparent !important; 
             border: none !important; 
             outline: none !important;
             text-align: center !important; 
@@ -106,16 +105,6 @@
             vertical-align: middle !important;
             display: block !important;
             box-sizing: border-box !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: textfield !important;
-            appearance: none !important;
-        }
-        
-        /* Suppression des flèches spinner sur Chrome/Safari */
-        .clean-input::-webkit-outer-spin-button,
-        .clean-input::-webkit-inner-spin-button {
-            -webkit-appearance: none !important;
-            margin: 0 !important;
         }
         
         .identity-select, .identity-input {
@@ -123,8 +112,7 @@
             background: transparent; 
             border: none;
             border-bottom: 2px solid rgba(0, 0, 0, 0.5); 
-            width: 60px;
-            text-align: center;
+            width: 100%;
             padding: 0; 
             height: 30px; 
             vertical-align: bottom; 
@@ -758,9 +746,13 @@
                     select.appendChild(group);
                 }
                 select.value = "Main Libre";
-                select.onchange = updateUI;
+                select.onchange = () => {
+                    updateOffhandOptions(index);
+                    updateUI();
+                };
                 const off = find(`offhand-select-${index}`);
                 if(off) off.onchange = updateUI;
+                updateOffhandOptions(index);
             });
             const arm = find('armor-select');
             if(arm) arm.onchange = updateUI;
@@ -795,18 +787,27 @@
             offhandSelect.disabled = false;
             
             let options = [];
+            let defaultValue = "Main Libre";
+            
             if (category === "Distance" || category === "Longue") {
                 options.push("Occupée");
-                offhandSelect.disabled = true; 
+                offhandSelect.disabled = true;
+                defaultValue = "Occupée";
             } 
             else if (category === "Focalisateur") {
-                if (weaponName === "Bâton") options.push("Occupée ou Libre", "Bouclier", "Torche");
-                else options.push("Main Libre (Incantation)", "Bouclier", "Torche");
+                if (weaponName === "Bâton") {
+                    options.push("Occupée ou Libre", "Bouclier", "Torche");
+                    defaultValue = "Occupée ou Libre";
+                }
+                else {
+                    options.push("Main Libre (Incantation)", "Bouclier", "Torche");
+                    defaultValue = "Main Libre (Incantation)";
+                }
             }
             else if (category === "Moyenne") {
                 options.push("Main Libre", "Bouclier", "Torche");
             }
-            else { 
+            else {
                 options.push("Main Libre", "Bouclier", "Torche");
                 WEAPONS_DATA["Courte"].items.forEach(wp => {
                     if (!["Main Libre","Torche","Bouclier (Offensif)"].includes(wp)) options.push(wp); 
@@ -819,8 +820,11 @@
                 offhandSelect.appendChild(el);
             });
 
-            if (Array.from(offhandSelect.options).some(o => o.value === currentOffhand)) offhandSelect.value = currentOffhand;
-            else offhandSelect.selectedIndex = 0;
+            if (currentOffhand && Array.from(offhandSelect.options).some(o => o.value === currentOffhand)) {
+                offhandSelect.value = currentOffhand;
+            } else {
+                offhandSelect.value = defaultValue;
+            }
         }
 
         function updatePortrait() {
@@ -982,4 +986,3 @@
     </script>
 </body>
 </html>
-
