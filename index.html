@@ -292,29 +292,32 @@
             letter-spacing: 0.05em;
         }
 
-        /* Réduction drastique des marges en mode fiche */
+        /* Mode fiche : suppression totale des marges internes */
         .book-spread.sheet-mode .page-right {
-            padding-top: 0px !important;      /* Au lieu de 50px */
-            padding-bottom: 40px !important;  /* Au lieu de 120px */
-            padding-left: 10px !important;
-            padding-right: 10px !important;
-
-            /* Alignement en HAUT pour le vertical, CENTRÉ pour l'horizontal */
-            justify-content: flex-start !important; /* Annule le center vertical */
-            align-items: center !important;         /* Garde le center horizontal */
+            padding: 0 !important;
+            overflow: hidden; /* Empêche le scroll de la page */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Alignement en HAUT */
         }
 
-        /* Alignement en haut avec léger décalage plutôt que centré */
         .book-spread.sheet-mode .sheet-container-frame {
-            align-items: flex-start !important; /* Supprime le centrage vertical */
-            justify-content: center;
-            padding-top: 0; /* La fiche commence tout en haut */
-            height: 100%;
+            width: 100%;
+            height: 100vh; /* Force la pleine hauteur visible */
+            display: flex;
+            justify-content: center; /* Centre horizontal */
+            align-items: flex-start; /* Alignement en haut */
+            position: relative;
         }
 
-        /* Si vous préférez garder un léger centrage mais remonté */
         .book-spread.sheet-mode .char-sheet-frame {
-            margin-top: -40px; /* Compense visuellement le padding résiduel */
+            border: none;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            transform-origin: top center !important; /* Ancre le scale en haut au centre */
+            margin: 0 !important;
+            max-width: none !important;
+            max-height: none !important;
         }
         
         @media (max-width: 1024px) {
@@ -688,26 +691,34 @@
             }
         }
 
-        // Resize global pour toutes les fiches visibles
         function resizeAllSheets() {
             const frames = document.querySelectorAll('.char-sheet-frame');
             frames.forEach(iframe => {
                 const container = iframe.parentElement;
-                if(!container) return;
+                if (!container) return;
 
-                const targetW = 794; 
-                const targetH = 1123;
-                // On utilise presque toute la hauteur disponible (-30px de marge de sécurité)
-                const availableH = container.clientHeight - 30;
-                const availableW = container.clientWidth - 20;
-
-                const scale = Math.min(
-                    availableW / targetW,
-                    availableH / targetH
-                ) * 0.98; /* Léger breathing room */
-
+                const targetW = 794;  // Largeur originale A4
+                const targetH = 1123; // Hauteur originale A4
+        
+                // Hauteur disponible (moins une petite marge pour le footer si besoin)
+                const availableH = container.clientHeight - 5; // 5px de sécurité
+        
+                // Scale pour remplir la HAUTEUR
+                let scale = availableH / targetH;
+        
+                // Vérifier si ça dépasse en largeur (écran étroit)
+                const availableW = container.clientWidth;
+                const scaledW = targetW * scale;
+        
+                // Si trop large, on rescale basé sur la largeur pour éviter le scroll horizontal
+                if (scaledW > availableW) {
+                    scale = availableW / targetW;
+                }
+        
+                // Application
+                iframe.style.width = `${targetW}px`;
+                iframe.style.height = `${targetH}px`;
                 iframe.style.transform = `scale(${scale})`;
-                // Supprimez margin-top négatif si vous utilisez flex-start
             });
         }
 
