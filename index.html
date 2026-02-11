@@ -283,6 +283,15 @@
             z-index: 10;
         }
 
+        .section-title-isolated {
+            font-size: 1.5rem;
+            border-bottom: 2px solid #1c1917;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+        
         @media (max-width: 1024px) {
             .sidebar-container { transform: translateX(-320px); }
             .sidebar-container.open { transform: translateX(0); }
@@ -764,7 +773,11 @@
             if (children.length > 0) {
                 // TRANSFÉRER L'ID AU PREMIER ENFANT POUR CONSERVER LA NAVIGATION
                 if (element.id && children[0]) {
-                children[0].id = element.id;
+                    children[0].id = element.id;
+                    // Si c'est un titre H2, lui conserver son style de section
+                    if (children[0].tagName === 'H2') {
+                        children[0].classList.add('section-title-isolated');
+                    }
                 }
                 for (let i = children.length - 1; i >= 0; i--) { pgnState.elementsQueue.unshift(children[i]); }
             } else {
