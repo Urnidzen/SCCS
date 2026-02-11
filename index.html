@@ -533,10 +533,6 @@
                         node.removeChild(child);
                     } else if (child.nodeType === 1) { // Élément
                         removeComments(child);
-                        // Supprimer les divs vides sans classe ni id
-                        if (child.tagName === 'DIV' && !child.className && !child.id && child.innerText.trim() === '') {
-                            node.removeChild(child);
-                        }
                     }
                 }
             };
@@ -675,17 +671,9 @@
 
             createNewSpread();
             
-            // Filtrer les éléments non-visuels et vides
+            // Filtrer uniquement les balises techniques (script, style, meta, etc.)
             pgnState.elementsQueue = Array.from(staging.children).filter(el => {
-                // Ignorer les balises techniques
-                if (['SCRIPT', 'STYLE', 'LINK', 'META', 'NOSCRIPT', 'TITLE', 'BASE'].includes(el.tagName)) {
-                    return false;
-                }
-                // Ignorer les éléments sans contenu visible (texte, images, tableaux)
-                const hasVisibleContent = el.innerText.trim().length > 0 || 
-                                          el.querySelectorAll('img, table, canvas, svg, iframe').length > 0 ||
-                                          ['IMG', 'TABLE', 'CANVAS', 'SVG', 'IFRAME'].includes(el.tagName);
-                return hasVisibleContent;
+                return !['SCRIPT', 'STYLE', 'LINK', 'META', 'NOSCRIPT', 'TITLE', 'BASE'].includes(el.tagName);
             });
 
             while (pgnState.elementsQueue.length > 0) {
@@ -717,7 +705,12 @@
             const spreads = document.querySelectorAll('.book-spread');
             spreads.forEach(spread => {
                 const wrappers = spread.querySelectorAll('.content-wrapper');
-                const isEmpty = Array.from(wrappers).every(w => w.children.length === 0 || w.innerText.trim().length === 0);
+                const isEmpty = Array.from(wrappers).every(w => {
+                    // Vérifier s'il n'y a vraiment aucun enfant OU que le texte est vide ET pas d'images/tableaux
+                    const hasNoChildren = w.children.length === 0;
+                    const hasNoVisualContent = w.innerText.trim().length === 0 && w.querySelectorAll('img, table, canvas, svg').length === 0;
+                    return hasNoChildren || hasNoVisualContent;
+                });
                 if (isEmpty) {
                     spread.remove();
                 }
