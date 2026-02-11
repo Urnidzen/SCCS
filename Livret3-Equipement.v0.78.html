@@ -23,12 +23,118 @@
 }
 </script>
 
+<style>
+    /* Base forcée sur tous les tableaux du document */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    
+    /* Styles spécifiques aux tableaux */
+    .content-wrapper .table-armures,
+    .content-wrapper .table-boucliers,
+    .content-wrapper .table-armes-mfg,
+    .content-wrapper .table-armes-nat {
+        width: 100% !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+    }
+    
+    /* Tableau Armures - 4 colonnes égales */
+    .content-wrapper .table-armures th,
+    .content-wrapper .table-armures td {
+        width: 25% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    
+    /* Tableau Boucliers - 3 colonnes égales */
+    .content-wrapper .table-boucliers th,
+    .content-wrapper .table-boucliers td {
+        width: 33.33% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    
+    /* Tableau Armes manufacturées - 4 colonnes avec Contrainte/Avantage plus large */
+    .content-wrapper .table-armes-mfg th:nth-child(1),
+    .content-wrapper .table-armes-mfg td:nth-child(1) {
+        width: 20% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    .content-wrapper .table-armes-mfg th:nth-child(2),
+    .content-wrapper .table-armes-mfg td:nth-child(2) {
+        width: 20% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    .content-wrapper .table-armes-mfg th:nth-child(3),
+    .content-wrapper .table-armes-mfg td:nth-child(3) {
+        width: 35% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    .content-wrapper .table-armes-mfg th:nth-child(4),
+    .content-wrapper .table-armes-mfg td:nth-child(4) {
+        width: 25% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    
+    /* Tableau Armes naturelles - 3 colonnes égales */
+    .content-wrapper .table-armes-nat th,
+    .content-wrapper .table-armes-nat td {
+        width: 33.33% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    
+    /* En-têtes communs */
+    .content-wrapper .table-armures th,
+    .content-wrapper .table-boucliers th,
+    .content-wrapper .table-armes-mfg th,
+    .content-wrapper .table-armes-nat th {
+        text-align: left !important;
+        border-bottom: 2px solid #1c1917 !important;
+    }
+    
+    /* Cellules de données communes */
+    .content-wrapper .table-armures td,
+    .content-wrapper .table-boucliers td,
+    .content-wrapper .table-armes-mfg td,
+    .content-wrapper .table-armes-nat td {
+        border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+    }
+</style>
+
 <div class="content-section" id="section-armures">
     <h2>A. Armures et Boucliers</h2>
     <p class="mb-4 italic">Le port d'une armure confère une protection vitale (Résistance), mais impose des contraintes sur la mobilité et la perception du personnage.</p>
     
     <h3 id="section-armures-table">1. Tableau des Armures</h3>
-    <table>
+    <table class="table-armures">
         <thead>
             <tr>
                 <th>Type d'Armure</th>
@@ -66,7 +172,7 @@
     </table>
 
     <h3 id="section-boucliers-table">2. Tableau des Boucliers</h3>
-    <table>
+    <table class="table-boucliers">
         <thead>
             <tr>
                 <th>Équipement</th>
@@ -99,7 +205,7 @@
     </div>
 
     <h3 id="section-armes-manufacturees">1. Armes manufacturées et Objets</h3>
-    <table>
+    <table class="table-armes-mfg">
         <thead>
             <tr>
                 <th>Catégorie</th>
@@ -143,7 +249,7 @@
     </table>
 
     <h3 id="section-armes-naturelles">2. Armes Naturelles</h3>
-    <table>
+    <table class="table-armes-nat">
         <thead>
             <tr>
                 <th>Catégorie</th>
