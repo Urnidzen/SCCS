@@ -24,9 +24,47 @@
 }
 </script>
 
+<style>
+    .table-lexique {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+    
+    .table-lexique th, .table-lexique td {
+        padding: 8px;
+        vertical-align: top;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+    
+    /* Tableau Lexique - 3 colonnes avec Talents plus large */
+    .table-lexique th:nth-child(1), .table-lexique td:nth-child(1) {
+        width: 25%;
+    }
+    
+    .table-lexique th:nth-child(2), .table-lexique td:nth-child(2) {
+        width: 25%;
+    }
+    
+    .table-lexique th:nth-child(3), .table-lexique td:nth-child(3) {
+        width: 50%;
+    }
+    
+    .table-lexique th {
+        text-align: left;
+        border-bottom: 2px solid #1c1917;
+    }
+    
+    .table-lexique td {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+</style>
+
 <div class="content-section" id="section-lexique">
     <h2>Lexique des Abréviations</h2>
-    <table>
+    <table class="table-lexique">
         <thead>
             <tr>
                 <th>Combat</th>
