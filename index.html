@@ -294,7 +294,7 @@
         
         @media (max-width: 1024px) {
             .sidebar-container { transform: translateX(-320px); }
-            .sidebar-container.open { transform: translateX(0); }
+            .sidebar-container:not(.closed) { transform: translateX(0); }
             .main-container { margin-left: 0 !important; width: 100% !important; }
             .book-spread { flex-direction: column; }
             .page { padding: 30px 20px 120px 20px; width: 100%; }
