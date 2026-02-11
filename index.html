@@ -16,22 +16,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-       .page {
-    position: relative;
-}
-.page::before {
-    content: '';
-    position: absolute;
-    top: 50px;      /* Padding-top */
-    left: 60px;     /* Padding-left */
-    right: 60px;    /* Padding-right */
-    bottom: 120px;  /* Padding-bottom */
-    border: 2px dashed red;
-    pointer-events: none;
-    z-index: 9999;
-}
-         
+  
         html, body { 
             height: 100%; 
             width: 100%;
@@ -387,8 +372,28 @@
                 transform: scale(1) !important;
                 width: 100% !important;
                 height: 1000px !important;
-            }
-        }
+            @media print {
+
+           /* Correction spécifique pour l'impression de la fiche */
+           .sheet-container-frame {
+               position: relative !important;
+               width: 210mm !important;  /* Largeur A4 */
+               height: 297mm !important; /* Hauteur A4 */
+               overflow: visible !important;
+               page-break-inside: avoid !important;
+           }
+    
+           .char-sheet-frame {
+           position: absolute !important;
+               top: 0 !important;
+               left: 0 !important;
+               transform: none !important;  /* Supprime le scale */
+               width: 210mm !important;
+               height: 297mm !important;
+               box-shadow: none !important;
+               margin: 0 !important;
+           }
+       }
     </style>
 </head>
 <body>
