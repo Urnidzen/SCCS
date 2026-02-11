@@ -493,7 +493,9 @@
         const findClass = (cls) => context.querySelector(`.${cls}`);
         const findAll = (selector) => context.querySelectorAll(selector);
 
-        const currentUid = root ? root.getAttribute('data-uid') : null;
+        // Récupération de l'ID depuis l'URL (pour l'iframe)
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentUid = root ? root.getAttribute('data-uid') : urlParams.get('uid');
 
         const CUSTOM_PORTRAITS_URLS = {
             "HUMAIN_MASCULIN": "portraits/portrait_homme_humain.png",
@@ -572,6 +574,7 @@
 
             adjustZoom();
             window.addEventListener('resize', adjustZoom);
+            updatePortrait();
         }
 
         function loadFromRegistry(uid) {
