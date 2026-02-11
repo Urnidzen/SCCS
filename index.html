@@ -17,7 +17,22 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-       .sheet-container-frame {
+       .page {
+    position: relative;
+}
+.page::before {
+    content: '';
+    position: absolute;
+    top: 50px;      /* Padding-top */
+    left: 60px;     /* Padding-left */
+    right: 60px;    /* Padding-right */
+    bottom: 120px;  /* Padding-bottom */
+    border: 2px dashed red;
+    pointer-events: none;
+    z-index: 9999;
+}
+        
+        .sheet-container-frame {
     position: relative;
 }
 
