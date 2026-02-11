@@ -210,8 +210,7 @@
             align-items: center; 
             justify-content: center;
             padding: 0; 
-            overflow: hidden !important;
-            position: relative;
+            overflow: hidden;
         }
 
         .char-sheet-frame {
@@ -221,7 +220,6 @@
             height: 1123px; /* A4 Hauteur */
             transform-origin: center center;
             background: #fff;
-            overflow: hidden !important;
         }
 
         .sheet-placeholder-text {
@@ -587,7 +585,7 @@
 
                 const rightContent = `
                     <div class="page page-right sheet-container-frame">
-                        <iframe class="char-sheet-frame" src="${uniqueUrl}" scrolling="no"></iframe>
+                        <iframe class="char-sheet-frame" src="${uniqueUrl}"></iframe>
                         ${LEGAL_HTML}
                         <div class="page-number">- ${ (index * 2) + 2 } -</div>
                     </div>
@@ -628,13 +626,10 @@
             
             wrapper.appendChild(newSpread);
 
-            // 4. Lancer le resize des iframes avec multiples tentatives
+            // 4. Lancer le resize des iframes une fois chargées
             const frames = document.querySelectorAll('.char-sheet-frame');
             frames.forEach(frame => {
-                // Tentatives répétées pour gérer le cache et le timing
-                [0, 100, 300, 600, 1000].forEach(delay => {
-                    setTimeout(() => resizeAllSheets(), delay);
-                });
+                frame.onload = () => resizeAllSheets();
             });
         }
 
@@ -652,30 +647,23 @@
             }
         }
 
-        // Resize global pour toutes les fiches visibles - CORRIGÉ
+        // Resize global pour toutes les fiches visibles
         function resizeAllSheets() {
             const frames = document.querySelectorAll('.char-sheet-frame');
             frames.forEach(iframe => {
                 const container = iframe.parentElement;
-                if(!container || container.clientHeight === 0) return;
+                if(!container) return;
 
                 const targetW = 794; 
                 const targetH = 1123;
-                const availableH = container.clientHeight - 80; // Marge réduite
+                const availableH = container.clientHeight - 130; 
                 const availableW = container.clientWidth - 40;
 
-                // Calcul du scale optimal
-                let scale = Math.min(availableW / targetW, availableH / targetH) * 0.98;
-                
-                // Appliquer le transform
+                let scale = availableH / targetH;
+                if (targetW * scale > availableW) {
+                    scale = availableW / targetW;
+                }
                 iframe.style.transform = `scale(${scale})`;
-                
-                // CRITIQUE : Ajuster la hauteur réelle pour éviter le débordement
-                // qui cause la scrollbar
-                const actualHeight = targetH * scale;
-                iframe.style.height = `${actualHeight}px`;
-                iframe.style.maxHeight = `${actualHeight}px`;
-                iframe.style.width = `${targetW}px`;
             });
         }
 
