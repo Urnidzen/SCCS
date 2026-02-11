@@ -777,10 +777,24 @@
         function scrollToElement(id) {
             const cleanId = id.replace('section-', '');
             const target = document.getElementById(cleanId) || document.getElementById(id);
-            if (target) {
-                const spread = target.closest('.book-spread');
-                if (spread) spread.scrollIntoView({ behavior: 'smooth' });
+            if (!target) {
+                console.warn(`Élément introuvable: #${id}`);
+                return;
             }
+    
+            const spread = target.closest('.book-spread');
+            if (!spread) return;
+    
+            const mainContainer = document.getElementById('mainContainer');
+    
+            // Calculer la position exacte du spread dans le conteneur
+            const spreadTop = spread.offsetTop;
+    
+            // Scroll manuel compatible avec scroll-snap
+            mainContainer.scrollTo({
+                top: spreadTop,
+                behavior: 'smooth'
+            });
         }
 
         function toggleSidebar() {
