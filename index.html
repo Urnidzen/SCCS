@@ -500,6 +500,9 @@
                 tempDiv.querySelectorAll('script, .sidebar, header, nav').forEach(el => el.remove());
                 
                 rawContentCache = tempDiv.innerHTML;
+                // Réinitialiser la pagination pour que chaque livret commence sur une page de gauche
+                pgnState.pageCount = 1;
+                pgnState.isRightPage = false;
                 paginateContent(rawContentCache);
 
             } catch (error) {
