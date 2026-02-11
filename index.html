@@ -199,26 +199,27 @@
 
         .rule-box { border-left: 4px solid #7c2d12; background: rgba(124, 45, 18, 0.05); padding: 1rem; margin: 1.2rem 0; }
 
-        img, table {
+        img {
             max-width: 100%; height: auto; display: block;
         }
 
-        /* ===== STYLE SPÉCIAL FICHE PERSO (DIRECT INJECTION) ===== */
-        /* On supprime les styles iframe, on prépare le conteneur */
-        .sheet-wrapper-direct {
+        /* ===== STYLE SPÉCIAL FICHE PERSO (IFRAME) ===== */
+        /* Conteneur de l'iframe */
+        .sheet-container-frame {
             display: flex; 
             align-items: center; 
             justify-content: center;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Permet le scroll si la fiche est trop grande en mode édition */
+            padding: 0; 
+            overflow: hidden;
         }
-        
-        /* Ajustement pour que la fiche s'affiche proprement dans le livre */
-        .sheet-container {
-            transform-origin: top center;
-            /* Le scale sera géré si besoin, ou on laisse le layout responsive faire */
-            margin: 0 auto;
+
+        .char-sheet-frame {
+            border: none;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            width: 794px; /* A4 Largeur (96dpi) */
+            height: 1123px; /* A4 Hauteur */
+            transform-origin: center center;
+            background: #fff;
         }
 
         .sheet-placeholder-text {
@@ -298,9 +299,9 @@
         /* ===== AJOUT SPÉCIFIQUE IMPRESSION ===== */
         @media print {
             @page {
-                margin: 0;
+               margin: 0;
             }
-
+            
             /* 1. Réinitialisation structurelle */
             html, body, .main-container, .book-spreads-wrapper {
                 height: auto !important;
@@ -331,41 +332,22 @@
                 break-after: auto !important;
             }
 
-            /* 5. Pages de contenu STANDARD (Livrets) */
+            /* 5. Pages de contenu */
             .page {
                 height: auto !important;
-                min-height: 100vh !important;
+                /* C'est ICI le correctif : on force une hauteur minimale d'une page complète */
+                /* Cela empêche le contenu suivant de remonter sur la même feuille */
+                min-height: 100vh !important; 
                 width: 100% !important;
                 display: block !important;
                 border: none !important;
                 box-shadow: none !important;
                 margin: 0 !important;
-                padding: 1cm !important; /* Marges pour le texte */
+                padding: 1cm !important; /* Marges réduites pour l'impression */
                 
                 page-break-inside: avoid !important;
                 page-break-after: always !important;
                 break-after: page !important;
-            }
-
-            /* 6. Pages SPÉCIALES FICHE (Direct Injection) */
-            /* Quand on imprime une fiche, on veut supprimer le padding du conteneur parent */
-            /* car la fiche a ses propres marges définies dans son CSS */
-            .book-spread.sheet-mode .page {
-                padding: 0 !important;
-                display: block !important;
-            }
-
-            /* On s'assure que le conteneur de la fiche prend tout l'espace */
-            .sheet-wrapper-direct {
-                display: block !important;
-                width: 100% !important;
-                height: 100% !important;
-                overflow: visible !important;
-            }
-
-            /* Masquer les éléments purement UI de la vue fiche (comme le bouton supprimer) */
-            .sheet-ui-controls {
-                display: none !important;
             }
 
             /* Pour éviter la page blanche finale si la dernière page est un .page */
@@ -376,6 +358,13 @@
 
             .page-left, .page-right {
                 display: block !important;
+            }
+
+            /* Iframe */
+            .char-sheet-frame {
+                transform: scale(1) !important;
+                width: 100% !important;
+                height: 1000px !important;
             }
         }
     </style>
@@ -489,9 +478,8 @@
             const wrapper = document.getElementById('bookSpreadsWrapper');
             wrapper.innerHTML = '<div style="padding:40px; text-align:center; color:#7c2d12;">Chargement...</div>';
 
-            // === CAS SPÉCIAL : LE REGISTRE DES HÉROS (NOUVELLE MÉTHODE) ===
+            // === CAS SPÉCIAL : LE REGISTRE DES HÉROS ===
             if (docId === 'fiche') {
-                // On passe l'URL du fichier pour chargement du contenu
                 renderRegistryChapter(doc.file);
                 return;
             }
@@ -508,9 +496,6 @@
 
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = (docElement.body && docElement.body.innerHTML) ? docElement.body.innerHTML : html;
-                
-                // Ici on continue de nettoyer les scripts pour les livrets de texte standard
-                // pour éviter les conflits, car ils n'en ont pas besoin.
                 tempDiv.querySelectorAll('script, .sidebar, header, nav').forEach(el => el.remove());
                 
                 rawContentCache = tempDiv.innerHTML;
@@ -522,122 +507,93 @@
             }
         }
 
-        // ===== NOUVEAU MOTEUR REGISTRE : INJECTION DIRECTE =====
-        async function renderRegistryChapter(baseFileUrl) {
+        // ===== MOTEUR D'AFFICHAGE DU REGISTRE (MULTIPLES IFRAMES) =====
+        function renderRegistryChapter(baseFileUrl) {
             const wrapper = document.getElementById('bookSpreadsWrapper');
-            wrapper.innerHTML = '<div style="padding:40px; text-align:center; color:#7c2d12;">Chargement des fiches...</div>';
-            currentIndex = []; 
+            wrapper.innerHTML = '';
+            currentIndex = []; // Pas d'index textuel
 
-            try {
-                // 1. Charger le code HTML brut de la fiche UNE SEULE FOIS
-                const response = await fetch(baseFileUrl);
-                const rawHtml = await response.text();
+            // 1. Récupérer tous les héros depuis le Registre (Systeme.js)
+            const profiles = SCCS_Registre.getAllProfiles();
 
-                // 2. Extraire le contenu utile (le body) pour éviter d'avoir des balises <html> imbriquées
-                const parser = new DOMParser();
-                const docDOM = parser.parseFromString(rawHtml, 'text/html');
-                // On prend tout ce qui est dans body
-                const sheetContent = docDOM.body.innerHTML;
-                // On récupère aussi les scripts qui pourraient être dans le head (ex: styles ou logic)
-                // Mais pour la fiche, tout est souvent inline ou dans body.
-                // On va concaténer scripts du head + body content pour être sûr.
+            // 2. Générer une double-page pour chaque héros existant
+            profiles.forEach((profile, index) => {
+                const spread = document.createElement('div');
+                spread.className = 'book-spread sheet-mode';
                 
-                wrapper.innerHTML = '';
-                const profiles = SCCS_Registre.getAllProfiles();
+                // URL unique avec l'ID
+                const uniqueUrl = `${baseFileUrl}?uid=${profile.id}`;
 
-                // 3. Générer les pages
-                profiles.forEach((profile, index) => {
-                    const spread = document.createElement('div');
-                    spread.className = 'book-spread sheet-mode';
-                    
-                    // Page Gauche : Présentation
-                    const leftContent = `
-                        <div class="page page-left">
-                            <div class="content-wrapper" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                                <div class="sheet-placeholder-text">
-                                    <h2 style="font-size:2rem; margin-bottom:0.5rem;">${profile.name || "Héros Inconnu"}</h2>
-                                    <p style="font-size:0.9rem; opacity:0.7;">Fiche d'identité N° ${index + 1}</p>
-                                    <div style="width:50px; height:2px; background:#7c2d12; margin:20px auto;"></div>
-                                    <p>Modification directe activée.</p>
-                                    <button onclick="deleteHero('${profile.id}')" style="margin-top:40px; border:none; background:none; color:#dc2626; opacity:0.6; cursor:pointer; font-family:'Cinzel', serif; font-size:0.8rem;" class="sheet-ui-controls">[ Supprimer ce registre ]</button>
-                                </div>
+                const leftContent = `
+                    <div class="page page-left">
+                        <div class="content-wrapper" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <div class="sheet-placeholder-text">
+                                <h2 style="font-size:2rem; margin-bottom:0.5rem;">${profile.name || "Héros Inconnu"}</h2>
+                                <p style="font-size:0.9rem; opacity:0.7;">Fiche d'identité N° ${index + 1}</p>
+                                <div style="width:50px; height:2px; background:#7c2d12; margin:20px auto;"></div>
+                                <p>Modifiez la fiche ci-contre.<br>L'archiviste sauvegardera chaque lettre.</p>
+                                <button onclick="deleteHero('${profile.id}')" style="margin-top:40px; border:none; background:none; color:#dc2626; opacity:0.6; cursor:pointer; font-family:'Cinzel', serif; font-size:0.8rem;">[ Supprimer ce registre ]</button>
                             </div>
-                            ${LEGAL_HTML}
-                            <div class="page-number">- ${ (index * 2) + 1 } -</div>
-                        </div>
-                    `;
-
-                    // Page Droite : INJECTION DIRECTE DU CODE
-                    // On crée un wrapper avec un ID unique ou un data-attribute pour que le script sache qui il est
-                    // Note: Le script de la fiche devra être adapté pour lire ce data-uid
-                    const rightContent = `
-                        <div class="page page-right">
-                            <div class="sheet-wrapper-direct" data-uid="${profile.id}">
-                                ${sheetContent}
-                            </div>
-                            <div class="page-number">- ${ (index * 2) + 2 } -</div>
-                        </div>
-                    `;
-
-                    spread.innerHTML = isMobile ? rightContent : (leftContent + rightContent);
-                    wrapper.appendChild(spread);
-
-                    // 4. RÉANIMATION DES SCRIPTS
-                    // Le HTML est là, mais les balises <script> sont inertes. Il faut les réveiller.
-                    // On cible le wrapper qu'on vient de créer
-                    const sheetContainer = spread.querySelector('.sheet-wrapper-direct');
-                    if (sheetContainer) {
-                        executeScripts(sheetContainer);
-                    }
-                });
-
-                // 5. Page "Nouveau Personnage"
-                const newSpread = document.createElement('div');
-                newSpread.className = 'book-spread';
-                const pageNum = (profiles.length * 2) + 1;
-                const newPageContent = `
-                    <div class="page" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                        <div style="text-align:center;">
-                            <h2 style="font-size:2rem; margin-bottom:1rem;">Fin du Registre</h2>
-                            <button onclick="createNewHero()" class="new-char-btn">
-                                <span class="big-plus">+</span>
-                                <span>Inscrire un nouveau héros</span>
-                            </button>
                         </div>
                         ${LEGAL_HTML}
-                        <div class="page-number">- ${pageNum} -</div>
+                        <div class="page-number">- ${ (index * 2) + 1 } -</div>
                     </div>
                 `;
-                if (isMobile) newSpread.innerHTML = newPageContent;
-                else newSpread.innerHTML = newPageContent + `<div class="page page-right"></div>`;
-                wrapper.appendChild(newSpread);
 
-            } catch (error) {
-                console.error("Erreur chargement fiche:", error);
-                wrapper.innerHTML = "<p>Erreur critique chargement module fiche.</p>";
+                const rightContent = `
+                    <div class="page page-right sheet-container-frame">
+                        <iframe class="char-sheet-frame" src="${uniqueUrl}"></iframe>
+                        ${LEGAL_HTML}
+                        <div class="page-number">- ${ (index * 2) + 2 } -</div>
+                    </div>
+                `;
+
+                spread.innerHTML = isMobile ? rightContent : (leftContent + rightContent);
+                wrapper.appendChild(spread);
+            });
+
+            // 3. Ajouter la page "Nouvelle Inscription" à la fin
+            const newSpread = document.createElement('div');
+            newSpread.className = 'book-spread';
+            const pageNum = (profiles.length * 2) + 1;
+
+            const newPageContent = `
+                <div class="page" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <div style="text-align:center;">
+                        <h2 style="font-size:2rem; margin-bottom:1rem;">Fin du Registre</h2>
+                        <p>Il reste des pages vierges dans ce tome.</p>
+                        
+                        <button onclick="createNewHero()" class="new-char-btn">
+                            <span class="big-plus">+</span>
+                            <span>Inscrire un nouveau héros</span>
+                        </button>
+                    </div>
+                    ${LEGAL_HTML}
+                    <div class="page-number">- ${pageNum} -</div>
+                </div>
+            `;
+            
+            // Sur desktop on met ça à droite ou centré ? Centrons-le sur une page simple (gauche) pour finir
+            // Ou une double page vide à droite. Disons double page avec contenu à gauche.
+            if (isMobile) {
+                newSpread.innerHTML = newPageContent;
+            } else {
+                newSpread.innerHTML = newPageContent + `<div class="page page-right"></div>`;
             }
-        }
+            
+            wrapper.appendChild(newSpread);
 
-        // Fonction magique pour exécuter les scripts injectés via innerHTML
-        function executeScripts(container) {
-            const scripts = container.querySelectorAll("script");
-            scripts.forEach((oldScript) => {
-                const newScript = document.createElement("script");
-                
-                // Copier les attributs (src, type, etc.)
-                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                
-                // Copier le contenu (code JS inline)
-                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                
-                // Remplacer l'ancien script inerte par le nouveau actif
-                oldScript.parentNode.replaceChild(newScript, oldScript);
+            // 4. Lancer le resize des iframes une fois chargées
+            const frames = document.querySelectorAll('.char-sheet-frame');
+            frames.forEach(frame => {
+                frame.onload = () => resizeAllSheets();
             });
         }
 
         // Actions du Registre
         function createNewHero() {
             SCCS_Registre.createProfile();
+            // Recharger la vue actuelle pour afficher la nouvelle page
             loadDocument('fiche');
         }
 
@@ -648,10 +604,24 @@
             }
         }
 
-        // Le resize des sheets n'est plus nécessaire car on est en HTML natif responsive !
-        // On garde la fonction vide au cas où des appels trainent
-        function resizeAllSheets() { 
-            /* Obsolete avec l'injection directe, mais gardé pour compatibilité */ 
+        // Resize global pour toutes les fiches visibles
+        function resizeAllSheets() {
+            const frames = document.querySelectorAll('.char-sheet-frame');
+            frames.forEach(iframe => {
+                const container = iframe.parentElement;
+                if(!container) return;
+
+                const targetW = 794; 
+                const targetH = 1123;
+                const availableH = container.clientHeight - 130; 
+                const availableW = container.clientWidth - 40;
+
+                let scale = availableH / targetH;
+                if (targetW * scale > availableW) {
+                    scale = availableW / targetW;
+                }
+                iframe.style.transform = `scale(${scale})`;
+            });
         }
 
         // ===== MOTEUR PAGINATION (TEXTE STANDARD) =====
@@ -722,7 +692,9 @@
 
         function handleGiantBlock(element) {
             const tagName = element.tagName.toLowerCase();
-            if (['img', 'table', 'video', 'iframe', 'svg'].includes(tagName) || element.classList.contains('atomic')) {
+            // Modification : les tableaux ne sont plus traités comme des blocs atomiques spéciaux
+            // car ils s'adaptent nativement en largeur avec des colonnes relatives
+            if (['img', 'video', 'iframe', 'svg'].includes(tagName) || element.classList.contains('atomic')) {
                 let node = element.cloneNode(true);
                 node.style.maxHeight = "100%";
                 node.style.overflowY = "auto";
