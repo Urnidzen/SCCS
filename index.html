@@ -756,6 +756,30 @@
             removeEmptySpreads();
         }
 
+        function injectGiscus() {
+            const container = document.querySelector('.giscus-container');
+            if (!container) return;
+    
+            const script = document.createElement('script');
+            script.src = "https://giscus.app/client.js";
+            script.setAttribute('data-repo', 'Urnidzen/SCCS');
+            script.setAttribute('data-repo-id', 'R_kgDORGC3NQ');
+            script.setAttribute('data-category', 'Commentaires Site Web');
+            script.setAttribute('data-category-id', 'DIC_kwDORGC3Nc4C2FWF');
+            script.setAttribute('data-mapping', 'specific');
+            script.setAttribute('data-term', 'contact-page');
+            script.setAttribute('data-strict', '0');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'bottom');
+            script.setAttribute('data-theme', 'light');
+            script.setAttribute('data-lang', 'fr');
+            script.crossOrigin = 'anonymous';
+            script.async = true;
+    
+            container.appendChild(script);
+        }
+        
         function createNewSpread() {
             const spread = document.createElement('div');
             spread.className = 'book-spread';
