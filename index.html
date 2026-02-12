@@ -699,22 +699,11 @@
                 wrapper.appendChild(spread);
             }
 
-            // Si aucun héros, afficher une seule page avec bouton créer
+            // Si aucun héros, créer automatiquement une fiche vierge permanente
             if (profiles.length === 0) {
-                const spread = document.createElement('div');
-                spread.className = 'book-spread';
-                spread.innerHTML = `
-                    <div class="page" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                        <div style="text-align:center;">
-                            <h2 style="font-family:'Cinzel', serif; font-size:2rem; margin-bottom:1rem; color:#7c2d12;">Registre Vide</h2>
-                            <button onclick="createNewHero()" class="new-char-btn">
-                                <span class="big-plus">+</span>
-                                <span>Inscrire un premier héros</span>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                wrapper.appendChild(spread);
+                SCCS_Registre.createProfile();
+                // Relancer le rendu avec le nouveau profil créé
+                return renderRegistryChapter(baseFileUrl);
             }
 
             // Resize après chargement
