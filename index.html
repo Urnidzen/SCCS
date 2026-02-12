@@ -452,18 +452,27 @@
                 const text = extractTextContent(html);
                 const normalized = normalizeText(text);
                 
+                // Extraction des sections avec leur contenu pour la hiérarchie
                 const parser = new DOMParser();
                 const docEl = parser.parseFromString(html, 'text/html');
                 const sections = [];
                 
-                docEl.querySelectorAll('[id^="section-"], h2, h3').forEach(el => {
-                    if (el.id || el.textContent) {
-                        sections.push({
-                            id: el.id || '',
-                            title: el.textContent.trim(),
-                            normalized: normalizeText(el.textContent)
-                        });
-                    }
+                // On récupère tous les éléments avec ID de section ou les titres
+                const sectionElements = docEl.querySelectorAll('[id^="section-"], h2, h3, h4');
+                let currentSection = { id: '', title: doc.title, level: 0 };
+                
+                sectionElements.forEach(el => {
+                    const id = el.id || '';
+                    const title = el.textContent.trim();
+                    const level = parseInt(el.tagName.charAt(1)) || 2;
+                    
+                    sections.push({
+                        id: id,
+                        title: title,
+                        normalized: normalizeText(title),
+                        level: level,
+                        html: el.outerHTML
+                    });
                 });
                 
                 searchIndex.set(doc.id, {
@@ -489,66 +498,83 @@
             if (!normalizedQuery) return [];
             
             const results = [];
+            
             searchIndex.forEach((docData, docId) => {
-                const idx = docData.normalizedText.indexOf(normalizedQuery);
-                if (idx !== -1) {
-                    const start = Math.max(0, idx - 50);
-                    const end = Math.min(docData.rawText.length, idx + normalizedQuery.length + 50);
-                    let snippet = docData.rawText.substring(start, end);
-                    if (start > 0) snippet = '...' + snippet;
-                    if (end < docData.rawText.length) snippet = snippet + '...';
-                    
-                    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-                    snippet = snippet.replace(regex, '<mark style="background:rgba(124,45,18,0.3);font-weight:bold;">$1</mark>');
-                    
+                // On cherche dans quelles sections le terme apparaît
+                const matchingSections = [];
+                
+                docData.sections.forEach((section, index) => {
+                    // Vérifier si le terme est dans le titre de la section
+                    if (section.normalized.includes(normalizedQuery)) {
+                        matchingSections.push({
+                            section: section,
+                            parentTitle: index > 0 ? docData.sections[index - 1].title : docData.title
+                        });
+                    }
+                });
+                
+                // Si on a trouvé des sections correspondantes, on les groupe par document
+                if (matchingSections.length > 0) {
                     results.push({
                         docId: docId,
                         docTitle: docData.title,
                         docIcon: docData.icon,
-                        snippet: snippet,
-                        position: idx
+                        sections: matchingSections
                     });
                 }
                 
-                docData.sections.forEach(section => {
-                    if (section.normalized.includes(normalizedQuery)) {
-                        const exists = results.find(r => r.docId === docId && r.sectionId === section.id);
-                        if (!exists) {
-                            results.push({
-                                docId: docId,
-                                docTitle: docData.title,
-                                docIcon: docData.icon,
-                                sectionId: section.id,
-                                sectionTitle: section.title,
-                                snippet: `<strong>Section :</strong> ${section.title}`,
-                                isSection: true
-                            });
-                        }
-                    }
-                });
+                // On vérifie aussi si le terme est dans le texte général mais pas dans les titres de section
+                // Dans ce cas, on associe à la première section ou au document racine
+                if (docData.normalizedText.includes(normalizedQuery) && matchingSections.length === 0) {
+                    results.push({
+                        docId: docId,
+                        docTitle: docData.title,
+                        docIcon: docData.icon,
+                        sections: [{
+                            section: { 
+                                id: docData.sections[0]?.id || '', 
+                                title: 'Contenu', 
+                                normalized: 'contenu',
+                                level: 2 
+                            },
+                            parentTitle: docData.title,
+                            isGeneric: true
+                        }]
+                    });
+                }
             });
-            return results.slice(0, 20);
+            
+            return results;
         }
 
-        async function navigateToResult(docId, sectionId = null) {
+        async function navigateToResult(docId, sectionId) {
             if (currentDoc !== docId) {
                 await selectDocument(docId);
             }
+            
             setTimeout(() => {
                 if (sectionId) {
                     scrollToElement(sectionId);
-                } else {
-                    highlightSearchTerm(document.getElementById('searchInput').value);
                 }
-            }, 300);
+                // Surligner le terme recherché dans la page
+                const searchTerm = document.getElementById('searchInput').value;
+                if (searchTerm) {
+                    highlightSearchTerm(searchTerm);
+                }
+            }, 400);
         }
 
         function highlightSearchTerm(term) {
             if (!term) return;
+            
+            // Nettoyer les anciens surlignages
             document.querySelectorAll('.search-highlight').forEach(el => {
-                el.outerHTML = el.innerHTML;
+                const parent = el.parentNode;
+                parent.replaceChild(document.createTextNode(el.textContent), el);
+                parent.normalize();
             });
             
+            const normalizedTerm = normalizeText(term);
             const walker = document.createTreeWalker(
                 document.getElementById('bookSpreadsWrapper'),
                 NodeFilter.SHOW_TEXT,
@@ -556,12 +582,11 @@
                 false
             );
             
-            const normalizedTerm = normalizeText(term);
             const textNodes = [];
             let node;
             
             while (node = walker.nextNode()) {
-                if (normalizeText(node.textContent).includes(normalizedTerm)) {
+                if (node.textContent && normalizeText(node.textContent).includes(normalizedTerm)) {
                     textNodes.push(node);
                 }
             }
@@ -570,24 +595,34 @@
                 const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
                 const parts = node.textContent.split(regex);
                 
+                const fragment = document.createDocumentFragment();
                 parts.forEach((part, i) => {
                     if (normalizeText(part) === normalizedTerm) {
                         const mark = document.createElement('mark');
                         mark.className = 'search-highlight';
-                        mark.style.cssText = 'background-color:rgba(124,45,18,0.4);color:#1c1917;font-weight:bold;border-radius:2px;';
+                        mark.style.cssText = 'background-color:rgba(124,45,18,0.3);color:#1c1917;font-weight:bold;border-radius:2px;padding:0 2px;';
                         mark.textContent = part;
-                        node.parentNode.insertBefore(mark, node);
+                        fragment.appendChild(mark);
                     } else {
-                        node.parentNode.insertBefore(document.createTextNode(part), node);
+                        fragment.appendChild(document.createTextNode(part));
                     }
                 });
-                node.parentNode.removeChild(node);
+                
+                if (node.parentNode) {
+                    node.parentNode.replaceChild(fragment, node);
+                }
             });
         }
 
         function clearSearch() {
             document.getElementById('searchInput').value = '';
             renderDocumentsList();
+            // Nettoyer les surlignages
+            document.querySelectorAll('.search-highlight').forEach(el => {
+                const parent = el.parentNode;
+                parent.replaceChild(document.createTextNode(el.textContent), el);
+                parent.normalize();
+            });
         }
 
         window.addEventListener('message', (e) => {
@@ -659,6 +694,7 @@
             const container = document.getElementById('documentsList');
             const searchTerm = document.getElementById('searchInput').value.trim();
             
+            // MODE RECHERCHE ACTIF
             if (searchTerm.length > 2) {
                 const results = performSearch(searchTerm);
                 
@@ -668,32 +704,47 @@
                             Aucun résultat pour "${searchTerm}"<br>
                             <small style="opacity:0.7;">La recherche ignore les accents et majuscules</small>
                         </div>
+                        <div style="text-align:center; margin-top:10px;">
+                            <button onclick="clearSearch()" style="background:rgba(124,45,18,0.1); border:1px solid #7c2d12; color:#7c2d12; padding:5px 15px; border-radius:4px; cursor:pointer; font-family:'Cinzel',serif; font-size:0.8rem;">
+                                ← Retour aux documents
+                            </button>
+                        </div>
                     `;
                 } else {
-                    container.innerHTML = `
-                        <div style="padding:10px; margin-bottom:10px; background:rgba(124,45,18,0.1); border-radius:4px; font-size:0.85em;">
-                            <strong>${results.length}</strong> résultat(s) pour "${searchTerm}"
-                            <button onclick="clearSearch()" style="float:right; background:none; border:none; cursor:pointer; color:#7c2d12; font-weight:bold;">×</button>
+                    let html = `
+                        <div style="padding:10px; margin-bottom:15px; background:rgba(124,45,18,0.1); border-radius:4px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center;">
+                            <span><strong>${results.reduce((acc, r) => acc + r.sections.length, 0)}</strong> occurrence(s) dans <strong>${results.length}</strong> document(s)</span>
+                            <button onclick="clearSearch()" style="background:none; border:none; cursor:pointer; color:#7c2d12; font-weight:bold; font-size:1.2rem;" title="Effacer la recherche">×</button>
                         </div>
-                        ${results.map(r => `
-                            <div class="doc-item" style="margin-bottom:12px;">
-                                <div class="index-item" onclick="navigateToResult('${r.docId}', '${r.sectionId || ''}')" 
-                                     style="cursor:pointer; border-left:3px solid #7c2d12; padding-left:10px;">
-                                    <div style="font-weight:bold; color:#1c1917; margin-bottom:4px;">
-                                        ${r.docIcon} ${r.docTitle}
-                                        ${r.sectionTitle ? '› ' + r.sectionTitle : ''}
-                                    </div>
-                                    <div style="font-size:0.85em; color:#444; line-height:1.4; opacity:0.9;">
-                                        ${r.snippet}
-                                    </div>
+                    `;
+                    
+                    results.forEach(docResult => {
+                        html += `
+                            <div style="margin-bottom:20px; border-left:3px solid #7c2d12; padding-left:12px;">
+                                <div style="font-family:'Cinzel',serif; font-weight:bold; font-size:1rem; color:#1c1917; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+                                    <span>${docResult.docIcon}</span>
+                                    <span>${docResult.docTitle}</span>
+                                </div>
+                                <div style="margin-left:5px;">
+                                    ${docResult.sections.map(sec => `
+                                        <div class="index-item" onclick="navigateToResult('${docResult.docId}', '${sec.section.id}')" 
+                                             style="cursor:pointer; padding:6px 10px; margin-bottom:4px; border-radius:4px; font-size:0.85rem; line-height:1.4; border-left:2px solid rgba(124,45,18,0.3); margin-left:5px;">
+                                            <div style="font-weight:600; color:#7c2d12;">${sec.section.title}</div>
+                                            ${sec.parentTitle && sec.parentTitle !== docResult.docTitle ? 
+                                                `<div style="font-size:0.75rem; color:#666; margin-top:2px;">dans ${sec.parentTitle}</div>` : ''}
+                                        </div>
+                                    `).join('')}
                                 </div>
                             </div>
-                        `).join('')}
-                    `;
+                        `;
+                    });
+                    
+                    container.innerHTML = html;
                 }
                 return;
             }
             
+            // MODE NORMAL (affichage des documents)
             container.innerHTML = documents.map(doc => {
                 const isActive = doc.id === currentDoc;
                 const isExpanded = doc.id === expandedId;
