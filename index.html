@@ -3,941 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCS - Codex Officiel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="registre.js"></script>
-
+    <title>Contact & Discussions - SCCS Codex</title>
+    <meta name="description" content="Contactez l'auteur ou discutez des règles SCCS">
+    <link rel="icon" href="https://fav.farm/ 📜">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --parchment: #e3d5b8;
-            --dark-ink: #1c1917;
-            --accent: #7c2d12;
+            --opacite-page: 0.1;
+            --opacite-onglets: 0.45; 
+            --couleur-onglet-fond: 20, 20, 20; 
+            --couleur-texte-onglet: #000000; 
+            --flou-vitre: 2px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-  
-        html, body { 
-            height: 100%; 
-            width: 100%;
-            overflow: hidden; 
+        html {
+            background: transparent;
         }
 
         body {
-            background-color: #2c2520;
-            background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+            margin: 0;
+            padding: 0;
+            background: transparent; 
             font-family: 'Cormorant Garamond', serif;
-            color: var(--dark-ink);
-            line-height: 1.6;
-        }
-
-        h1, h2, h3, h4, .font-cinzel { font-family: 'Cinzel', serif; letter-spacing: 0.05em; }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar-container {
-            position: fixed;
-            left: 0; top: 0; height: 100vh;
-            z-index: 100;
-            display: flex;
-            transform: translateX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-container.closed { transform: translateX(-320px); }
-
-        .sidebar {
-            width: 320px;
-            height: 100%;
-            background: #f4ecd8;
-            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            border-right: 3px solid #1c1917;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.3);
-        }
-
-        .tab-handle {
-            width: 40px; height: 120px;
-            background: #f5f5f0;
-            border: 2px solid #1c1917;
-            border-left: none;
-            border-radius: 0 12px 12px 0;
-            align-self: center;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 3px 0 10px rgba(0,0,0,0.4);
-            transition: all 0.2s;
-            margin-left: -2px;
-        }
-
-        .tab-handle:hover { background: #ffffff; width: 45px; }
-
-        .tab-text {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            color: #1c1917;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-            transform: rotate(180deg);
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        /* ===== SEARCH & LIST ===== */
-        .search-container {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(0,0,0,0.2);
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #1c1917;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.9);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-        }
-
-        .doc-item { margin-bottom: 8px; }
-
-        .doc-header {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px;
-            background: rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .doc-header:hover { background: rgba(124, 45, 18, 0.1); }
-        .doc-header.active { background: rgba(124, 45, 18, 0.2); border-left: 4px solid #7c2d12; }
-
-        .doc-icon { font-size: 1.2rem; }
-        .doc-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.9rem; }
-        .doc-subtitle { font-size: 0.75rem; opacity: 0.7; margin-top: 2px; }
-
-        .doc-index {
-            margin-top: 8px; margin-left: 10px; padding-left: 15px;
-            border-left: 2px solid rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .doc-index.expanded { display: block; }
-
-        .index-item {
-            padding: 8px 10px; font-size: 0.85rem; cursor: pointer;
-            border-radius: 4px; transition: all 0.2s; margin-bottom: 4px;
-        }
-
-        .index-item:hover { background: rgba(124, 45, 18, 0.1); padding-left: 15px; }
-
-        /* ===== MAIN CONTAINER ===== */
-        .main-container {
-            margin-left: 320px; 
-            height: 100vh;
-            width: calc(100% - 320px);
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-            transition: margin-left 0.3s, width 0.3s;
-            scrollbar-width: none; 
-            -ms-overflow-style: none;
-        }
-        
-        .main-container::-webkit-scrollbar { display: none; }
-        .main-container.sidebar-closed { margin-left: 0; width: 100%; }
-
-        .book-spreads-wrapper {
-            display: flex; flex-direction: column; width: 100%;
-        }
-
-        .book-spread {
-            display: flex; gap: 0; width: 100%; height: 100vh; 
-            scroll-snap-align: start; scroll-snap-stop: always; 
-            flex-shrink: 0; position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 1; overflow: hidden;
-        }
-
-        .page {
-            flex: 1; height: 100vh;
-            background: #e3d5b8;
-            background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            padding: 50px 60px 120px 60px; /* Padding bas 120px */
-            position: relative; overflow: hidden;
-            display: flex; flex-direction: column; justify-content: flex-start;
-        }
-
-        .page-left { 
-            border-right: 1px solid rgba(0,0,0,0.1); 
-            box-shadow: inset -10px 0 20px rgba(0,0,0,0.05); 
-        }
-        .page-right { 
-            box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); 
-        }
-
-        .content-wrapper { 
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-        }
-
-        /* ===== CONTENU TEXTE ===== */
-        .content-section { margin-bottom: 1.5rem; }
-        .content-section h2 { font-size: 1.5rem; border-bottom: 2px solid #1c1917; padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        
-        .content-card {
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 1.2rem; margin-bottom: 1.2rem; border-radius: 4px;
-        }
-
-        .rule-box { border-left: 4px solid #7c2d12; background: rgba(124, 45, 18, 0.05); padding: 1rem; margin: 1.2rem 0; }
-
-        img {
-            max-width: 100%; height: auto; display: block;
-        }
-
-        /* ===== STYLE SPÉCIAL FICHE PERSO (IFRAME) ===== */
-        /* Conteneur de l'iframe */
-        .sheet-container-frame {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-        }
-
-        .char-sheet-frame {
-            background: transparent;  /* AJOUTER CETTE LIGNE */
-            border: none;
-            width: 794px;
-            height: 1123px;
-        }
-
-        .sheet-placeholder-text {
-            font-family: 'Cinzel', serif; 
-            text-align: center; 
-            color: #7c2d12;
-            margin-top: 30vh;
-            padding: 0 40px;
-        }
-
-        /* Styles pour la page "Nouveau Personnage" */
-        .new-char-btn {
-            background: transparent;
-            border: 2px solid #7c2d12;
-            color: #7c2d12;
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            padding: 15px 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 10px;
+            align-items: center; 
+            min-height: 100vh;
+            box-sizing: border-box;
+            color: #000000;
         }
 
-        .new-char-btn:hover {
-            background: #7c2d12;
-            color: #f4ecd8;
-        }
-
-        .big-plus { font-size: 2rem; }
-
-        /* ===== FOOTER ===== */
-        .legal-notice {
-            position: absolute;
-            bottom: 40px;
+        .container {
+            max-width: 800px;
             width: 100%;
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            font-size: 0.6rem;
-            color: rgba(28, 25, 23, 0.6);
-            left: 0;
-            pointer-events: none;
-            line-height: 1.4;
-            padding: 0 20px;
-            z-index: 10;
+            background: rgba(255, 255, 255, var(--opacite-page)); 
+            backdrop-filter: blur(var(--flou-vitre));
+            -webkit-backdrop-filter: blur(var(--flou-vitre));
+            padding: 30px 40px; 
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-top: 40px;
+            margin-bottom: 20px;
         }
 
-        .page-number {
-            position: absolute;
-            bottom: 15px;
+        .header {
+            text-align: center;
+            margin-bottom: 30px; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #000000; 
+            margin: 0;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+            line-height: 1.2;
+            letter-spacing: 1px;
+            text-shadow: none;
+        }
+
+        .subtitle {
+            font-style: italic;
+            color: rgba(0, 0, 0, 0.9); 
+            font-size: 1.2rem;
+            margin-top: 8px;
+            text-shadow: none;
+        }
+
+        .section {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #7c2d12;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: #7c2d12;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .github-info {
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+
+        .github-info a {
+            color: #7c2d12;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .github-info a:hover {
+            text-decoration: underline;
+        }
+
+        .giscus-container {
+            margin-top: 20px;
+            min-height: 200px;
+        }
+
+        footer {
+            color: #000000;
+            text-align: center; 
+            padding: 20px 15px;
+            margin-top: auto;
             width: 100%;
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            color: rgba(28, 25, 23, 0.5);
-            left: 0;
-            pointer-events: none;
-            z-index: 10;
+            font-size: 0.8em;
+            text-shadow: none;
         }
 
-        .section-title-isolated {
-            font-size: 1.5rem;
-            border-bottom: 2px solid #1c1917;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            font-family: 'Cinzel', serif;
-            letter-spacing: 0.05em;
-        }
-        
-        @media (max-width: 1024px) {
-            .sidebar-container { transform: translateX(-320px); }
-            .sidebar-container:not(.closed) { transform: translateX(0); }
-            .main-container { margin-left: 0 !important; width: 100% !important; }
-            .book-spread { flex-direction: column; }
-            .page { padding: 30px 20px 120px 20px; width: 100%; }
-            .page-right { display: none; }
-            
-            /* En mode fiche mobile, on cache la gauche et montre la droite */
-            .book-spread.sheet-mode .page-left { display: none; }
-            .book-spread.sheet-mode .page-right { display: flex; width: 100%; height: 100vh; }
+        footer a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
         }
 
-                /* ===== AJOUT SPÉCIFIQUE IMPRESSION ===== */
-        @media print {
-            @page {
-               margin: 0;
-            }
-            
-            /* 1. Réinitialisation structurelle */
-            html, body, .main-container, .book-spreads-wrapper {
-                height: auto !important;
-                overflow: visible !important;
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: none !important;
-            }
-
-            /* 2. Masquer l'interface */
-            .sidebar-container, .tab-handle, #searchInput, .new-char-btn {
-                display: none !important;
-            }
-
-            /* 3. Reformatage des "Spreads" */
-            .book-spread {
-                display: block !important;
-                height: auto !important;
-                box-shadow: none !important;
-                page-break-after: always !important;
-                break-after: page !important;
-            }
-
-            /* 4. EXCEPTION : Pas de saut de page après le tout dernier bloc */
-            .book-spread:last-of-type {
-                page-break-after: auto !important;
-                break-after: auto !important;
-            }
-
-            /* 5. Pages de contenu */
-            .page {
-                height: auto !important;
-                min-height: 100vh !important; 
-                width: 100% !important;
-                display: block !important;
-                border: none !important;
-                box-shadow: none !important;
-                margin: 0 !important;
-                padding: 1cm !important;
-                
-                page-break-inside: avoid !important;
-                page-break-after: always !important;
-                break-after: page !important;
-            }
-
-            /* Pour éviter la page blanche finale si la dernière page est un .page */
-            .page:last-of-type {
-                page-break-after: auto !important;
-                break-after: auto !important;
-            }
-
-            .page-left, .page-right {
-                display: block !important;
-            }
-
-            /* Correction spécifique pour l'impression de la fiche */
-            .sheet-container-frame {
-                position: relative !important;
-                width: 794px !important;
-                height: 1123px !important;
-                overflow: hidden !important;
-                margin: 0 auto !important;
-                page-break-inside: avoid !important;
-            }
-    
-            .char-sheet-frame {
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                transform: none !important;
-                width: 794px !important;
-                height: 1123px !important;
-                box-shadow: none !important;
-                margin: 0 !important;
-                display: block !important;
-                page-break-inside: avoid !important;
-            }
+        @media (max-width: 600px) {
+            .container { padding: 20px; margin: 10px; width: auto; }
+            h1 { font-size: 1.4rem; }
         }
     </style>
+    <script data-goatcounter="https://urnidzen.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
-
-    <div class="sidebar-container" id="sidebarContainer">
-        <div class="sidebar">
-            <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher...">
-            </div>
-            <div id="documentsList"></div>
-            <div style="margin-top: auto; padding-top: 20px; text-align: center; font-size: 0.6rem; opacity: 0.6; font-family: 'Cinzel', serif;">
-                © 2024 Urnidzen - SCCS<br>CC BY-NC-SA 4.0
-            </div>
+    <div class="container">
+        <div class="header">
+            <h1>Contact & Discussions</h1>
+            <div class="subtitle">Échangez sur le SCCS et contactez l'auteur</div>
         </div>
-        <div class="tab-handle" id="tabHandle">
-            <span class="tab-text">Documents<br>et Index</span>
+
+        <div class="section">
+            <h2>💬 Discussions Communautaires</h2>
+            <p>Posez vos questions sur les règles, partagez vos retours de partie ou suggérez des améliorations.</p>
+            
+            <div class="github-info">
+                <strong>ℹ️ Comment participer ?</strong><br>
+                Les commentaires utilisent les Discussions GitHub. C'est gratuit et cela prend 2 minutes :<br>
+                <a href="https://github.com/signup" target="_blank">Créer un compte GitHub</a> (si vous n'en avez pas déjà un), puis revenez ici pour commenter ci-dessous.
+            </div>
+
+            <div class="giscus-container">
+                <script src="https://giscus.app/client.js"
+                        data-repo="Urnidzen/SCCS"
+                        data-repo-id="R_kgDORGC3NQ"
+                        data-category="Commentaires Site Web"
+                        data-category-id="DIC_kwDORGC3Nc4C2FWF"
+                        data-mapping="pathname"
+                        data-strict="0"
+                        data-reactions-enabled="1"
+                        data-emit-metadata="0"
+                        data-input-position="bottom"
+                        data-theme="light"
+                        data-lang="fr"
+                        crossorigin="anonymous"
+                        async>
+                </script>
+            </div>
         </div>
     </div>
 
-    <div class="main-container" id="mainContainer">
-        <div class="book-spreads-wrapper" id="bookSpreadsWrapper">
-            </div>
-    </div>
-
-    <div id="hiddenStaging" style="position:absolute; visibility:hidden; width: 100%; pointer-events:none; top:-9999px;"></div>
-
-    <script>
-        // ===== CONFIGURATION =====
-        const documents = [
-            { id: 'intro', file: 'introduction.v0.01.html', icon: '📜', title: 'Introduction', subtitle: 'Bienvenue au Codex' },
-            { id: 'livret1', file: 'Livret1-Mecanismes.v0.85.html', icon: '⚙️', title: 'Livret 1', subtitle: 'Mécanismes' },
-            { id: 'livret2', file: 'Livret2-Creation.v0.74.html', icon: '📖', title: 'Livret 2', subtitle: 'Création & Évolution' },
-            { id: 'livret3', file: 'Livret3-Equipement.v0.78.html', icon: '🛡️', title: 'Livret 3', subtitle: 'Équipement' },
-            { id: 'livret4', file: 'Livret4-Rencontres.v0.80.html', icon: '⚔️', title: 'Livret 4', subtitle: 'Rencontres' },
-            { id: 'livret5', file: 'Livret5-Bestiaire.v0.80.html', icon: '🐾', title: 'Livret 5', subtitle: 'Bestiaire' },
-            { id: 'fiche', file: 'Fiche de personnage.v0.87.html', icon: '📝', title: 'Fiche de Personnage', subtitle: 'Interactive' },
-            { id: 'contact', file: 'contact.html', icon: '💬', title: 'Contact & Discutions', subtitle: "Échangez sur le SCCS" }
-        ];
-
-        // ===== STATE =====
-        let currentDoc = 'intro';
-        let expandedId = null; 
-        let sidebarOpen = true;
-        let isMobile = window.innerWidth <= 1024;
-        let currentIndex = [];
-        let rawContentCache = ""; 
-
-        const LEGAL_HTML = `
-            <div class="legal-notice">
-                Copiez, modifiez, enrichissez ! seul le commerce est interdit.<br>
-                © 2024 Urnidzen | Licence CC BY-NC-SA 4.0 | Images assistées par IA
-            </div>
-        `;
-
-        // Écouter les messages des iframes (fiches de personnage)
-        window.addEventListener('message', (e) => {
-            if(e.data.action === 'refreshSidebar') {
-                SCCS_Registre.reload();          // Recharge les données depuis le LocalStorage
-                renderDocumentsList();           // Rafraîchit l'index avec les nouvelles données
-            }
-            if(e.data.action === 'characterDeleted') {
-                SCCS_Registre.reload();          // Recharge les données (suppression faite par l'iframe)
-                loadDocument('fiche');           // Recharge le contenu principal
-                renderDocumentsList();           // Rafraîchit explicitement la sidebar
-            }
-        });
-        
-        function init() {
-            renderDocumentsList();
-            loadDocument(currentDoc);
-            setupEventListeners();
-            checkMobile();
-        }
-
-        function renderHeroesList() {
-            const profiles = SCCS_Registre.getAllProfiles();
-            let html = '';
-   
-            // Liste des héros
-            profiles.forEach((profile, index) => {
-                html += `
-                    <div class="index-item" style="display:flex; justify-content:space-between; align-items:center;">
-                        <span onclick="scrollToHero(${index})" style="flex-grow:1; cursor:pointer;">${profile.name || 'Sans Nom'}</span>
-                        <span onclick="deleteHeroFromSidebar('${profile.id}')" style="cursor:pointer; opacity:0.4; padding:0 5px;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4">🗑️</span>
-                    </div>
-                `;
-            });
-            
-            // Bouton créer
-            html += `<div class="index-item" onclick="createNewHero()" style="font-style:italic; opacity:0.8; border-bottom:1px solid rgba(0,0,0,0.2); margin-bottom:5px;">
-                <span style="color:#7c2d12; font-weight:bold; margin-right:5px;">+</span> Inscrire un nouveau héros
-            </div>`;
-    
-            return html;
-        }
-
-        function renderCharactersList() {
-            const profiles = SCCS_Registre.getAllProfiles();
-            let html = '';
-    
-            // Liste des personnages
-            profiles.forEach((profile, index) => {
-                html += `
-                    <div class="index-item" style="display:flex; justify-content:space-between; align-items:center; padding-right:5px;">
-                        <span onclick="scrollToCharacter(${index})" style="flex-grow:1; cursor:pointer;">${profile.name || 'Sans Nom'}</span>
-                        <span onclick="deleteCharacter('${profile.id}')" style="cursor:pointer; opacity:0.4; font-size:0.9rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4">🗑️</span>
-                    </div>
-                `;
-            });
-            
-            // Bouton ajouter
-            html += `<div class="index-item" onclick="createNewHero()" style="font-style:italic; opacity:0.8; border-bottom:1px solid rgba(0,0,0,0.2); margin-bottom:5px; padding-bottom:8px;">
-                <span style="color:#7c2d12; font-weight:bold; margin-right:5px;">+</span> Ajouter un nouveau personnage
-            </div>`;
-    
-            return html;
-        }
-        
-        function renderDocumentsList() {
-            const container = document.getElementById('documentsList');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-            container.innerHTML = documents.map(doc => {
-                const isActive = doc.id === currentDoc;
-                const isExpanded = doc.id === expandedId;
-                const matchesSearch = !searchTerm || doc.title.toLowerCase().includes(searchTerm);
-                if (!matchesSearch && !isActive) return '';
-
-                return `
-                    <div class="doc-item">
-                        <div class="doc-header ${isActive ? 'active' : ''}" onclick="selectDocument('${doc.id}')">
-                            <span class="doc-icon">${doc.icon}</span>
-                            <div>
-                                <div class="doc-title">${doc.title}</div>
-                                <div class="doc-subtitle">${doc.subtitle}</div>
-                            </div>
-                        </div>
-                        <div class="doc-index ${isExpanded ? 'expanded' : ''}">
-                            ${(isActive && doc.id === 'fiche') ? renderCharactersList() : (currentIndex.length > 0 && isActive) ? currentIndex.map(item => `
-                                <div class="index-item" onclick="scrollToElement('section-${item.id}')">
-                                    ${item.title}
-                                </div>
-                            `).join('') : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function scrollToCharacter(index) {
-            const spreadIndex = Math.floor(index / 2);
-            const spreads = document.querySelectorAll('.book-spread');
-            if (spreads[spreadIndex]) {
-                const mainContainer = document.getElementById('mainContainer');
-                mainContainer.scrollTo({
-                    top: spreads[spreadIndex].offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        }
-
-        function deleteCharacter(id) {
-            if(confirm("Êtes-vous certain de vouloir supprimer ce personnage ? Cette action est irréversible.")) {
-                SCCS_Registre.deleteProfile(id);
-                renderDocumentsList(); // Rafraîchit la sidebar
-                loadDocument('fiche'); // Rafraîchit le livre
-            }
-        }
-        
-        function scrollToHero(index) {
-            // Chaque spread contient 2 héros (0-1, 2-3, etc.)
-            const spreadIndex = Math.floor(index / 2);
-            const spreads = document.querySelectorAll('.book-spread');
-            if (spreads[spreadIndex]) {
-                const mainContainer = document.getElementById('mainContainer');
-                mainContainer.scrollTo({
-                    top: spreads[spreadIndex].offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        }
-
-        function deleteHeroFromSidebar(id) {
-            if(confirm("Êtes-vous certain de vouloir brûler cette page ? Cette action est irréversible.")) {
-                SCCS_Registre.deleteProfile(id);
-                loadDocument('fiche'); // Recharge tout
-            }
-        }
-        
-        async function selectDocument(docId) {
-            if (currentDoc === docId) {
-                expandedId = (expandedId === docId) ? null : docId;
-            } else {
-                currentDoc = docId;
-                expandedId = docId;
-                await loadDocument(docId);
-            }
-            renderDocumentsList();
-        }
-
-        async function loadDocument(docId) {
-            const doc = documents.find(d => d.id === docId);
-            if (!doc) return;
-
-            const wrapper = document.getElementById('bookSpreadsWrapper');
-            wrapper.innerHTML = '<div style="padding:40px; text-align:center; color:#7c2d12;">Chargement...</div>';
-
-            // === CAS SPÉCIAL : LE REGISTRE DES HÉROS ===
-            if (docId === 'fiche') {
-                renderRegistryChapter(doc.file);
-                return;
-            }
-
-            // === CAS STANDARD : LIVRES & TEXTES ===
-            try {
-                const response = await fetch(doc.file);
-                const html = await response.text();
-                const parser = new DOMParser();
-                const docElement = parser.parseFromString(html, 'text/html');
-                
-                const indexScript = docElement.getElementById('doc-index');
-                currentIndex = indexScript ? JSON.parse(indexScript.textContent).index : [];
-
-                // Injection des styles dans le head principal (pas dans le contenu paginé)
-                const styles = docElement.querySelectorAll('style');
-                styles.forEach(style => {
-                    const styleId = style.id || `injected-style-${docId}`;
-                    if (!document.getElementById(styleId)) {
-                        const clone = style.cloneNode(true);
-                        clone.id = styleId;
-                        document.head.appendChild(clone);
-                    }
-                });
-
-                // Préparation du contenu à paginer
-                const tempDiv = document.createElement('div');
-                const bodyContent = (docElement.body && docElement.body.innerHTML) ? docElement.body.innerHTML : html;
-                tempDiv.innerHTML = bodyContent;
-                
-                // Suppression des éléments techniques du flux de pagination
-                tempDiv.querySelectorAll('script, style, link[rel="stylesheet"], meta, title, base, noscript').forEach(el => el.remove());
-                
-                rawContentCache = cleanHtmlContent(tempDiv.innerHTML);
-                paginateContent(rawContentCache);
-
-            } catch (error) {
-                console.error('Erreur:', error);
-                wrapper.innerHTML = "<p class='page'>Erreur lors du chargement.</p>";
-            }
-        }
-
-        function cleanHtmlContent(html) {
-            const div = document.createElement('div');
-            div.innerHTML = html;
-            
-            // Supprimer les commentaires HTML
-            const removeComments = (node) => {
-                for (let i = node.childNodes.length - 1; i >= 0; i--) {
-                    const child = node.childNodes[i];
-                    if (child.nodeType === 8) { // Commentaire HTML
-                        node.removeChild(child);
-                    } else if (child.nodeType === 1) { // Élément
-                        removeComments(child);
-                    }
-                }
-            };
-            removeComments(div);
-            
-            return div.innerHTML;
-        }
-
-        // ===== MOTEUR D'AFFICHAGE DU REGISTRE (MULTIPLES IFRAMES) =====
-        function renderRegistryChapter(baseFileUrl) {
-            const wrapper = document.getElementById('bookSpreadsWrapper');
-            wrapper.innerHTML = '';
-            currentIndex = []; // Pas d'index textuel pour cette méthode
-
-            const profiles = SCCS_Registre.getAllProfiles();
-
-            // Boucle par pas de 2 pour créer des spreads avec 2 fiches
-            for (let i = 0; i < profiles.length; i += 2) {
-                const spread = document.createElement('div');
-                spread.className = 'book-spread sheet-mode';
-        
-                // Fiche de gauche (toujours présente)
-                const leftProfile = profiles[i];
-                const leftUrl = `${baseFileUrl}?uid=${leftProfile.id}`;
-        
-                const leftContent = `
-                    <div class="page page-left sheet-container-frame">
-                        <iframe class="char-sheet-frame" src="${leftUrl}"></iframe>
-                    </div>
-                `;
-        
-                // Fiche de droite (si existe)
-                let rightContent = '';
-                if (profiles[i + 1]) {
-                    const rightProfile = profiles[i + 1];
-                    const rightUrl = `${baseFileUrl}?uid=${rightProfile.id}`;
-                    rightContent = `
-                        <div class="page page-right sheet-container-frame">
-                            <iframe class="char-sheet-frame" src="${rightUrl}"></iframe>
-                        </div>
-                    `;
-                } else {
-                    rightContent = `<div class="page page-right"></div>`;
-                }
-        
-                spread.innerHTML = isMobile ? leftContent : (leftContent + rightContent);
-                wrapper.appendChild(spread);
-            }
-
-            // Si aucun héros, créer automatiquement une fiche vierge permanente
-            if (profiles.length === 0) {
-                SCCS_Registre.createProfile();
-                // Relancer le rendu avec le nouveau profil créé
-                return renderRegistryChapter(baseFileUrl);
-            }
-
-            // Resize après chargement
-            setTimeout(resizeAllSheets, 100);
-        }
-
-        // Actions du Registre
-        function createNewHero() {
-            SCCS_Registre.createProfile();
-            // Recharger la vue actuelle pour afficher la nouvelle page
-            loadDocument('fiche');
-        }
-
-        function deleteHero(id) {
-            if(confirm("Êtes-vous certain de vouloir brûler cette page ? Cette action est irréversible.")) {
-                SCCS_Registre.deleteProfile(id);
-                loadDocument('fiche');
-            }
-        }
-
-        // Resize global pour toutes les fiches visibles
-        function resizeAllSheets() {
-            const frames = document.querySelectorAll('.char-sheet-frame');
-            frames.forEach(iframe => {
-                const container = iframe.parentElement;
-                if(!container) return;
-
-                const targetW = 794; 
-                const targetH = 1123;
-        
-                // Récupérer les dimensions disponibles
-                const availableH = container.clientHeight; 
-                const availableW = container.clientWidth;
-
-                // Calculer le scale
-                const scale = Math.min(
-                    availableH / targetH, 
-                    availableW / targetW
-                );
-
-                // Appliquer le positionnement absolu avec centrage
-                iframe.style.position = 'absolute';
-                iframe.style.top = '50%';
-                iframe.style.left = '50%';
-                iframe.style.width = targetW + 'px';
-                iframe.style.height = targetH + 'px';
-                iframe.style.transform = `translate(-50%, -50%) scale(${scale})`;
-                iframe.style.transformOrigin = 'center center';
-            });
-        }
-
-        // ===== MOTEUR PAGINATION (TEXTE STANDARD) =====
-        let pgnState = { wrapper: null, currentSpread: null, currentPageContent: null, isRightPage: false, pageCount: 1, elementsQueue: [] };
-
-        function paginateContent(htmlContent) {
-            pgnState.wrapper = document.getElementById('bookSpreadsWrapper');
-            const staging = document.getElementById('hiddenStaging');
-            staging.innerHTML = htmlContent;
-            pgnState.wrapper.innerHTML = ''; 
-            pgnState.pageCount = 1;
-            pgnState.isRightPage = false; 
-
-            createNewSpread();
-            
-            // Filtrer uniquement les balises techniques (script, style, meta, etc.)
-            pgnState.elementsQueue = Array.from(staging.children).filter(el => {
-                return !['SCRIPT', 'STYLE', 'LINK', 'META', 'NOSCRIPT', 'TITLE', 'BASE'].includes(el.tagName);
-            });
-
-            while (pgnState.elementsQueue.length > 0) {
-                let element = pgnState.elementsQueue.shift();
-                processElement(element);
-            }
-            
-            // Nettoyer les spreads vides créés par erreur
-            removeEmptySpreads();
-        }
-
-        function createNewSpread() {
-            const spread = document.createElement('div');
-            spread.className = 'book-spread';
-            
-            const htmlLeft = `<div class="page page-left"><div class="content-wrapper"></div>${LEGAL_HTML}<div class="page-number">- ${pgnState.pageCount} -</div></div>`;
-            const htmlRight = `<div class="page page-right"><div class="content-wrapper"></div>${LEGAL_HTML}<div class="page-number">- ${pgnState.pageCount + 1} -</div></div>`;
-
-            if (isMobile) spread.innerHTML = htmlLeft;
-            else spread.innerHTML = htmlLeft + htmlRight;
-            
-            pgnState.wrapper.appendChild(spread);
-            pgnState.currentSpread = spread;
-            pgnState.currentPageContent = spread.querySelector('.page-left .content-wrapper');
-            pgnState.isRightPage = false;
-        }
-
-        function removeEmptySpreads() {
-            const spreads = document.querySelectorAll('.book-spread');
-            spreads.forEach(spread => {
-                const wrappers = spread.querySelectorAll('.content-wrapper');
-                const isEmpty = Array.from(wrappers).every(w => {
-                    // Vérifier s'il n'y a vraiment aucun enfant OU que le texte est vide ET pas d'images/tableaux
-                    const hasNoChildren = w.children.length === 0;
-                    const hasNoVisualContent = w.innerText.trim().length === 0 && w.querySelectorAll('img, table, canvas, svg').length === 0;
-                    return hasNoChildren || hasNoVisualContent;
-                });
-                if (isEmpty) {
-                    spread.remove();
-                }
-            });
-        }
-
-        function advancePage() {
-            if (isMobile) {
-                pgnState.pageCount++;
-                createNewSpread();
-            } else {
-                if (!pgnState.isRightPage) {
-                    pgnState.isRightPage = true;
-                    pgnState.currentPageContent = pgnState.currentSpread.querySelector('.page-right .content-wrapper');
-                } else {
-                    pgnState.pageCount += 2;
-                    createNewSpread();
-                }
-            }
-        }
-
-        function processElement(element) {
-            let node = element.cloneNode(true);
-            pgnState.currentPageContent.appendChild(node);
-            if (isOverflowing(pgnState.currentPageContent)) {
-                pgnState.currentPageContent.removeChild(node);
-                const isPageEmpty = pgnState.currentPageContent.children.length === 0;
-                if (!isPageEmpty) {
-                    advancePage();
-                    pgnState.elementsQueue.unshift(element); 
-                } else {
-                    handleGiantBlock(element);
-                }
-            }
-        }
-
-        function handleGiantBlock(element) {
-            const tagName = element.tagName.toLowerCase();
-            // Modification : les tableaux ne sont plus traités comme des blocs atomiques spéciaux
-            // car ils s'adaptent nativement en largeur avec des colonnes relatives
-            if (['img', 'video', 'iframe', 'svg'].includes(tagName) || element.classList.contains('atomic')) {
-                let node = element.cloneNode(true);
-                node.style.maxHeight = "100%";
-                node.style.overflowY = "auto";
-                node.style.display = "block";
-                pgnState.currentPageContent.appendChild(node);
-                advancePage();
-                return;
-            }
-            const children = Array.from(element.children);
-            if (children.length > 0) {
-                // TRANSFÉRER L'ID AU PREMIER ENFANT POUR CONSERVER LA NAVIGATION
-                if (element.id && children[0]) {
-                    children[0].id = element.id;
-                    // Si c'est un titre H2, lui conserver son style de section
-                    if (children[0].tagName === 'H2') {
-                        children[0].classList.add('section-title-isolated');
-                    }
-                }
-                for (let i = children.length - 1; i >= 0; i--) { pgnState.elementsQueue.unshift(children[i]); }
-            } else {
-                let node = element.cloneNode(true);
-                node.style.maxHeight = "100%";
-                node.style.overflowY = "auto";
-                pgnState.currentPageContent.appendChild(node);
-                advancePage();
-            }
-        }
-
-        function isOverflowing(container) { return container.scrollHeight > container.clientHeight + 2; }
-
-        function scrollToElement(id) {
-            const cleanId = id.replace('section-', '');
-            const target = document.getElementById(cleanId) || document.getElementById(id);
-            if (!target) {
-                console.warn(`Élément introuvable: #${id}`);
-                return;
-            }
-    
-            const spread = target.closest('.book-spread');
-            if (!spread) return;
-    
-            const mainContainer = document.getElementById('mainContainer');
-    
-            // Calculer la position exacte du spread dans le conteneur
-            const spreadTop = spread.offsetTop;
-    
-            // Scroll manuel compatible avec scroll-snap
-            mainContainer.scrollTo({
-                top: spreadTop,
-                behavior: 'smooth'
-            });
-        }
-
-        function toggleSidebar() {
-            sidebarOpen = !sidebarOpen;
-            document.getElementById('sidebarContainer').classList.toggle('closed', !sidebarOpen);
-            document.getElementById('mainContainer').classList.toggle('sidebar-closed', !sidebarOpen);
-            setTimeout(() => { 
-                if (currentDoc === 'fiche') resizeAllSheets();
-                else if (rawContentCache) paginateContent(rawContentCache); 
-            }, 350);
-        }
-
-        function checkMobile() {
-            const wasMobile = isMobile;
-            isMobile = window.innerWidth <= 1024;
-            if (isMobile && sidebarOpen && !wasMobile) toggleSidebar();
-            if (wasMobile !== isMobile) {
-                 if (currentDoc === 'fiche') loadDocument('fiche');
-                 else if (rawContentCache) paginateContent(rawContentCache);
-            }
-        }
-
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                checkMobile();
-                if (currentDoc === 'fiche') resizeAllSheets();
-                else if (rawContentCache) paginateContent(rawContentCache);
-            }, 300);
-        });
-
-        function setupEventListeners() {
-            document.getElementById('tabHandle').addEventListener('click', toggleSidebar);
-            document.getElementById('searchInput').addEventListener('input', renderDocumentsList);
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+    <footer>
+        <p>© 2024 Urnidzen - SCCS | Licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> | Images générées par IA</p>
+    </footer>
 </body>
 </html>
