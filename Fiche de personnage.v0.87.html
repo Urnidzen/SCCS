@@ -226,6 +226,9 @@
                                             <button data-action="reset" class="btn-action btn-reset" title="Effacer le contenu">↺</button>
                                             <span style="color:#000; font-size:1.1rem; cursor:default;">|</span> 
                                             <button data-action="export" class="btn-action btn-export" title="Sauvegarder JSON local">💾</button>
+                                            <!-- AJOUT : Bouton Import -->
+                                            <button data-action="import" class="btn-action btn-import" title="Charger une sauvegarde">📂</button>
+                                            <span style="color:#000; font-size:1.1rem; cursor:default;">|</span>
                                             <button data-action="print" class="btn-action btn-print" title="Imprimer cette fiche" onclick="window.print()">🖨️</button>
                                         </div>
                                     </div>
@@ -587,9 +590,71 @@
             const btnExport = context.querySelector('[data-action="export"]');
             if(btnExport) btnExport.onclick = exportSingleJSON;
 
+            // AJOUT : Gestionnaire du bouton Import
+            const btnImport = context.querySelector('[data-action="import"]');
+            if(btnImport) btnImport.onclick = () => {
+                const fileInput = find('file-upload');
+                if(fileInput) fileInput.click();
+            };
+
             if (currentUid && typeof SCCS_Registre !== 'undefined') {
                 loadFromRegistry(currentUid);
                 setupAutoSave();
+            }
+
+            // AJOUT : Gestionnaire de l'input file pour l'import
+            const fileInput = find('file-upload');
+            if(fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            if (data.content) {
+                                // Charger les données dans la fiche actuelle
+                                Object.keys(data.content).forEach(key => {
+                                    if (key.startsWith('__clean_input_')) {
+                                        const idx = parseInt(key.replace('__clean_input_', ''));
+                                        const els = findAll('.clean-input:not([data-id])');
+                                        if (els[idx]) els[idx].value = data.content[key];
+                                    } 
+                                    else if (key.startsWith('__area_')) {
+                                        const idx = parseInt(key.replace('__area_', ''));
+                                        const els = findAll('.area-textarea');
+                                        if (els[idx]) els[idx].value = data.content[key];
+                                    }
+                                    else {
+                                        const el = find(key);
+                                        if (el) {
+                                            if (el.type === 'checkbox') el.checked = data.content[key];
+                                            else el.value = data.content[key];
+                                        }
+                                    }
+                                });
+                                
+                                if (data.content.__state_talents) {
+                                    state.talents = JSON.parse(JSON.stringify(data.content.__state_talents));
+                                }
+                                
+                                updateUI();
+                                updatePortrait();
+                                triggerSave();
+                                alert('Personnage chargé avec succès !');
+                            } else {
+                                alert('Format de fichier invalide');
+                            }
+                        } catch (err) {
+                            alert('Erreur lors du chargement du fichier JSON');
+                            console.error(err);
+                        }
+                        // Reset pour permettre de re-sélectionner le même fichier
+                        e.target.value = '';
+                    };
+                    reader.readAsText(file);
+                });
             }
 
            const btnDelete = context.querySelector('[data-action="delete"]');
