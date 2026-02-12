@@ -692,11 +692,7 @@
                         </div>
                     `;
                 } else {
-                    // Page vierge sans contenu (attente d'un futur personnage)
-                    rightContent = `
-                        <div class="page page-right" style="background: transparent;">
-                        </div>
-                    `;
+                    rightContent = `<div class="page page-right"></div>`;
                 }
         
                 spread.innerHTML = isMobile ? leftContent : (leftContent + rightContent);
