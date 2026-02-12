@@ -441,6 +441,16 @@
             </div>
         `;
 
+        // Écouter les messages des iframes (fiches de personnage)
+        window.addEventListener('message', (e) => {
+            if(e.data.action === 'refreshSidebar') {
+                renderDocumentsList(); // Rafraîchit la sidebar
+            }
+            if(e.data.action === 'characterDeleted') {
+                loadDocument('fiche'); // Recharge tout le chapitre
+            }
+        });
+        
         function init() {
             renderDocumentsList();
             loadDocument(currentDoc);
@@ -451,12 +461,7 @@
         function renderHeroesList() {
             const profiles = SCCS_Registre.getAllProfiles();
             let html = '';
-    
-            // Bouton créer en haut
-            html += `<div class="index-item" onclick="createNewHero()" style="font-style:italic; opacity:0.8; border-bottom:1px solid rgba(0,0,0,0.2); margin-bottom:5px;">
-                <span style="color:#7c2d12; font-weight:bold; margin-right:5px;">+</span> Inscrire un nouveau héros
-            </div>`;
-    
+   
             // Liste des héros
             profiles.forEach((profile, index) => {
                 html += `
@@ -466,6 +471,11 @@
                     </div>
                 `;
             });
+            
+            // Bouton créer
+            html += `<div class="index-item" onclick="createNewHero()" style="font-style:italic; opacity:0.8; border-bottom:1px solid rgba(0,0,0,0.2); margin-bottom:5px;">
+                <span style="color:#7c2d12; font-weight:bold; margin-right:5px;">+</span> Inscrire un nouveau héros
+            </div>`;
     
             return html;
         }
@@ -473,11 +483,6 @@
         function renderCharactersList() {
             const profiles = SCCS_Registre.getAllProfiles();
             let html = '';
-    
-            // Bouton ajouter en haut
-            html += `<div class="index-item" onclick="createNewHero()" style="font-style:italic; opacity:0.8; border-bottom:1px solid rgba(0,0,0,0.2); margin-bottom:5px; padding-bottom:8px;">
-                <span style="color:#7c2d12; font-weight:bold; margin-right:5px;">+</span> Ajouter un nouveau personnage
-            </div>`;
     
             // Liste des personnages
             profiles.forEach((profile, index) => {
@@ -488,6 +493,11 @@
                     </div>
                 `;
             });
+            
+            // Bouton ajouter
+            html += `<div class="index-item" onclick="createNewHero()" style="font-style:italic; opacity:0.8; border-bottom:1px solid rgba(0,0,0,0.2); margin-bottom:5px; padding-bottom:8px;">
+                <span style="color:#7c2d12; font-weight:bold; margin-right:5px;">+</span> Ajouter un nouveau personnage
+            </div>`;
     
             return html;
         }
