@@ -574,6 +574,11 @@
                 return;
             }
 
+            if (docId === 'contact') {
+                renderContactPage(doc.file);
+                return;
+            }
+
             try {
                 const response = await fetch(doc.file);
                 const html = await response.text();
@@ -601,11 +606,6 @@
                 
                 rawContentCache = cleanHtmlContent(tempDiv.innerHTML);
                 paginateContent(rawContentCache);
-                
-                // Injection dynamique de Giscus pour la page contact
-                if (docId === 'contact') {
-                    setTimeout(injectGiscus, 200);
-                }
 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -639,16 +639,13 @@
 
             const spread = document.createElement('div');
             spread.className = 'book-spread';
-    
+            
             const content = `
-                <div class="page page-left" style="padding: 40px; overflow-y: auto;">
+                <div class="page page-left" style="width: 100%; height: 100%; padding: 40px; overflow-y: auto;">
                     <iframe src="${fileUrl}" style="width: 100%; height: 100%; border: none; background: transparent;"></iframe>
                 </div>
-                    <div class="page page-right" style="padding: 40px;">
-                    <!-- Page de droite vide pour l'effet livre ouvert -->
-                </div>
             `;
-    
+            
             spread.innerHTML = content;
             wrapper.appendChild(spread);
         }
