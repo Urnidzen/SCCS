@@ -82,6 +82,142 @@
     .content-wrapper .table-cibles td {
         border-bottom: 1px solid rgba(0,0,0,0.1) !important;
     }
+
+    /* HIÉRARCHIE VISUELLE PAR PROFONDEUR */
+    
+    /* Niveau 1 (●) : Cards distincts avec fond gris */
+    .level-1 {
+        background-color: #f3f4f6 !important;
+        border-radius: 8px !important;
+        padding: 16px !important;
+        margin: 12px 0 !important;
+        border-left: 4px solid #6b7280 !important;
+    }
+    
+    .level-1 > li {
+        list-style: none !important;
+        position: relative !important;
+        padding-left: 24px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .level-1 > li:before {
+        content: "●" !important;
+        position: absolute !important;
+        left: 0 !important;
+        color: #374151 !important;
+        font-weight: bold !important;
+    }
+
+    /* Niveau 2 (○) : Indentation + bordure latérale */
+    .level-2 {
+        margin: 8px 0 8px 24px !important;
+        padding-left: 16px !important;
+        border-left: 3px solid #d1d5db !important;
+    }
+    
+    .level-2 > li {
+        list-style: none !important;
+        position: relative !important;
+        padding-left: 20px !important;
+        margin-bottom: 6px !important;
+        color: #4b5563 !important;
+    }
+    
+    .level-2 > li:before {
+        content: "○" !important;
+        position: absolute !important;
+        left: 0 !important;
+        color: #6b7280 !important;
+    }
+
+    /* Niveau 3 (■) : Badges internes, police réduite */
+    .level-3 {
+        margin: 6px 0 6px 16px !important;
+        padding: 8px 12px !important;
+        background-color: #e5e7eb !important;
+        border-radius: 6px !important;
+        font-size: 0.95em !important;
+    }
+    
+    .level-3 > li {
+        list-style: none !important;
+        position: relative !important;
+        padding-left: 20px !important;
+        margin-bottom: 4px !important;
+        color: #374151 !important;
+    }
+    
+    .level-3 > li:before {
+        content: "■" !important;
+        position: absolute !important;
+        left: 0 !important;
+        color: #9ca3af !important;
+        font-size: 0.8em !important;
+    }
+
+    /* CARTES MÉCANIQUES - LES 3 CAS */
+    
+    .mechanic-card {
+        margin: 16px 0 !important;
+        padding: 20px !important;
+        border-radius: 8px !important;
+        border: 2px solid !important;
+        position: relative !important;
+    }
+    
+    .mechanic-card h4 {
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        font-size: 1.1em !important;
+    }
+    
+    .mechanic-icon {
+        font-size: 1.3em !important;
+    }
+
+    /* Cas A : Supériorité (Vert) */
+    .card-success {
+        background-color: #f0fdf4 !important;
+        border-color: #166534 !important;
+        border-left-width: 6px !important;
+    }
+    
+    .card-success h4 {
+        color: #166534 !important;
+    }
+
+    /* Cas B : Infériorité (Rouge) */
+    .card-error {
+        background-color: #fef2f2 !important;
+        border-color: #991b1b !important;
+        border-left-width: 6px !important;
+    }
+    
+    .card-error h4 {
+        color: #991b1b !important;
+    }
+
+    /* Cas C : Égalité (Orange/Ambre rayé) */
+    .card-warning {
+        background-color: #fffbeb !important;
+        border-color: #d97706 !important;
+        border-left-width: 6px !important;
+        background-image: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(217, 119, 6, 0.03) 10px,
+            rgba(217, 119, 6, 0.03) 20px
+        ) !important;
+    }
+    
+    .card-warning h4 {
+        color: #92400e !important;
+    }
 </style>
 
 <div class="content-section" id="section-philosophie">
@@ -163,19 +299,19 @@
     <div class="content-card">
         <h4>A. La Défense (Parade & Esquive)</h4>
         <p>C'est la capacité à parer,esquiver ou vous libérer d'un des 3types d'attaque :</p>
-        <ul class="dash-list space-y-2">
-            <li>●vs Direct</li>
-            <li>●vs Circulaire</li>
-            <li>●vs Saisie</li>
+        <ul class="level-1">
+            <li>vs Direct</li>
+            <li>vs Circulaire</li>
+            <li>vs Saisie</li>
         </ul>
     </div>
     <div class="content-card" id="section-resistance">
         <h4>B. La Résistance (Encaissement & Armure)</h4>
         <p>C'est la solidité de la cible,due à l'armure portée ou à la constitution :</p>
-        <ul class="dash-list space-y-2">
-            <li>●Résistance Tête</li>
-            <li>●Résistance Tronc</li>
-            <li>●Résistance Membres</li>
+        <ul class="level-1">
+            <li>Résistance Tête</li>
+            <li>Résistance Tronc</li>
+            <li>Résistance Membres</li>
         </ul>
     </div>
 </div>
@@ -195,69 +331,69 @@
     <div class="rule-box" id="section-incantation">
         <h4>L'Incantation Libre (Magie uniquement)</h4>
         <p>Le mage peut choisir de ne pas focaliser son sort pour gagner en flexibilité :</p>
-        <ul class="dash-list space-y-2">
-            <li>●Mode Focalisé (Type +Cible):Score complet pour un effet spécifique.</li>
-            <li>●Mode Général (Type uniquement):Le mage utilise seulement son score de Type.L'attaque est comparée aux scores de défense des 3zones de la cible (Tête,Tronc, Membres).L'impact a lieu là où la défense est la plus faible.</li>
-            <li>●Mode Intuitif (Cible uniquement):Le mage utilise seulement son score de Cible pour imposer un effet pur sans forme technique.</li>
+        <ul class="level-1">
+            <li>Mode Focalisé (Type +Cible):Score complet pour un effet spécifique.</li>
+            <li>Mode Général (Type uniquement):Le mage utilise seulement son score de Type.L'attaque est comparée aux scores de défense des 3zones de la cible (Tête,Tronc, Membres).L'impact a lieu là où la défense est la plus faible.</li>
+            <li>Mode Intuitif (Cible uniquement):Le mage utilise seulement son score de Cible pour imposer un effet pur sans forme technique.</li>
         </ul>
     </div>
 
     <h3 id="section-resultats">Résultats de la Comparaison</h3>
     
-    <div class="content-card" style="border-left: 4px solid #166534;">
-        <h4>Cas A :Supériorité (Attaque >protection)</h4>
-        <ul class="dash-list space-y-2">
-            <li>○Condition :Le total de l'attaquant est strictement supérieur à celui qui se protège.</li>
-            <li>○Résultat :IMPACT IMMÉDIAT.(Voir section Conséquences de l'Impact).</li>
+    <div class="mechanic-card card-success">
+        <h4><span class="mechanic-icon">✓</span> Cas A :Supériorité (Attaque >protection)</h4>
+        <ul class="level-1">
+            <li>Condition :Le total de l'attaquant est strictement supérieur à celui qui se protège.</li>
+            <li>Résultat :IMPACT IMMÉDIAT.(Voir section Conséquences de l'Impact).</li>
         </ul>
     </div>
 
-    <div class="content-card" style="border-left: 4px solid #991b1b;">
-        <h4>Cas B :Infériorité (Attaque <Protection)</h4>
-        <ul class="dash-list space-y-2">
-            <li>○Condition :Le total de l'attaquant est strictement inférieur à celui qui se protège.</li>
-            <li>○Résultat :ÉCHEC AUTOMATIQUE.</li>
-            <li>○Description :L'attaque est parfaitement contrée.Le MJ décrit pourquoi l'action est inefficace.</li>
+    <div class="mechanic-card card-error">
+        <h4><span class="mechanic-icon">✗</span> Cas B :Infériorité (Attaque <Protection)</h4>
+        <ul class="level-1">
+            <li>Condition :Le total de l'attaquant est strictement inférieur à celui qui se protège.</li>
+            <li>Résultat :ÉCHEC AUTOMATIQUE.</li>
+            <li>Description :L'attaque est parfaitement contrée.Le MJ décrit pourquoi l'action est inefficace.</li>
         </ul>
     </div>
 
-    <div class="content-card" style="border-left: 4px solid #d97706;">
-        <h4>Cas C :Égalité (Attaque =Protection)</h4>
-        <ul class="dash-list space-y-2">
-            <li>○Condition :Les deux totaux sont identiques.</li>
-            <li>○Résultat :TEST DE COMPTEUR (D6).</li>
-            <li>○Procédure :Un jet de 1D6est effectué.Le MJ décide si le jet est caché ou ouvert,et s'il est effectué par lui-même ou par le joueur.Ce dé détermine le «Coût de la Réussite »(nombre d'échanges nécessaires pour atteindre sa cible)initiant un Compteur de Tours.
-                <ul class="dash-list space-y-2 mt-2">
-                    <li>■Persévérance :Si le joueur/adversaire répète l'action,le compteur diminue de 1.A 0,L'IMPACT a lieu.</li>
-                    <li>■Changement :Si l'attaquant change de Type/Cible,le compteur est abandonné et un nouveau test est effectué.</li>
+    <div class="mechanic-card card-warning">
+        <h4><span class="mechanic-icon">⏳</span> Cas C :Égalité (Attaque =Protection)</h4>
+        <ul class="level-1">
+            <li>Condition :Les deux totaux sont identiques.</li>
+            <li>Résultat :TEST DE COMPTEUR (D6).</li>
+            <li>Procédure :Un jet de 1D6est effectué.Le MJ décide si le jet est caché ou ouvert,et s'il est effectué par lui-même ou par le joueur.Ce dé détermine le «Coût de la Réussite »(nombre d'échanges nécessaires pour atteindre sa cible)initiant un Compteur de Tours.
+                <ul class="level-2">
+                    <li>Persévérance :Si le joueur/adversaire répète l'action,le compteur diminue de 1.A 0,L'IMPACT a lieu.</li>
+                    <li>Changement :Si l'attaquant change de Type/Cible,le compteur est abandonné et un nouveau test est effectué.</li>
                 </ul>
             </li>
-            <li>○Le descriptif qui découle de cette mécanique est nuancé suivant l'arme utilisée :
-                <ul class="dash-list space-y-2 mt-2">
-                    <li>■Arme de CaC :on décrit combien de coups avant de passer la garde de l'adversaire.</li>
-                    <li>■Armes à distance :le temps nécessaire pour réussir à ajuster un tir / lancé malgré les mouvements et assauts éventuels de la cible.</li>
-                    <li>■Sorts :le temps nécessaire pour réussir à lancer un sort malgré les mouvements et assauts éventuels de la cible.</li>
+            <li>Le descriptif qui découle de cette mécanique est nuancé suivant l'arme utilisée :
+                <ul class="level-2">
+                    <li>Arme de CaC :on décrit combien de coups avant de passer la garde de l'adversaire.</li>
+                    <li>Armes à distance :le temps nécessaire pour réussir à ajuster un tir / lancé malgré les mouvements et assauts éventuels de la cible.</li>
+                    <li>Sorts :le temps nécessaire pour réussir à lancer un sort malgré les mouvements et assauts éventuels de la cible.</li>
                 </ul>
             </li>
-            <li>○Le MJ se doit de tenir un décompte en marge de la narration des Compteurs de Tours de chaque acteur participant aux combats et en état de</li>
+            <li>Le MJ se doit de tenir un décompte en marge de la narration des Compteurs de Tours de chaque acteur participant aux combats et en état de</li>
         </ul>
     </div>
 
     <div class="rule-box" id="section-surnombre">
         <h3>La Loi du Surnombre (L'Érosion Tactique)</h3>
         <p><strong>La Limite d'Engagement (Les 4Points):</strong>Seuls 4adversaires de taille humaine peuvent engager une cible au corps-a-corps simultanément :Face,Dos,Flanc Gauche,Flanc Droit.Les adversaires supplémentaires peuvent :</p>
-        <ul class="dash-list space-y-2">
-            <li>○Attaquer depuis le second rang avec attaque directe en utilisant une arme à allonge Longue (ex :lance),dans la limite de ce que l'espace permet sans gêner les combattants au CaC ;</li>
-            <li>○Attaquer à distance (ex :arc,arbalète,sort)de n'importe quelle position distante depuis laquelle ils disposent d'une ligne de vue dégagée sur la</li>
+        <ul class="level-1">
+            <li>Attaquer depuis le second rang avec attaque directe en utilisant une arme à allonge Longue (ex :lance),dans la limite de ce que l'espace permet sans gêner les combattants au CaC ;</li>
+            <li>Attaquer à distance (ex :arc,arbalète,sort)de n'importe quelle position distante depuis laquelle ils disposent d'une ligne de vue dégagée sur la</li>
         </ul>
         <p class="mt-2"><em>Responsabilité du MJ :Déterminer,selon la géométrie du lieu (couloir,salle,plaine)et la disposition des combattants,combien d'attaquants peuvent effectivement tirer sans risquer de toucher leurs alliés ni être gênés par</em></p>
         
         <p class="mt-4"><strong>Malus d'Érosion :</strong>Chaque attaque subie après la première réduit le score de Protection du personnage de façon cumulative.Toutefois,ce malus ne peut jamais faire descendre la Protection en dessous du score d'Attaque de l'adversaire</p>
-        <ul class="dash-list space-y-2">
-            <li>○1ère Attaque reçue :Protection Normale.</li>
-            <li>○2ème Attaque reçue :Malus de -1au score de Protection (sous condition).</li>
-            <li>○3ème Attaque reçue :Malus de -2au score de Protection (sous condition).</li>
-            <li>○4ème Attaque reçue :Malus de -3au score de Protection (sous</li>
+        <ul class="level-1">
+            <li>1ère Attaque reçue :Protection Normale.</li>
+            <li>2ème Attaque reçue :Malus de -1au score de Protection (sous condition).</li>
+            <li>3ème Attaque reçue :Malus de -2au score de Protection (sous condition).</li>
+            <li>4ème Attaque reçue :Malus de -3au score de Protection (sous</li>
         </ul>
         
         <p class="mt-4"><strong>Conséquence :Le Sacrifice de l'Armure :</strong>Si le Malus d'Érosion réduit le score de Protection au point de créer une Infériorité (Attaque >Protection),mais que le bonus de Résistance de l'armure permet de maintenir une Égalité ou une Supériorité :L'attaque est parée/encaissée (Pas de conséquence</p>
@@ -268,10 +404,10 @@
     <div class="content-card" id="section-avantage">
         <h3>L'Avantage Tactique</h3>
         <p>Un personnage bénéficiant d'une situation favorable (effet de surprise,position surélevée, matériel de qualité,environnement propice,etc.)gagne un bonus de +1 de</p>
-        <ul class="dash-list space-y-2">
-            <li>●Champ d'application :Il s'applique à toute action qui semble pouvoir bénéficier de manière pertinente de cet avantage.</li>
-            <li>●Calcul :Le bonus s'ajoute au Score Total de l'action ou au Talent du personnage avant la comparaison avec la Protection ou la Difficulté.</li>
-            <li>●Validation :Ce bonus est ponctuel,narratif et validé par le MJ au cas par</li>
+        <ul class="level-1">
+            <li>Champ d'application :Il s'applique à toute action qui semble pouvoir bénéficier de manière pertinente de cet avantage.</li>
+            <li>Calcul :Le bonus s'ajoute au Score Total de l'action ou au Talent du personnage avant la comparaison avec la Protection ou la Difficulté.</li>
+            <li>Validation :Ce bonus est ponctuel,narratif et validé par le MJ au cas par</li>
         </ul>
     </div>
 
@@ -280,20 +416,20 @@
         <p>Dès qu'un acteur tente d'effectuer plus d'une action ou de frapper plus d'une cible au cours de son tour,un Malus est appliqué pour refléter la perte de précision.Ce malus est calculé en fonction du nombre total d'éléments (actions ou cibles)et s'applique à toutes les résolutions (Score d'Attaque,Score de Talent lors d'une manœuvre,etc.)de cette</p>
         
         <h4 class="mt-4">Exemples :</h4>
-        <ul class="dash-list space-y-2">
-            <li>●Attaquer 2cibles simultanément :L'attaquant subit un Malus de -1 à son Score d'Attaque pour la résolution contre la Cible 1 et pour la résolution contre la Cible 2.</li>
-            <li>●Tenter un Sort de Zone (3cibles):Le Malus est de -2 (3-1).Ce Malus de -2est appliqué au Score de Talent du mage pour la résolution contre la Cible 1,la Cible 2 et la Cible</li>
-            <li>●Frapper,puis Tenter une Manœuvre :Le Malus est de -1 (2actions -1).Ce Malus de -1s'applique au Score d'Attaque de la frappe et au Score de Talent de la</li>
+        <ul class="level-1">
+            <li>Attaquer 2cibles simultanément :L'attaquant subit un Malus de -1 à son Score d'Attaque pour la résolution contre la Cible 1 et pour la résolution contre la Cible 2.</li>
+            <li>Tenter un Sort de Zone (3cibles):Le Malus est de -2 (3-1).Ce Malus de -2est appliqué au Score de Talent du mage pour la résolution contre la Cible 1,la Cible 2 et la Cible</li>
+            <li>Frapper,puis Tenter une Manœuvre :Le Malus est de -1 (2actions -1).Ce Malus de -1s'applique au Score d'Attaque de la frappe et au Score de Talent de la</li>
         </ul>
     </div>
 
     <div class="content-card" id="section-impact" style="border-left: 4px solid #7f1d1d; background: rgba(127, 29, 29, 0.1);">
         <h3>Conséquences de l'Impact</h3>
         <p>Lorsqu'une attaque aboutit (Supériorité ou fin du compteur D6),l'effet narratif est choisi par le MJ en fonction de la logique de la scène.Si le choix n'est pas la mort,un désavantage de -1 à toutes les actions sera appliqué à la victime jusqu'à guérison,annulation ou contournement de l'effet appliqué si pertinent :</p>
-        <ul class="dash-list space-y-2 mt-2">
-            <li>●Tête :Mort,Blessure qui sans soins entraîne la mort à court terme,KO,Aveuglement.</li>
-            <li>●Tronc :Mort,Blessure qui sans soins entraîne la mort à court terme,Souffle coupé, Recul forcé,Hémorragie (malus constant).</li>
-            <li>●Membres :Perte d'un membre,Désarmement,Lâcher prise, Fracture,Mise au sol, Chute,</li>
+        <ul class="level-1">
+            <li>Tête :Mort,Blessure qui sans soins entraîne la mort à court terme,KO,Aveuglement.</li>
+            <li>Tronc :Mort,Blessure qui sans soins entraîne la mort à court terme,Souffle coupé, Recul forcé,Hémorragie (malus constant).</li>
+            <li>Membres :Perte d'un membre,Désarmement,Lâcher prise, Fracture,Mise au sol, Chute,</li>
         </ul>
     </div>
 </div>
@@ -336,7 +472,7 @@
 <div class="content-section" id="section-actions">
     <h2>5. Actions en combat</h2>
     <p>Pour réaliser une action,chaque personnage peut choisir UNE option parmi les suivantes :</p>
-    <ul class="dash-list space-y-2">
+    <ul class="level-1">
         <li><strong>L'Attaque (Offensive):</strong>Le personnage choisit un Type et une Cible pour tenter de toucher un adversaire.Si un personnage a une arme courte dans chaque main,il peut effectuer une attaque par arme qu'il possède sans malus de cible ou d'attaque</li>
         <li><strong>L'Attente (Action Retardée):</strong>Le personnage ne fait rien dans l'immediat.Effet :Il peut déclarer «J'interromps !»à tout moment.Son action (Attaque ou Protection)se résout immédiatement,avant ou pendant l'action de la</li>
         <li><strong>La Manœuvre Défensive (Tactique):</strong>Le personnage se concentre exclusivement sur sa protection.Effet :Il choisit un type de Défense.Il gagne un bonus temporaire de +1dans cette caractéristique défensive jusqu'au début de son prochain tour.Restriction :Seuls les PJ et PNJ intelligents peuvent utiliser la</li>
@@ -349,26 +485,26 @@
     
     <div class="content-card" id="section-maintien-sort">
         <h3>Maintien d'un sort sur la durée</h3>
-        <ul class="dash-list space-y-2">
-            <li>○Individuel :Pour garder un sort actif,le lanceur doit gérer le coût de sa concentration :
-                <ul class="dash-list space-y-2 mt-2">
-                    <li>■Jet de 1D6(Durée sans Malus):Le lanceur effectue un jet de 1D6.Le résultat indique le nombre de tours (le Compteur de Maintien)durant lesquels le sort est maintenu sans aucun malus.</li>
-                    <li>■Contrecoup (Malus de Maintien):Une fois le Compteur de Maintien arrivé (à 0),le sort reste actif,mais le lanceur subit le Malus de Maintien :
-                        <ul class="dash-list space-y-2 mt-2">
-                            <li>●Malus de -1à TOUTES ses statistiques jusqu'à l'annulation du sort (Rupture ou Annulation Tactique)ou un repos complet.</li>
-                            <li>●La Rupture (Le Talon d'Achille):Si le lanceur subit un Impact ou une Saisie,alors qu'il est sous l'effet d'un contrecoup,le sort cesse immédiatement (le Buff disparait,la créature</li>
+        <ul class="level-1">
+            <li>Individuel :Pour garder un sort actif,le lanceur doit gérer le coût de sa concentration :
+                <ul class="level-2">
+                    <li>Jet de 1D6(Durée sans Malus):Le lanceur effectue un jet de 1D6.Le résultat indique le nombre de tours (le Compteur de Maintien)durant lesquels le sort est maintenu sans aucun malus.</li>
+                    <li>Contrecoup (Malus de Maintien):Une fois le Compteur de Maintien arrivé (à 0),le sort reste actif,mais le lanceur subit le Malus de Maintien :
+                        <ul class="level-3">
+                            <li>Malus de -1à TOUTES ses statistiques jusqu'à l'annulation du sort (Rupture ou Annulation Tactique)ou un repos complet.</li>
+                            <li>La Rupture (Le Talon d'Achille):Si le lanceur subit un Impact ou une Saisie,alors qu'il est sous l'effet d'un contrecoup,le sort cesse immédiatement (le Buff disparait,la créature</li>
                         </ul>
                     </li>
                 </ul>
             </li>
-            <li>○Cercle Rituel (2Mages &+):Un groupe de lanceur de sorts peut se réunir pour lancer un sort qu'ils ne pourraient pas réussir à lancer individuellement :
-                <ul class="dash-list space-y-2 mt-2">
-                    <li>■Effet :Il dépend des stats du lanceur de sort le plus expérimenté (en général,celui qui a les plus hautes stats)+1.</li>
-                    <li>■Lancement :Un seul jet de 1D6est réalisé pour l'ensemble des participants et détermine le Compteur de Lancement du sort qui indique le temps nécessaire pour lancer le sort.Un minimum de deux individus (lanceur le plus expérimenté inclus)doit rester concentré sur le lancement du sort et ne rien faire d'autre.</li>
-                    <li>■Contrecoup (Concentration):tous subissent le Malus de -1à toutes leurs stats,tant qu'ils se concentrent pour lancer ou maintenir le sort.Ils peuvent être remplacés ou relayés,cela ne rompt pas le sort tant qu'au moins un des participants reste</li>
+            <li>Cercle Rituel (2Mages &+):Un groupe de lanceur de sorts peut se réunir pour lancer un sort qu'ils ne pourraient pas réussir à lancer individuellement :
+                <ul class="level-2">
+                    <li>Effet :Il dépend des stats du lanceur de sort le plus expérimenté (en général,celui qui a les plus hautes stats)+1.</li>
+                    <li>Lancement :Un seul jet de 1D6est réalisé pour l'ensemble des participants et détermine le Compteur de Lancement du sort qui indique le temps nécessaire pour lancer le sort.Un minimum de deux individus (lanceur le plus expérimenté inclus)doit rester concentré sur le lancement du sort et ne rien faire d'autre.</li>
+                    <li>Contrecoup (Concentration):tous subissent le Malus de -1à toutes leurs stats,tant qu'ils se concentrent pour lancer ou maintenir le sort.Ils peuvent être remplacés ou relayés,cela ne rompt pas le sort tant qu'au moins un des participants reste</li>
                 </ul>
             </li>
-            <li>○L'Annulation :rompre les effets de son sort volontairement (ou non)ou de quitter un Cercle rituel permet de récupérer ses statistiques</li>
+            <li>L'Annulation :rompre les effets de son sort volontairement (ou non)ou de quitter un Cercle rituel permet de récupérer ses statistiques</li>
         </ul>
     </div>
 
@@ -380,13 +516,13 @@
     <div class="rule-box" id="section-sorts-sans-opposant">
         <h3>Sorts sans opposant</h3>
         <p>Pour les sorts sans opposant,la résolution se fait par comparaison des Stats (2stats au maximum)du lanceur impliquées par l'effet voulu du sort à la Difficulté :</p>
-        <ul class="dash-list space-y-2">
-            <li>○Difficulté 0(Initié):Sort simple.La majorité des sorts sans opposant.</li>
-            <li>○Difficulté 2(Expert):Sort complexe pouvant affecter une petite zone ou ayant des effets puissants.</li>
-            <li>○Difficulté 4(Maître):Sort extrêmement complexe pouvant affecter une grande zone ou ayant des effets extrêmement</li>
-            <li>○Difficulté 7(Mythique):Sort nécessitant généralement un Maître de haut niveau et un rituel pour être lancé,peut impacter un région significativement.</li>
-            <li>○Dans le cas d'une métamorphose ou d'une invocation :la difficulté est égale à la Dangerosité de la créature +1par créature additionnelle.</li>
-            <li>○Dans le cas d'un bonus aux caracs,talents ou actions :la difficulté est fixée à 2pour un +1global et ne semble pas pouvoir avoir un effet plus important même en augmentant la</li>
+        <ul class="level-1">
+            <li>Difficulté 0(Initié):Sort simple.La majorité des sorts sans opposant.</li>
+            <li>Difficulté 2(Expert):Sort complexe pouvant affecter une petite zone ou ayant des effets puissants.</li>
+            <li>Difficulté 4(Maître):Sort extrêmement complexe pouvant affecter une grande zone ou ayant des effets extrêmement</li>
+            <li>Difficulté 7(Mythique):Sort nécessitant généralement un Maître de haut niveau et un rituel pour être lancé,peut impacter un région significativement.</li>
+            <li>Dans le cas d'une métamorphose ou d'une invocation :la difficulté est égale à la Dangerosité de la créature +1par créature additionnelle.</li>
+            <li>Dans le cas d'un bonus aux caracs,talents ou actions :la difficulté est fixée à 2pour un +1global et ne semble pas pouvoir avoir un effet plus important même en augmentant la</li>
         </ul>
         <p class="mt-4"><strong>Malus :</strong>Le malus d'armure ne s'applique qu'aux sorts ciblant/incluant un ou des ennemis.Le malus lié à l'utilisation d'une arme manufacturée ou d'un objet,non listé dans la catégorie des focalisateurs magiques (cf.livret 3chapitre B,Armes)s'applique dans tous les cas.Pour lancer un sort (hors capacités innées),le personnage doit impérativement avoir au moins une main libre (pour les somatiques) ET tenir un focalisateur ou une arme (catalyseur).Une arme tenue à deux mains peut être lâchée d'une main instantanément pour satisfaire cette</p>
     </div>
@@ -397,26 +533,26 @@
     <p>Cette section concerne la résolution des actions liées à l'usage</p>
     <div class="content-card">
         <h3>La Difficulté</h3>
-        <ul class="dash-list space-y-2">
-            <li>●Sans opposant :
-                <ul class="dash-list space-y-2 mt-2">
-                    <li>○Difficulté 0(Facile):Tâche simple.</li>
-                    <li>○Difficulté 1(Ardue):Tâche exigeant une</li>
+        <ul class="level-1">
+            <li>Sans opposant :
+                <ul class="level-2">
+                    <li>Difficulté 0(Facile):Tâche simple.</li>
+                    <li>Difficulté 1(Ardue):Tâche exigeant une</li>
                 </ul>
             </li>
-            <li>●Avec opposants :
-                <ul class="dash-list space-y-2 mt-2">
-                    <li>○La Difficulté est égale au score de talent (ou de statistique)le plus élevé parmi les adversaires,choisi selon la logique de l'action</li>
+            <li>Avec opposants :
+                <ul class="level-2">
+                    <li>La Difficulté est égale au score de talent (ou de statistique)le plus élevé parmi les adversaires,choisi selon la logique de l'action</li>
                 </ul>
             </li>
         </ul>
         
         <h4 class="mt-4">Le Test</h4>
         <p>On compare le Talent à la Difficulté :</p>
-        <ul class="dash-list space-y-2">
-            <li>●Supériorité (Talent >Difficulté):Réussite Automatique.</li>
-            <li>●Infériorité (Talent <Difficulté):Échec Automatique.</li>
-            <li>●Égalité (Talent =Difficulté):Test de Compteur (D6)pour déterminer,selon les cas :le temps nécessaire avant la réussite (ex:crochetage)ou l'échec (ex:discrétion),et/ou un coût en ressources supplémentaire (ex:</li>
+        <ul class="level-1">
+            <li>Supériorité (Talent >Difficulté):Réussite Automatique.</li>
+            <li>Infériorité (Talent <Difficulté):Échec Automatique.</li>
+            <li>Égalité (Talent =Difficulté):Test de Compteur (D6)pour déterminer,selon les cas :le temps nécessaire avant la réussite (ex:crochetage)ou l'échec (ex:discrétion),et/ou un coût en ressources supplémentaire (ex:</li>
         </ul>
     </div>
 </div>
