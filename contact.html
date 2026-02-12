@@ -1,119 +1,179 @@
-<style>
-    .contact-wrapper {
-        font-family: 'Cormorant Garamond', serif;
-        color: #000000;
-        background: transparent;
-    }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & Discussions - SCCS Codex</title>
+    <meta name="description" content="Contactez l'auteur ou discutez des règles SCCS">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
     
-    .contact-header {
-        text-align: center;
-        margin-bottom: 30px; 
-        border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-        padding-bottom: 20px;
-    }
+    <style>
+        :root {
+            --opacite-page: 0.1;
+            --flou-vitre: 2px;
+        }
 
-    .contact-header h1 {
-        font-family: 'Cinzel', serif;
-        color: #000000; 
-        margin: 0;
-        text-transform: uppercase;
-        font-size: 1.8rem;
-        line-height: 1.2;
-        letter-spacing: 1px;
-    }
+        html {
+            background: transparent;
+        }
 
-    .contact-subtitle {
-        font-style: italic;
-        color: rgba(0, 0, 0, 0.9); 
-        font-size: 1.2rem;
-        margin-top: 8px;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent; 
+            font-family: 'Cormorant Garamond', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            min-height: 100vh;
+            box-sizing: border-box;
+            color: #000000;
+        }
 
-    .contact-section-box {
-        background: rgba(0, 0, 0, 0.05);
-        padding: 25px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        border-left: 4px solid #7c2d12;
-    }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, var(--opacite-page)); 
+            backdrop-filter: blur(var(--flou-vitre));
+            -webkit-backdrop-filter: blur(var(--flou-vitre));
+            padding: 30px 40px; 
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
 
-    .contact-section-box h2 {
-        font-family: 'Cinzel', serif;
-        color: #7c2d12;
-        margin-top: 0;
-        font-size: 1.4rem;
-    }
+        .header {
+            text-align: center;
+            margin-bottom: 30px; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            padding-bottom: 20px;
+        }
 
-    .contact-section-box p {
-        font-size: 1.1rem;
-        line-height: 1.6;
-        margin: 10px 0;
-    }
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #000000; 
+            margin: 0;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+            line-height: 1.2;
+            letter-spacing: 1px;
+        }
 
-    .github-info {
-        background: rgba(0,0,0,0.05);
-        padding: 15px;
-        border-radius: 6px;
-        margin: 15px 0;
-        font-size: 0.95rem;
-    }
+        .subtitle {
+            font-style: italic;
+            color: rgba(0, 0, 0, 0.9); 
+            font-size: 1.2rem;
+            margin-top: 8px;
+        }
 
-    .github-info a {
-        color: #7c2d12;
-        text-decoration: none;
-        font-weight: 700;
-    }
+        .section {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #7c2d12;
+        }
 
-    .github-info a:hover {
-        text-decoration: underline;
-    }
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: #7c2d12;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
 
-    .giscus-container {
-        margin-top: 20px;
-        min-height: 200px;
-    }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
 
-    .contact-footer {
-        text-align: center;
-        font-family: 'Cinzel', serif;
-        font-size: 0.6rem;
-        color: rgba(0, 0, 0, 0.6);
-        margin-top: 40px;
-        line-height: 1.4;
-    }
+        .github-info {
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
 
-    .contact-footer a {
-        color: #000000;
-        text-decoration: none;
-        font-weight: 600;
-    }
-</style>
+        .github-info a {
+            color: #7c2d12;
+            text-decoration: none;
+            font-weight: 700;
+        }
 
-<div class="contact-wrapper">
-    <div class="contact-header">
-        <h1>Contact & Discussions</h1>
-        <div class="contact-subtitle">Échangez sur le SCCS et contactez l'auteur</div>
-    </div>
+        .github-info a:hover {
+            text-decoration: underline;
+        }
 
-    <div class="contact-section-box">
-        <h2>💬 Discussions Communautaires</h2>
-        <p>Posez vos questions sur les règles, partagez vos retours de partie ou suggérez des améliorations.</p>
-        
-        <div class="github-info">
-            <strong>ℹ️ Comment participer ?</strong><br>
-            Les commentaires utilisent les Discussions GitHub. C'est gratuit et cela prend 2 minutes :<br>
-            <a href="https://github.com/signup" target="_blank">Créer un compte GitHub</a> (si vous n'en avez pas déjà un), puis revenez ici pour commenter ci-dessous.
+        .giscus-container {
+            margin-top: 20px;
+            min-height: 200px;
+        }
+
+        footer {
+            color: #000000;
+            text-align: center; 
+            padding: 20px 15px;
+            margin-top: auto;
+            width: 100%;
+            font-size: 0.8em;
+        }
+
+        footer a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; margin: 10px; width: auto; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+    <script data-goatcounter="https://urnidzen.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Contact & Discussions</h1>
+            <div class="subtitle">Échangez sur le SCCS et contactez l'auteur</div>
         </div>
 
-        <div class="giscus-container" id="giscus-container">
-            <!-- Script injecté dynamiquement par index.html -->
+        <div class="section">
+            <h2>💬 Discussions Communautaires</h2>
+            <p>Posez vos questions sur les règles, partagez vos retours de partie ou suggérez des améliorations.</p>
+            
+            <div class="github-info">
+                <strong>ℹ️ Comment participer ?</strong><br>
+                Les commentaires utilisent les Discussions GitHub. C'est gratuit et cela prend 2 minutes :<br>
+                <a href="https://github.com/signup" target="_blank">Créer un compte GitHub</a> (si vous n'en avez pas déjà un), puis revenez ici pour commenter ci-dessous.
+            </div>
+
+            <div class="giscus-container">
+                <script src="https://giscus.app/client.js"
+                        data-repo="Urnidzen/SCCS"
+                        data-repo-id="R_kgDORGC3NQ"
+                        data-category="Commentaires Site Web"
+                        data-category-id="DIC_kwDORGC3Nc4C2FWF"
+                        data-mapping="pathname"
+                        data-strict="0"
+                        data-reactions-enabled="1"
+                        data-emit-metadata="0"
+                        data-input-position="bottom"
+                        data-theme="light"
+                        data-lang="fr"
+                        crossorigin="anonymous"
+                        async>
+                </script>
+            </div>
         </div>
     </div>
 
-    <div class="contact-footer">
+    <footer>
         <p>© 2024 Urnidzen - SCCS | Licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> | Images générées par IA</p>
-    </div>
-</div>
-
-<script data-goatcounter="https://urnidzen.goatcounter.com/count"
-    async src="//gc.zgo.at/count.js"></script>
+    </footer>
+</body>
+</html>
