@@ -670,15 +670,22 @@
             return html;
         }
 
+        // MODIFICATION : Ajout des boutons d'action dans la liste des personnages
         function renderCharactersList() {
             const profiles = SCCS_Registre.getAllProfiles();
             let html = '';
     
             profiles.forEach((profile, index) => {
                 html += `
-                    <div class="index-item" style="display:flex; justify-content:space-between; align-items:center; padding-right:5px;">
-                        <span onclick="scrollToCharacter(${index})" style="flex-grow:1; cursor:pointer;">${profile.name || 'Sans Nom'}</span>
-                        <span onclick="deleteCharacter('${profile.id}')" style="cursor:pointer; opacity:0.4; font-size:0.9rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4">🗑️</span>
+                    <div class="index-item" style="display:flex; justify-content:space-between; align-items:center; padding-right:5px; gap:8px;">
+                        <span onclick="scrollToCharacter(${index})" style="flex-grow:1; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${profile.name || 'Sans Nom'}</span>
+                        <div style="display:flex; gap:4px; flex-shrink:0;">
+                            <span onclick="resetCharacter('${profile.id}')" style="cursor:pointer; opacity:0.4; font-size:0.9rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4" title="Réinitialiser">↺</span>
+                            <span onclick="exportCharacter('${profile.id}')" style="cursor:pointer; opacity:0.4; font-size:0.9rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4" title="Sauvegarder">💾</span>
+                            <span onclick="importCharacter('${profile.id}')" style="cursor:pointer; opacity:0.4; font-size:0.9rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4" title="Importer">📂</span>
+                            <span onclick="printCharacter('${profile.id}')" style="cursor:pointer; opacity:0.4; font-size:0.9rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4" title="Imprimer">🖨️</span>
+                            <span onclick="deleteCharacter('${profile.id}')" style="cursor:pointer; opacity:0.4; font-size:0.9rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4" title="Supprimer">🗑️</span>
+                        </div>
                     </div>
                 `;
             });
@@ -780,6 +787,101 @@
                     behavior: 'smooth'
                 });
             }
+        }
+
+        // AJOUT : Fonction pour réinitialiser un personnage depuis la sidebar
+        function resetCharacter(id) {
+            if(!confirm("Voulez-vous vider les champs de ce personnage ?")) return;
+            const profile = SCCS_Registre.getProfile(id);
+            if (!profile) return;
+            
+            // Créer une fiche vierge
+            const emptyContent = {
+                "char-name": "",
+                "race-select": "HUMAIN",
+                "gender-select": "MASCULIN",
+                "val-pa": "0",
+                "identity-eyes": "",
+                "identity-hair": "",
+                "__state_talents": {
+                    "athletisme": false, 
+                    "acrobatie": false, 
+                    "mecanique": false,
+                    "subtilite": false, 
+                    "perception": false, 
+                    "survie": false,
+                    "savoir_acad": false
+                }
+            };
+            
+            // Réinitialiser tous les champs numériques et texte
+            for(let i=0; i<20; i++) {
+                emptyContent[`__clean_input_${i}`] = "0";
+            }
+            for(let i=0; i<2; i++) {
+                emptyContent[`__area_${i}`] = "";
+            }
+            
+            SCCS_Registre.updateProfile(id, emptyContent, "Sans Nom");
+            renderDocumentsList();
+            if(currentDoc === 'fiche') loadDocument('fiche');
+        }
+
+        // AJOUT : Fonction pour exporter un personnage depuis la sidebar
+        function exportCharacter(id) {
+            const profile = SCCS_Registre.getProfile(id);
+            if (!profile) return;
+            const dataStr = JSON.stringify(profile, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SCCS_Heros_${profile.name.replace(/\s+/g, '_')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // AJOUT : Fonction pour importer un personnage depuis la sidebar
+        function importCharacter(id) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        if (data.content && confirm(`Remplacer "${SCCS_Registre.getProfile(id)?.name || 'ce personnage'}" par "${data.name || 'le personnage importé'}" ?`)) {
+                            SCCS_Registre.updateProfile(id, data.content, data.name || "Sans Nom");
+                            renderDocumentsList();
+                            if(currentDoc === 'fiche') loadDocument('fiche');
+                            alert('Personnage importé avec succès !');
+                        }
+                    } catch (err) {
+                        alert('Erreur lors de l\'import du fichier JSON');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // AJOUT : Fonction pour imprimer un personnage depuis la sidebar
+        function printCharacter(id) {
+            // Ouvrir la fiche dans un nouvel onglet et lancer l'impression
+            const profile = SCCS_Registre.getProfile(id);
+            if (!profile) return;
+            
+            const printWindow = window.open(`Fiche de personnage.v0.87.html?uid=${id}`, '_blank');
+            printWindow.onload = () => {
+                setTimeout(() => {
+                    printWindow.print();
+                }, 1000);
+            };
         }
 
         function deleteCharacter(id) {
