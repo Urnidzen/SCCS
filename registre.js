@@ -115,6 +115,20 @@ const SCCS_Registre = {
         }
     },
 
+        /**
+     * Force la relecture du LocalStorage pour synchroniser l'état entre iframe et parent
+     */
+    reload: function() {
+        const store = localStorage.getItem(this.STORAGE_KEY);
+        if (store) {
+            try {
+                this.data = JSON.parse(store);
+            } catch (e) {
+                console.error("[SCCS Registre] Erreur de relecture des données :", e);
+            }
+        }
+    },
+    
     /**
      * Fonction utilitaire pour exporter tout le registre en JSON (Backup global)
      */
