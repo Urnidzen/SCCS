@@ -13,30 +13,25 @@
             --opacite-page: 0.1;
             --opacite-onglets: 0.45; 
             --couleur-onglet-fond: 20, 20, 20; 
-            --couleur-texte-onglet: #ffffff; 
+            --couleur-texte-onglet: #000000; 
             --flou-vitre: 2px;
+        }
+
+        html {
+            background: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: #e3e3e3; 
-            background-image: 
-                url("clean-gray-paper.png"), 
-                linear-gradient(rgba(227, 227, 227, 0.8), rgba(227, 227, 227, 0.8)),
-                url("fond-de-page-accueil.png");
-            background-attachment: fixed;
-            background-position: center;
-            background-size: auto, cover, cover;
-            background-repeat: repeat, no-repeat, no-repeat;
-            background-blend-mode: multiply;
+            background: transparent; 
             font-family: 'Cormorant Garamond', serif;
             display: flex;
             flex-direction: column;
             align-items: center; 
             min-height: 100vh;
             box-sizing: border-box;
-            color: #ffffff;
+            color: #000000;
         }
 
         .container {
@@ -56,57 +51,40 @@
         .header {
             text-align: center;
             margin-bottom: 30px; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
             padding-bottom: 20px;
         }
 
         h1 {
             font-family: 'Cinzel', serif;
-            color: #ffffff; 
+            color: #000000; 
             margin: 0;
             text-transform: uppercase;
             font-size: 1.8rem;
             line-height: 1.2;
             letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-shadow: none;
         }
 
         .subtitle {
             font-style: italic;
-            color: rgba(255, 255, 255, 0.9); 
+            color: rgba(0, 0, 0, 0.9); 
             font-size: 1.2rem;
             margin-top: 8px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 700;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-
-        .back-link:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateX(-5px);
+            text-shadow: none;
         }
 
         .section {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.05);
             padding: 25px;
             border-radius: 8px;
             margin-bottom: 30px;
-            border-left: 4px solid #d4af37;
+            border-left: 4px solid #7c2d12;
         }
 
         h2 {
             font-family: 'Cinzel', serif;
-            color: #d4af37;
+            color: #7c2d12;
             margin-top: 0;
             font-size: 1.4rem;
         }
@@ -118,7 +96,7 @@
         }
 
         .github-info {
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.05);
             padding: 15px;
             border-radius: 6px;
             margin: 15px 0;
@@ -126,7 +104,7 @@
         }
 
         .github-info a {
-            color: #d4af37;
+            color: #7c2d12;
             text-decoration: none;
             font-weight: 700;
         }
@@ -141,17 +119,17 @@
         }
 
         footer {
-            color: #ffffff;
+            color: #000000;
             text-align: center; 
             padding: 20px 15px;
             margin-top: auto;
             width: 100%;
             font-size: 0.8em;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            text-shadow: none;
         }
 
         footer a {
-            color: #ffffff;
+            color: #000000;
             text-decoration: none;
             font-weight: 600;
         }
@@ -166,24 +144,21 @@
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-link">← Retour au Codex</a>
-        
         <div class="header">
             <h1>Contact & Discussions</h1>
             <div class="subtitle">Échangez sur le SCCS et contactez l'auteur</div>
         </div>
 
-        <!-- Section Discussions -->
         <div class="section">
             <h2>💬 Discussions Communautaires</h2>
             <p>Posez vos questions sur les règles, partagez vos retours de partie ou suggérez des améliorations.</p>
             
             <div class="github-info">
                 <strong>ℹ️ Comment participer ?</strong><br>
-                Il vous faut un <a href="https://github.com/signup" target="_blank">compte GitHub</a> (rapide et facile à créer). Totalement gratuit, open-source et respecte votre vie privée (pas de cookies publicitaires, pas de vente de données).
+                Les commentaires utilisent les Discussions GitHub. C'est gratuit et cela prend 2 minutes :<br>
+                <a href="https://github.com/signup" target="_blank">Créer un compte GitHub</a> (si vous n'en avez pas déjà un), puis revenez ici pour commenter ci-dessous.
             </div>
 
-            <!-- CODE GISCUS ICI -->
             <div class="giscus-container">
                 <script src="https://giscus.app/client.js"
                         data-repo="Urnidzen/SCCS"
@@ -195,7 +170,7 @@
                         data-reactions-enabled="1"
                         data-emit-metadata="0"
                         data-input-position="bottom"
-                        data-theme="dark"
+                        data-theme="light"
                         data-lang="fr"
                         crossorigin="anonymous"
                         async>
