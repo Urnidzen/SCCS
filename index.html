@@ -601,6 +601,11 @@
                 
                 rawContentCache = cleanHtmlContent(tempDiv.innerHTML);
                 paginateContent(rawContentCache);
+                
+                // Injection dynamique de Giscus pour la page contact
+                if (docId === 'contact') {
+                    setTimeout(injectGiscus, 200);
+                }
 
             } catch (error) {
                 console.error('Erreur:', error);
