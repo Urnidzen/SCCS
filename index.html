@@ -692,13 +692,9 @@
                         </div>
                     `;
                 } else {
-                    // Créer automatiquement une nouvelle fiche sur la page de droite
-                    const newId = SCCS_Registre.createProfile();
-                    const rightUrl = `${baseFileUrl}?uid=${newId}`;
-                    
+                    // Page vierge sans contenu (attente d'un futur personnage)
                     rightContent = `
-                        <div class="page page-right sheet-container-frame">
-                            <iframe class="char-sheet-frame" src="${rightUrl}"></iframe>
+                        <div class="page page-right" style="background: transparent;">
                         </div>
                     `;
                 }
