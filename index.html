@@ -639,13 +639,16 @@
 
             const spread = document.createElement('div');
             spread.className = 'book-spread';
-            
+    
             const content = `
-                <div class="page page-left" style="flex: 2; padding: 0; overflow: hidden; background: transparent; border: none; box-shadow: none;">
+                <div class="page page-left" style="padding: 40px; overflow-y: auto;">
                     <iframe src="${fileUrl}" style="width: 100%; height: 100%; border: none; background: transparent;"></iframe>
                 </div>
+                    <div class="page page-right" style="padding: 40px;">
+                    <!-- Page de droite vide pour l'effet livre ouvert -->
+                </div>
             `;
-            
+    
             spread.innerHTML = content;
             wrapper.appendChild(spread);
         }
