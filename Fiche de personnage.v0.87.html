@@ -664,6 +664,10 @@
 
             const nameVal = find('char-name').value || "Sans Nom";
             SCCS_Registre.updateProfile(currentUid, data, nameVal);
+
+            if(window.parent && window.parent !== window) {
+                window.parent.postMessage({action: 'refreshSidebar'}, '*');
+            }
         }
 
         function updateProfileName(val) { triggerSave(); }
