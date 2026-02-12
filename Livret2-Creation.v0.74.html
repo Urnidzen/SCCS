@@ -7,18 +7,18 @@
     "title": "Livret 2",
     "subtitle": "Création & Évolution",
     "index": [
-        {"id": "talents", "title": "1.Talents et Statistiques de", "level": 1},
-        {"id": "talents-list", "title": "Les Talents", "level": 2},
-        {"id": "valeurs", "title": "Les Valeurs des Statistiques de combat", "level": 2},
-        {"id": "creation", "title": "2.Création de personnage", "level": 1},
-        {"id": "espece", "title": "1) Choisissez une espece", "level": 2},
-        {"id": "genre", "title": "2) Determinez son genre", "level": 2},
-        {"id": "nom", "title": "3) Donnez lui un", "level": 2},
-        {"id": "apparence", "title": "4) Decrivez son apparence", "level": 2},
-        {"id": "depart", "title": "5) Equipement de Depart", "level": 2},
-        {"id": "progression", "title": "3.Progression du Personnage", "level": 1},
-        {"id": "pa", "title": "Gain de Points d'Amelioration (PA)", "level": 2},
-        {"id": "usage", "title": "Regle de l'Usage", "level": 2}
+        {"id": "talents", "title": "1. Talents et Statistiques", "level": 1},
+        {"id": "talents-list", "title": "Les 7 Talents", "level": 2},
+        {"id": "valeurs", "title": "Valeurs des Statistiques", "level": 2},
+        {"id": "creation", "title": "2. Création de personnage", "level": 1},
+        {"id": "espece", "title": "Étape 1 : Espèce", "level": 2},
+        {"id": "genre", "title": "Étape 2 : Genre", "level": 2},
+        {"id": "nom", "title": "Étape 3 : Nom", "level": 2},
+        {"id": "apparence", "title": "Étape 4 : Apparence", "level": 2},
+        {"id": "depart", "title": "Étape 5 : Équipement", "level": 2},
+        {"id": "progression", "title": "3. Progression", "level": 1},
+        {"id": "pa", "title": "Points d'Amélioration", "level": 2},
+        {"id": "usage", "title": "Règle de l'Usage", "level": 2}
     ]
 }
 </script>
@@ -66,39 +66,39 @@
 
 <!-- CONTENU HTML -->
 <div class="content-section" id="section-talents">
-    <h2>1.Talents et Statistiques de</h2>
+    <h2>1. Talents et Statistiques de combat</h2>
     
     <div class="content-card" id="section-talents-list">
         <h3>Les Talents</h3>
         <ol class="decimal space-y-2">
-            <li><strong>Athlétisme :</strong> Force et endurance.</li>
-            <li><strong>Acrobatie :</strong> Équilibre et discrétion.</li>
-            <li><strong>Mécanique :</strong> Outils et ingénierie.</li>
-            <li><strong>Subtilité :</strong> Vol et manipulation fine.</li>
-            <li><strong>Perception :</strong> Sens et détection.</li>
-            <li><strong>Survie :</strong> Nature et pistage.</li>
-            <li><strong>Savoir Académique :</strong> Théorie et</li>
+            <li><strong>Athlétisme:</strong> Force et endurance.</li>
+            <li><strong>Acrobatie:</strong> Équilibre et discrétion.</li>
+            <li><strong>Mécanique:</strong> Outils et ingénierie.</li>
+            <li><strong>Subtilité:</strong> Vol et manipulation fine.</li>
+            <li><strong>Perception:</strong> Sens et détection.</li>
+            <li><strong>Survie:</strong> Nature et pistage.</li>
+            <li><strong>Savoir Académique:</strong> Théorie et histoire.</li>
         </ol>
         <p class="italic mt-4" style="background: rgba(255,255,255,0.4); padding: 10px; border-left: 3px solid #1c1917;">
-            Chaque Talent à +1 permet de réussir automatiquement les épreuves faciles (Difficulté 0)et de tenter les épreuves ardues (Difficulté
+            Chaque Talent à +1 permet de réussir automatiquement les épreuves faciles (Difficulté 0) et de tenter les épreuves ardues (Difficulté 1).
         </p>
     </div>
 
     <h3 id="section-valeurs">Les Valeurs des Statistiques de combat</h3>
-    <p class="mb-4">Au nombre de 12(6attaques : 3Types (Direct,Circulaire,Saisie)et 3Cibles (Tête,Tronc, Membres)et 6protections : 3Défenses (vs Direct,vs Circulaire,vs Saisie)et 3Résistances (Tête,Tronc,Membres)leur valeur représente vos aptitudes au combat,mettant en avant vos faiblesses et vos point fort :</p>
+    <p class="mb-4">Au nombre de 12 (6 attaques: 3 Types et 3 Cibles, et 6 protections), leur valeur représente vos aptitudes au combat:</p>
     <ul class="dash-list space-y-2">
-        <li><strong>0(Non-initié):</strong> Valeur par défaut.</li>
-        <li><strong>+1(Initié):</strong> Entraînement de base.</li>
-        <li><strong>+2(Expert):</strong> Aventurier expérimenté.</li>
-        <li><strong>+3(Maître)</strong></li>
+        <li><strong>0 (Non-initié):</strong> Valeur par défaut.</li>
+        <li><strong>+1 (Initié):</strong> Entraînement de base.</li>
+        <li><strong>+2 (Expert):</strong> Aventurier expérimenté.</li>
+        <li><strong>+3 (Maître):</strong> Élite.</li>
     </ul>
 </div>
 
 <div class="content-section" id="section-creation">
-    <h2>2.Création de personnage</h2>
+    <h2>2. Création de personnage</h2>
     
-    <h3 id="section-espece">1) Choisissez une espeèce :</h3>
-    <p class="mb-4">Vous débutez en ayant hérité des facultés innées de vos ancêtres,attribuez les bonus (talents et statistiques)que cela vous accorde comme indique dans le tableau suivant :</p>
+    <h3 id="section-espece">Étape 1 : Choisissez une espèce</h3>
+    <p class="mb-4">Vous débutez en ayant hérité des facultés innées de vos ancêtres:</p>
 
     <table class="table-races">
         <thead>
@@ -106,79 +106,78 @@
                 <th>Race</th>
                 <th>Talents</th>
                 <th>Statistiques</th>
-                <th>Rôle Narratif</th>
+                <th>Rôle</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><strong>Elfe</strong></td>
-                <td>Acrobatie+1, Perception +1, Survie +1</td>
-                <td>2auchoixa+1</td>
-                <td>Furtif etfin limierde la nature.</td>
+                <td>Acrobatie +1, Perception +1, Survie +1</td>
+                <td>2 au choix à +1</td>
+                <td>Furtif et fin limier</td>
             </tr>
             <tr>
                 <td><strong>Nain</strong></td>
-                <td>Athlétisme+1, Mécanique+1, Savoir Académique+1</td>
-                <td>2auchoixa+1</td>
-                <td>Pilierphysique et ingenieur.</td>
+                <td>Athlétisme +1, Mécanique +1, Savoir +1</td>
+                <td>2 au choix à +1</td>
+                <td>Pilier et ingénieur</td>
             </tr>
             <tr>
                 <td><strong>Orque</strong></td>
-                <td>Athletisme+1, Survie+1</td>
-                <td>Type saisie+1 et2 autresauchoixa+1</td>
-                <td>Fortaucorps-a-corps et résilient.</td>
+                <td>Athlétisme +1, Survie +1</td>
+                <td>Saisie +1 et 2 autres</td>
+                <td>Corps-à-corps résilient</td>
             </tr>
             <tr>
                 <td><strong>Humain</strong></td>
-                <td>2au choixa+1</td>
-                <td>2 au choixa+1</td>
-                <td>Adaptable et polyvalent.</td>
+                <td>2 au choix à +1</td>
+                <td>2 au choix à +1</td>
+                <td>Adaptable et polyvalent</td>
             </tr>
         </tbody>
     </table>
 
     <div class="content-card" id="section-genre">
-        <h4>2) Déterminez son genre</h4>
-        <p>(féminin,</p>
+        <h4>Étape 2 : Déterminez son genre</h4>
+        <p>(féminin, masculin).</p>
     </div>
 
     <div class="content-card" id="section-nom">
-        <h4>3) Donnez lui un</h4>
+        <h4>Étape 3 : Donnez lui un Nom</h4>
     </div>
 
     <div class="content-card" id="section-apparence">
-        <h4>4) Décrivez son apparence :</h4>
-        <p>Âge apparent,Couleur des cheveux et des yeux, Éventuels signes</p>
+        <h4>Étape 4 : Décrivez son apparence</h4>
+        <p>Âge apparent, couleur des cheveux et des yeux, signes distinctifs.</p>
     </div>
 
     <div class="rule-box" id="section-depart">
-        <h4>5) Équipement de Départ</h4>
-        <p>Chaque personnage débutant commence l'aventure avec :</p>
+        <h4>Étape 5 : Équipement de Départ</h4>
         <ol class="decimal space-y-2">
-            <li>Une arme au choix (Distance,Longue,Moyenne ou Courte).</li>
+            <li>Une arme au choix (Distance, Longue, Moyenne ou Courte).</li>
             <li>Sans armure.</li>
-            <li>Autre : suivant accord du</li>
+            <li>Autre: suivant accord du MJ.</li>
         </ol>
     </div>
 </div>
 
 <div class="content-section" id="section-progression">
-    <h2>3.Progression du Personnage</h2>
+    <h2>3. Progression du Personnage</h2>
     
     <div class="content-card" id="section-pa">
         <h3>Gain de Points d'Amélioration (PA)</h3>
-        <p class="mb-4">À la fin de chaque séance significative,le joueur gagne 1</p>
+        <p class="mb-4">À la fin de chaque séance significative, le joueur gagne <strong>1 PA</strong>.</p>
 
         <h3>Dépense des PA</h3>
         <ul class="dash-list space-y-2">
-            <li><strong>Statistiques de Combat :</strong> Coût =Niveau cible (ex: passer de +1à +2coûte 2PA).</li>
-            <li><strong>Talents d'Exploration :</strong> Acquérir un nouveau Talent (0vers +1)coûte 1</li>
+            <li><strong>Statistiques de Combat:</strong> Coût = Niveau cible (ex: +1 → +2 coûte 2 PA).</li>
+            <li><strong>Talents d'Exploration:</strong> Acquérir un nouveau Talent (0 → +1) coûte 1 PA.</li>
         </ul>
-        <p class="italic text-sm mt-4">Note : Un talent ne peut pas dépasser</p>
+        <p class="italic text-sm mt-4">Note: Un talent ne peut pas dépasser +1.</p>
     </div>
 
     <div class="rule-box" id="section-usage">
         <h3>Règle de l'Usage</h3>
-        <p>L'amélioration doit être justifiée soit par une pratique marquante lors de la séance précédente, soit par un mentorat durant un temps</p>
+        <p>L'amélioration doit être justifiée soit par une pratique marquante lors de la séance précédente, soit par un mentorat durant un temps mort.</p>
     </div>
 </div>

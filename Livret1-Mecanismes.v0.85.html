@@ -1,132 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livret 1 : Mécanismes</title>
-    <style>
-        body {
-            font-family: Georgia, serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            color: #1c1917;
-            background: #fafaf9;
-        }
-        h1 {
-            text-align: center;
-            border-bottom: 3px double #1c1917;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        h2 {
-            border-bottom: 2px solid #1c1917;
-            margin-top: 40px;
-            color: #0c0a09;
-        }
-        h3 {
-            margin-top: 30px;
-            color: #292524;
-        }
-        h4 {
-            margin-top: 20px;
-            font-style: italic;
-            color: #44403c;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        th, td {
-            border: 1px solid #d6d3d1;
-            padding: 12px;
-            text-align: left;
-            vertical-align: top;
-        }
-        th {
-            background: #f5f5f4;
-            font-weight: bold;
-            border-bottom: 2px solid #1c1917;
-        }
-        .version {
-            text-align: center;
-            font-style: italic;
-            color: #78716c;
-            margin-bottom: 40px;
-        }
-        ul, ol {
-            margin: 15px 0;
-            padding-left: 30px;
-        }
-        li {
-            margin: 8px 0;
-        }
-        .content-section {
-            margin-bottom: 40px;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .content-card {
-            background: #fafaf9;
-            border-left: 3px solid #78716c;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .rule-box {
-            background: #f0f9ff;
-            border-left: 3px solid #0369a1;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .note {
-            font-size: 0.9em;
-            color: #57534e;
-            font-style: italic;
-            border-left: 2px solid #a8a29e;
-            padding-left: 15px;
-            margin: 15px 0;
-        }
-        strong {
-            color: #0c0a09;
-        }
-        .mt-2 {
-            margin-top: 0.5rem;
-        }
-        .mt-4 {
-            margin-top: 1rem;
-        }
-        .mb-2 {
-            margin-bottom: 0.5rem;
-        }
-        .mb-4 {
-            margin-bottom: 1rem;
-        }
-        .space-y-2 > li {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .dash-list {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .dash-list > li:before {
-            content: "— ";
-            margin-right: 5px;
-            color: #78716c;
-        }
-        .decimal {
-            list-style-type: decimal;
-        }
-    </style>
-</head>
-<body>
-
 <script type="application/json" id="doc-index">
 {
     "id": "livret1",
@@ -134,367 +5,341 @@
     "title": "Livret 1",
     "subtitle": "Mécanismes",
     "index": [
-        {"id": "matrice", "title": "La Matrice Martiale", "level": 1},
-        {"id": "type-attaque", "title": "Types d'Attaque", "level": 2},
-        {"id": "cible", "title": "Cibles", "level": 2},
-        {"id": "defense", "title": "Défense & Résistance", "level": 2},
-        {"id": "moteur", "title": "Le Moteur de Résolution", "level": 1},
+        {"id": "philosophie", "title": "1. Philosophie", "level": 1},
+        {"id": "matrice", "title": "2. Matrice Martiale", "level": 1},
+        {"id": "type-attaque", "title": "A. Types d'Attaque", "level": 2},
+        {"id": "cible", "title": "B. Cibles", "level": 2},
+        {"id": "defense", "title": "C. Défense & Résistance", "level": 2},
+        {"id": "moteur", "title": "3. Moteur de Résolution", "level": 1},
         {"id": "incantation", "title": "Incantation Libre", "level": 2},
         {"id": "resultats", "title": "Résultats (Sup/Inf/Égal)", "level": 2},
         {"id": "surnombre", "title": "Loi du Surnombre", "level": 2},
         {"id": "avantage", "title": "Avantage Tactique", "level": 2},
         {"id": "attaques-multiples", "title": "Attaques Multiples", "level": 2},
         {"id": "impact", "title": "Conséquences de l'Impact", "level": 2},
-        {"id": "deroulement", "title": "Déroulement d'un combat", "level": 1},
+        {"id": "deroulement", "title": "4. Déroulement", "level": 1},
         {"id": "obligation", "title": "Obligation d'agir", "level": 2},
         {"id": "initiative", "title": "Initiative (Priorités)", "level": 2},
         {"id": "egalite-priorite", "title": "Égalités", "level": 2},
-        {"id": "actions", "title": "Actions en combat", "level": 1},
-        {"id": "magie", "title": "Règles spécifiques à la magie", "level": 1},
+        {"id": "actions", "title": "5. Actions en combat", "level": 1},
+        {"id": "magie", "title": "6. Règles de Magie", "level": 1},
         {"id": "maintien-sort", "title": "Maintien & Rupture", "level": 2},
         {"id": "cercle-rituel", "title": "Cercle Rituel", "level": 2},
         {"id": "restauration", "title": "Restauration (Soins)", "level": 2},
         {"id": "sorts-sans-opposant", "title": "Sorts sans opposant", "level": 2},
-        {"id": "exploration", "title": "Résolution d'Exploration", "level": 1},
-        {"id": "social", "title": "Résolution Sociale", "level": 1}
+        {"id": "exploration", "title": "7. Exploration", "level": 1},
+        {"id": "social", "title": "8. Social", "level": 1}
     ]
 }
 </script>
 
-<h1>LIVRET 1 : MÉCANISMES</h1>
-<p class="version">Version 0.84</p>
+<style>
+    /* Base forcée sur tous les tableaux du document */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    
+    /* Styles spécifiques aux tableaux Types et Cibles */
+    .content-wrapper .table-types,
+    .content-wrapper .table-cibles {
+        width: 100% !important;
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+    }
+    
+    /* Cellules du tableau Types */
+    .content-wrapper .table-types th,
+    .content-wrapper .table-types td {
+        width: 33.33% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    
+    /* Cellules du tableau Cibles */
+    .content-wrapper .table-cibles th,
+    .content-wrapper .table-cibles td {
+        width: 33.33% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+    }
+    
+    /* En-têtes */
+    .content-wrapper .table-types th,
+    .content-wrapper .table-cibles th {
+        text-align: left !important;
+        border-bottom: 2px solid #1c1917 !important;
+    }
+    
+    /* Cellules de données */
+    .content-wrapper .table-types td,
+    .content-wrapper .table-cibles td {
+        border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+    }
+</style>
 
-<p style="text-align: center; font-style: italic; margin-bottom: 40px;">Ce document contient toutes les règles de résolution, le combat, la magie et l'exploration</p>
+<div class="content-section" id="section-philosophie">
+    <h2>1. Philosophie du Système (SCCS)</h2>
+    <p class="mb-4 italic">Version 0.85</p>
+    <div class="content-card">
+        <p class="mb-4">Ce système abandonne les Points de Vie (PV) et les jets de dégâts aléatoires au profit d'une logique d'Opportunités et de Conséquences.</p>
+        <p>Le combat est une discussion tactique. Si une attaque est techniquement supérieure à la protection, elle touche. Si les niveaux sont égaux, la résistance est déterminée par un Compteur de Tours (D6).</p>
+    </div>
+</div>
 
 <div class="content-section" id="section-matrice">
-    <h2>La Matrice Martiale (Définitions)</h2>
+    <h2>2. La Matrice Martiale (Définitions)</h2>
+    <p class="mb-4">Le profil martial est décomposé en 12 statistiques distinctes (6 en Attaque, 6 en Protection).</p>
+
+    <h3 id="section-type-attaque">2.1 Les Compétences d'Attaque</h3>
     
-    <p>Le profil martial est décomposé en 12 statistiques distinctes (6 en Attaque, 6 en Protection).</p>
+    <div class="content-card">
+        <h4>A. Le Type</h4>
+        <p class="mb-4">L'attaque est caractérisée par son mode d'exécution.</p>
+        <table class="table-types">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Arme Naturelle ou Manufacturée</th>
+                    <th>Effet Magique</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Direct</strong></td>
+                    <td>Estoc, Jab, Tir</td>
+                    <td>Projectile, Rayon</td>
+                </tr>
+                <tr>
+                    <td><strong>Circulaire</strong></td>
+                    <td>Taille, Crochet, Balayage</td>
+                    <td>Disque, Demi-lune</td>
+                </tr>
+                <tr>
+                    <td><strong>Saisie</strong></td>
+                    <td>Clé, Projection, Constriction</td>
+                    <td>Télékinésie, Entrave</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <h3 id="section-type-attaque">Les Compétences d'Attaque</h3>
+    <div class="content-card" id="section-cible">
+        <h4>B. La Cible</h4>
+        <table class="table-cibles">
+            <thead>
+                <tr>
+                    <th>Cible</th>
+                    <th>Morphologique</th>
+                    <th>Conceptuelle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Tête</strong></td>
+                    <td>Tête, Cou, Yeux</td>
+                    <td>Esprit, Sens, Illusions</td>
+                </tr>
+                <tr>
+                    <td><strong>Tronc</strong></td>
+                    <td>Plexus, Organes vitaux</td>
+                    <td>Vie, Chair, Création</td>
+                </tr>
+                <tr>
+                    <td><strong>Membres</strong></td>
+                    <td>Bras, Jambes, Ailes</td>
+                    <td>Déplacement, Motricité</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <h4>A. Le Type</h4>
-    <p>L'attaque est caractérisée par son mode d'exécution : Direct, Circulaire ou Saisie.</p>
-
-    <table>
-        <thead>
-            <tr>
-                <th>TYPE</th>
-                <th>Arme Naturelle ou Manufacturée</th>
-                <th>Effet Magique ou Surnaturel</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>Direct</strong></td>
-                <td>Attaque d'Estoc, Jab, Tir, Lancé, …</td>
-                <td>Projectile, Rayon, flux linéaire, …</td>
-            </tr>
-            <tr>
-                <td><strong>Circulaire</strong></td>
-                <td>Attaque de Taille, Coup de pied circulaire, Crochet, Balayage, ...</td>
-                <td>Disque, Demi-lune, …</td>
-            </tr>
-            <tr>
-                <td><strong>Saisie</strong></td>
-                <td>Clé, Projection, Écrasement, Constriction, ...</td>
-                <td>Télékinésie, Entrave, Manipulation, Écrasement, Constriction, ...</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h4 id="section-cible">B. La Cible</h4>
-    <p>Viser et atteindre un point :</p>
-
-    <table>
-        <thead>
-            <tr>
-                <th>CIBLE</th>
-                <th>Morphologique</th>
-                <th>Conceptuelle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>Tête</strong></td>
-                <td>Tête, Cou, Yeux, Cheveux, …</td>
-                <td>Esprit, Mental, Sens, Illusions, …</td>
-            </tr>
-            <tr>
-                <td><strong>Tronc</strong></td>
-                <td>Plexus, Foie, Coeur, Poumons, Côtes, …</td>
-                <td>Altération du corps entier, Vie, Chair, Création, …</td>
-            </tr>
-            <tr>
-                <td><strong>Membres</strong></td>
-                <td>Bras, Jambes, Pattes, …</td>
-                <td>Déplacement, Équilibre, Motricité, …</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3 id="section-defense">Les Compétences pour Se Protéger</h3>
-
-    <h4>A. La Défense (Parade & Esquive)</h4>
-    <p>C'est la capacité à parer, esquiver ou vous libérer d'un des 3 types d'attaque :</p>
-    <ul>
-        <li>vs Direct</li>
-        <li>vs Circulaire</li>
-        <li>vs Saisie</li>
-    </ul>
-
-    <h4>B. La Résistance (Encaissement & Armure)</h4>
-    <p>C'est la solidité de la cible, due à l'armure portée ou à la constitution :</p>
-    <ul>
-        <li>Résistance Tête</li>
-        <li>Résistance Tronc</li>
-        <li>Résistance Membres</li>
-    </ul>
+    <h3 id="section-defense">2.2 Les Compétences de Protection</h3>
+    <div class="content-card">
+        <h4>A. La Défense (Parade & Esquive)</h4>
+        <p>Capacité à éviter l'un des 3 types d'attaque (vs Direct, vs Circulaire, vs Saisie).</p>
+    </div>
+    <div class="content-card" id="section-resistance">
+        <h4>B. La Résistance (Encaissement & Armure)</h4>
+        <p>Solidité de la cible (Résistance Tête, Résistance Tronc, Résistance Membres).</p>
+    </div>
 </div>
 
 <div class="content-section" id="section-moteur">
-    <h2>Le Moteur de Résolution</h2>
+    <h2>3. Le Moteur de Résolution</h2>
     
-    <p>Lorsqu'un joueur déclare une action, il annonce un Type et une Cible (ex : « Attaque Directe au Tronc »). Le MJ compare le Score Total d'Attaque (type + cible) au Score Total de Protection (défense + résistance).</p>
-
-    <ol>
-        <li><strong>Calcul de l'Attaque :</strong> Score du Type utilisé + Score de la Cible visée.</li>
-        <li><strong>Calcul de la Protection :</strong> Score de Défense contre ce Type + Score de Résistance de la Cible visée.</li>
-        <li><strong>Comparaison :</strong> On compare les deux totaux.</li>
-    </ol>
+    <div class="content-card">
+        <p class="mb-4"><strong>Comparaison :</strong> Score Total d'Attaque (Type + Cible) VS Score Total de Protection (Défense + Résistance).</p>
+        <ol class="decimal space-y-2">
+            <li>Calcul Attaque: Type + Cible.</li>
+            <li>Calcul Protection: Défense (contre ce Type) + Résistance (de la Cible).</li>
+            <li>Comparaison des deux totaux.</li>
+        </ol>
+    </div>
 
     <div class="rule-box" id="section-incantation">
-        <h4>L'Incantation Libre (Magie uniquement)</h4>
-        <p>Le mage peut choisir de ne pas focaliser son sort pour gagner en flexibilité :</p>
+        <h4>L'Incantation Libre (Magie)</h4>
         <ul class="dash-list space-y-2">
-            <li><strong>Mode Focalisé (Type + Cible) :</strong> Score complet pour un effet spécifique.</li>
-            <li><strong>Mode Général (Type uniquement) :</strong> Le mage utilise seulement son score de Type. L'attaque est comparée aux scores de défense des 3 zones de la cible (Tête, Tronc, Membres). L'impact a lieu là où la défense est la plus faible.</li>
-            <li><strong>Mode Intuitif (Cible uniquement) :</strong> Le mage utilise seulement son score de Cible pour imposer un effet pur sans forme technique.</li>
+            <li><strong>Mode Focalisé (Type + Cible):</strong> Score complet.</li>
+            <li><strong>Mode Général (Type seul):</strong> Comparé aux 3 défenses adverses (Tête/Tronc/Membres). Impacte la plus faible.</li>
+            <li><strong>Mode Intuitif (Cible seule):</strong> Effet pur sans forme technique.</li>
         </ul>
     </div>
 
     <h3 id="section-resultats">Résultats de la Comparaison</h3>
-
+    
     <div class="content-card" style="border-left: 4px solid #166534;">
-        <h4>Cas A : Supériorité (Attaque > protection)</h4>
-        <ul>
-            <li><strong>Condition :</strong> Le total de l'attaquant est strictement supérieur à celui qui se protège.</li>
-            <li><strong>Résultat :</strong> IMPACT IMMÉDIAT. (Voir section Conséquences de l'Impact).</li>
-        </ul>
+        <h4>Cas A: Supériorité (Attaque > Protection)</h4>
+        <p><strong>IMPACT IMMÉDIAT.</strong> (Voir Conséquences).</p>
     </div>
 
     <div class="content-card" style="border-left: 4px solid #991b1b;">
-        <h4>Cas B : Infériorité (Attaque < Protection)</h4>
-        <ul>
-            <li><strong>Condition :</strong> Le total de l'attaquant est strictement inférieur à celui qui se protège.</li>
-            <li><strong>Résultat :</strong> ÉCHEC AUTOMATIQUE.</li>
-            <li><strong>Description :</strong> L'attaque est parfaitement contrée. Le MJ décrit pourquoi l'action est inefficace.</li>
-        </ul>
+        <h4>Cas B: Infériorité (Attaque < Protection)</h4>
+        <p><strong>ÉCHEC AUTOMATIQUE.</strong> L'attaque est contrée.</p>
     </div>
 
     <div class="content-card" style="border-left: 4px solid #d97706;">
-        <h4>Cas C : Égalité (Attaque = Protection)</h4>
-        <ul>
-            <li><strong>Condition :</strong> Les deux totaux sont identiques.</li>
-            <li><strong>Résultat :</strong> TEST DE COMPTEUR (D6).</li>
-            <li><strong>Procédure :</strong> Un jet de 1D6 est effectué. Le MJ décide si le jet est caché ou ouvert, et s'il est effectué par lui-même ou par le joueur. Ce dé détermine le « Coût de la Réussite » (nombre d'échanges nécessaires pour atteindre sa cible) initiant un Compteur de Tours.
-                <ul>
-                    <li><strong>Persévérance :</strong> Si le joueur/adversaire répète l'action, le compteur diminue de 1. À 0, L'IMPACT a lieu.</li>
-                    <li><strong>Changement :</strong> Si l'attaquant change de Type/Cible, le compteur est abandonné et un nouveau test est effectué.</li>
-                </ul>
-            </li>
-            <li>Le descriptif qui découle de cette mécanique est nuancé suivant l'arme utilisée :
-                <ul>
-                    <li><strong>Arme de CàC :</strong> on décrit combien de coups avant de passer la garde de l'adversaire.</li>
-                    <li><strong>Armes à distance :</strong> le temps nécessaire pour réussir à ajuster un tir / lancé malgré les mouvements et assauts éventuels de la cible.</li>
-                    <li><strong>Sorts :</strong> le temps nécessaire pour réussir à lancer un sort malgré les mouvements et assauts éventuels de la cible.</li>
-                </ul>
-            </li>
-            <li>Le MJ se doit de tenir un décompte en marge de la narration des Compteurs de Tours de chaque acteur participant aux combats et en état de combat.</li>
+        <h4>Cas C: Égalité (Attaque = Protection)</h4>
+        <p><strong>TEST DE COMPTEUR (1D6).</strong></p>
+        <p>Le dé indique le nombre d'échanges (Compteur de Tours) avant réussite.</p>
+        <ul class="dash-list space-y-2 mt-2">
+            <li><strong>Persévérance:</strong> Répéter l'action réduit le compteur de 1. À 0, l'Impact a lieu.</li>
+            <li><strong>Changement:</strong> Changer de Type/Cible réinitialise le compteur.</li>
         </ul>
     </div>
 
     <div class="rule-box" id="section-surnombre">
-        <h3>La Loi du Surnombre (L'Érosion Tactique)</h3>
-        <p><strong>La Limite d'Engagement (Les 4 Points) :</strong> Seuls 4 adversaires de taille humaine peuvent engager une cible au corps-à-corps simultanément : Face, Dos, Flanc Gauche, Flanc Droit. Les adversaires supplémentaires peuvent :</p>
+        <h3>La Loi du Surnombre (Érosion)</h3>
+        <p><strong>Limite:</strong> Max 4 adversaires au corps-à-corps (Face, Dos, Flancs). Les autres doivent utiliser des armes Longues (2ème rang) ou Distance.</p>
+        <p class="mt-2"><strong>Malus d'Érosion (cumulatif par tour):</strong></p>
         <ul class="dash-list space-y-2">
-            <li>Attaquer depuis le second rang avec attaque directe en utilisant une arme à allonge Longue (ex : lance), dans la limite de ce que l'espace permet sans gêner les combattants au CàC ;</li>
-            <li>Attaquer à distance (ex : arc, arbalète, sort) de n'importe quelle position distante depuis laquelle ils disposent d'une ligne de vue dégagée sur la cible.</li>
+            <li>2ème Attaque reçue: Protection -1.</li>
+            <li>3ème Attaque reçue: Protection -2.</li>
+            <li>4ème Attaque reçue: Protection -3.</li>
         </ul>
-        <p class="note">Responsabilité du MJ : Déterminer, selon la géométrie du lieu (couloir, salle, plaine) et la disposition des combattants, combien d'attaquants peuvent effectivement tirer sans risquer de toucher leurs alliés ni être gênés par l'environnement.</p>
-        
-        <p class="mt-4"><strong>Malus d'Érosion :</strong> Chaque attaque subie après la première réduit le score de Protection du personnage de façon cumulative. Toutefois, ce malus ne peut jamais faire descendre la Protection en dessous du score d'Attaque de l'adversaire.</p>
-        <ul class="dash-list space-y-2">
-            <li>1ère Attaque reçue : Protection Normale.</li>
-            <li>2ème Attaque reçue : Malus de -1 au score de Protection (sous condition).</li>
-            <li>3ème Attaque reçue : Malus de -2 au score de Protection (sous condition).</li>
-            <li>4ème Attaque reçue : Malus de -3 au score de Protection (sous condition).</li>
-        </ul>
-        <p class="mt-4"><strong>Conséquence : Le Sacrifice de l'Armure :</strong> Si le Malus d'Érosion réduit le score de Protection au point de créer une Infériorité (Attaque > Protection), mais que le bonus de Résistance de l'armure permet de maintenir une Égalité ou une Supériorité : L'attaque est parée/encaissée (Pas de conséquence narrative).</p>
-        <p><strong>Règle d'Usure :</strong> L'Armure perd immédiatement 1 Point de Durabilité (car elle a été nécessaire pour compenser).</p>
+        <p class="mt-2 italic"><strong>Sacrifice de l'Armure:</strong> Si l'armure compense le malus d'érosion pour éviter une Infériorité, elle perd 1 Point de Durabilité.</p>
     </div>
 
     <div class="content-card" id="section-avantage">
         <h3>L'Avantage Tactique</h3>
-        <p>Un personnage bénéficiant d'une situation favorable (effet de surprise, position surélevée, matériel de qualité, environnement propice, etc.) gagne un bonus de +1 de circonstance.</p>
-        <ul class="dash-list space-y-2">
-            <li><strong>Champ d'application :</strong> Il s'applique à toute action qui semble pouvoir bénéficier de manière pertinente de cet avantage.</li>
-            <li><strong>Calcul :</strong> Le bonus s'ajoute au Score Total de l'action ou au Talent du personnage avant la comparaison avec la Protection ou la Difficulté.</li>
-            <li><strong>Validation :</strong> Ce bonus est ponctuel, narratif et validé par le MJ au cas par cas.</li>
-        </ul>
+        <p>Bonus de <strong>+1 de circonstance</strong> (surprise, position, matériel supérieur). Validé par le MJ.</p>
     </div>
 
     <div class="content-card" id="section-attaques-multiples">
-        <h3>Attaques Étendues et Multiples (Cible Élargie)</h3>
-        <p>Dès qu'un acteur tente d'effectuer plus d'une action ou de frapper plus d'une cible au cours de son tour, un Malus est appliqué pour refléter la perte de précision. Ce malus est calculé en fonction du nombre total d'éléments (actions ou cibles) et s'applique à toutes les résolutions (Score d'Attaque, Score de Talent lors d'une manœuvre, etc.) de cette séquence.</p>
-        
-        <h4>Exemples :</h4>
-        <ul class="dash-list space-y-2">
-            <li><strong>Attaquer 2 cibles simultanément :</strong> L'attaquant subit un Malus de -1 à son Score d'Attaque pour la résolution contre la Cible 1 et pour la résolution contre la Cible 2.</li>
-            <li><strong>Tenter un Sort de Zone (3 cibles) :</strong> Le Malus est de -2 (3-1). Ce Malus de -2 est appliqué au Score de Talent du mage pour la résolution contre la Cible 1, la Cible 2 et la Cible 3.</li>
-            <li><strong>Frapper, puis Tenter une Manœuvre :</strong> Le Malus est de -1 (2 actions -1). Ce Malus de -1 s'applique au Score d'Attaque de la frappe et au Score de Talent de la manœuvre.</li>
-        </ul>
+        <h3>Attaques Multiples / Cible Élargie</h3>
+        <p>Malus égal au (Nombre d'éléments - 1) appliqué à toutes les résolutions de la séquence.</p>
+        <p class="italic">Ex: Attaquer 2 cibles = Malus -1 sur les deux attaques.</p>
     </div>
 
     <div class="content-card" id="section-impact" style="border-left: 4px solid #7f1d1d; background: rgba(127, 29, 29, 0.1);">
         <h3>Conséquences de l'Impact</h3>
-        <p>Lorsqu'une attaque aboutit (Supériorité ou fin du compteur D6), l'effet narratif est choisi par le MJ en fonction de la logique de la scène. Si le choix n'est pas la mort, un désavantage de -1 à toutes les actions sera appliqué à la victime jusqu'à guérison, annulation ou contournement de l'effet appliqué si pertinent :</p>
+        <p>Si l'attaque aboutit, le MJ choisit l'effet. Sinon mort, applique un <strong>désavantage de -1</strong> à toutes les actions de la victime.</p>
         <ul class="dash-list space-y-2 mt-2">
-            <li><strong>Tête :</strong> Mort, Blessure qui sans soins entraîne la mort à court terme, KO, Aveuglement.</li>
-            <li><strong>Tronc :</strong> Mort, Blessure qui sans soins entraîne la mort à court terme, Souffle coupé, Recul forcé, Hémorragie (malus constant).</li>
-            <li><strong>Membres :</strong> Perte d'un membre, Désarmement, Lâcher prise, Fracture, Mise au sol, Chute.</li>
+            <li><strong>Tête:</strong> Mort, KO, Aveuglement.</li>
+            <li><strong>Tronc:</strong> Mort, Souffle coupé, Hémorragie.</li>
+            <li><strong>Membres:</strong> Désarmement, Chute, Fracture.</li>
         </ul>
     </div>
 </div>
 
 <div class="content-section" id="section-deroulement">
-    <h2>Déroulement d'un combat</h2>
-
-    <h3 id="section-obligation">L'obligation d'agir</h3>
-    <p>Le Maître du Jeu (MJ) doit s'assurer que tous les acteurs (Personnages Joueurs, PNJ, créatures) qui ne sont pas hors de combat (mort, KO) agissent durant le tour. Un tour de combat n'est pas terminé tant que chaque participant n'a pas résolu son action.</p>
+    <h2>4. Déroulement d'un combat</h2>
+    
+    <div id="section-obligation">
+        <h3>L'obligation d'agir</h3>
+        <p>Un tour n'est pas terminé tant que chaque participant valide n'a pas résolu son action.</p>
+    </div>
 
     <div class="rule-box" id="section-initiative">
-        <h3>La hiérarchie de l'Initiative (Les Priorités)</h3>
-        <p class="mb-2">L'ordre de passage n'est pas déterminé par un jet de dé systématique, mais par une priorité technique liée à l'équipement et à la situation.</p>
-        <p class="note"><strong>Note sur le Déplacement :</strong> Toute action de combat inclut par défaut un déplacement stratégique ou une charge sur une distance raisonnable (jugée par le MJ). Cette distance peut être augmentée avec un talent d'Athlétisme (+1) et, si le terrain est complexe, nécessite aussi Acrobatie (+1). L'utilisation du talent Acrobatie est requise pour se désengager sauf circonstance particulière (désavantage de l'adversaire ou avantage tactique).</p>
-
+        <h3>La Hiérarchie de l'Initiative</h3>
+        <p class="mb-2">Pas de jet de dé. L'ordre est déterminé par la priorité technique.</p>
         <ol class="decimal space-y-2">
-            <li><strong>Priorité 1 : Le Tir (ou Lancer) à Distance</strong> – Armes à Distance (ex : Arcs, Arbalètes, Armes de jet), uniquement si le tireur n'est engagé par aucun adversaire au corps-à-corps.</li>
-            <li><strong>Priorité 2 : La Magie « Libre » (Soutien)</strong> – Sortilèges et Prières, uniquement si le lanceur n'est engagé par aucun adversaire au corps-à-corps. Nécessite un catalyseur et d'avoir une main libre.</li>
-            <li><strong>Priorité 3 : Le Sprint</strong> – Se déplacer pour s'éloigner ou rejoindre un lieu (nombre de tours à l'appréciation du MJ). Une acrobatie peut être nécessaire pour se désengager.</li>
-            <li><strong>Priorité 4 : Allonge Longue (La Mêlée)</strong> – Armes à deux mains (ex : Lances, Espadons, Masses, Haches).</li>
-            <li><strong>Priorité 5 : Allonge Moyenne (La Mêlée)</strong> – Armes à une main (ex : Épées, Haches).</li>
-            <li><strong>Priorité 6 : Allonge Courte (La Mêlée)</strong> – ex : Dagues, Poings, Saisies.</li>
-            <li><strong>Priorité 7 : Le Tir (ou Lancer) en Mêlée</strong> – Armes à Distance alors que le tireur est engagé par au moins un adversaire au corps-à-corps.</li>
-            <li><strong>Priorité 8 : La Magie « Sous Pression »</strong> – Sortilèges et Prières si le lanceur a au moins un adversaire au contact.</li>
+            <li><strong>Prio 1: Distance (Libre).</strong> Tir sans ennemi au contact.</li>
+            <li><strong>Prio 2: Magie (Libre).</strong> Sort sans ennemi au contact.</li>
+            <li><strong>Prio 3: Sprint.</strong> Déplacement pur.</li>
+            <li><strong>Prio 4: Allonge Longue.</strong> Armes à deux mains.</li>
+            <li><strong>Prio 5: Allonge Moyenne.</strong> Armes à une main.</li>
+            <li><strong>Prio 6: Allonge Courte.</strong> Dagues, Poings, Saisies.</li>
+            <li><strong>Prio 7: Distance (Mêlée).</strong> Tir en étant engagé.</li>
+            <li><strong>Prio 8: Magie (Pression).</strong> Sort en étant engagé.</li>
         </ol>
     </div>
 
     <div class="content-card" id="section-egalite-priorite">
-        <h4>Résolution des égalités de priorité</h4>
-        <p>Si deux personnages se trouvent dans la même catégorie de priorité, on utilise les règles suivantes pour trancher :</p>
+        <h4>Égalité de Priorité ?</h4>
         <ol class="decimal space-y-2">
-            <li><strong>La Loi de la Compétence (Expérience) :</strong> Le combattant avec la Statistique la plus élevée (dans l'action entreprise ou sa stat principale) agit en premier.</li>
-            <li><strong>La Loi du Regard (Départage) :</strong> En cas d'égalité parfaite, chaque combattant lance 1D6. Le plus haut score agit en premier.</li>
+            <li><strong>Loi de la Compétence:</strong> La Stat la plus élevée agit en premier.</li>
+            <li><strong>Loi du Regard:</strong> Si égalité parfaite, 1D6 chacun (le plus haut commence).</li>
         </ol>
     </div>
 </div>
 
 <div class="content-section" id="section-actions">
-    <h2>Actions en combat</h2>
-    <p>Pour réaliser une action, chaque personnage peut choisir UNE option parmi les suivantes :</p>
+    <h2>5. Actions en combat</h2>
     <ul class="dash-list space-y-2">
-        <li><strong>L'Attaque (Offensive) :</strong> Le personnage choisit un Type et une Cible pour tenter de toucher un adversaire. Si un personnage a une arme courte dans chaque main, il peut effectuer une attaque par arme qu'il possède sans malus de cible ou d'attaque étendue.</li>
-        <li><strong>L'Attente (Action Retardée) :</strong> Le personnage ne fait rien dans l'immeédiat. Effet : Il peut déclarer « J'interromps ! » à tout moment. Son action (Attaque ou Protection) se résout immédiatement, avant ou pendant l'action de la cible.</li>
-        <li><strong>La Manœuvre Défensive (Tactique) :</strong> Le personnage se concentre exclusivement sur sa protection. Effet : Il choisit un type de Défense. Il gagne un bonus temporaire de +1 dans cette caractéristique défensive jusqu'au début de son prochain tour. Restriction : Seuls les PJ et PNJ intelligents peuvent utiliser cette action.</li>
-        <li><strong>Autre :</strong> Le personnage réalise une action qui fait appel à l'usage de ses Talents.</li>
+        <li><strong>Attaque:</strong> Choisir Type + Cible.</li>
+        <li><strong>Attente:</strong> Permet d'interrompre n'importe quand ("J'interromps !").</li>
+        <li><strong>Manœuvre Défensive:</strong> (PJ/PNJ intelligents) Bonus +1 en Défense jusqu'au prochain tour.</li>
+        <li><strong>Autre:</strong> Usage de Talent.</li>
     </ul>
 </div>
 
 <div class="content-section" id="section-magie">
-    <h2>Règles spécifiques à la magie</h2>
-
+    <h2>6. Règles spécifiques à la magie</h2>
+    
     <div class="content-card" id="section-maintien-sort">
-        <h3>Maintien d'un sort sur la durée</h3>
-        <ul>
-            <li><strong>Individuel :</strong> Pour garder un sort actif, le lanceur doit gérer le coût de sa concentration :
-                <ul>
-                    <li><strong>Jet de 1D6 (Durée sans Malus) :</strong> Le lanceur effectue un jet de 1D6. Le résultat indique le nombre de tours (le Compteur de Maintien) durant lesquels le sort est maintenu sans aucun malus.</li>
-                    <li><strong>Contrecoup (Malus de Maintien) :</strong> Une fois le Compteur de Maintien arrivé (à 0), le sort reste actif, mais le lanceur subit le Malus de Maintien :
-                        <ul>
-                            <li>Malus de -1 à TOUTES ses statistiques jusqu'à l'annulation du sort (Rupture ou Annulation Tactique) ou un repos complet.</li>
-                            <li><strong>La Rupture (Le Talon d'Achille) :</strong> Si le lanceur subit un Impact ou une Saisie, alors qu'il est sous l'effet d'un contrecoup, le sort cesse immédiatement (le Buff disparaît, la créature invoquée disparaît, etc.).</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li><strong>Cercle Rituel (2 Mages & +) :</strong> Un groupe de lanceur de sorts peut se réunir pour lancer un sort qu'ils ne pourraient pas réussir à lancer individuellement :
-                <ul>
-                    <li><strong>Effet :</strong> Il dépend des stats du lanceur de sort le plus expérimenté (en général, celui qui a les plus hautes stats) +1.</li>
-                    <li><strong>Lancement :</strong> Un seul jet de 1D6 est réalisé pour l'ensemble des participants et détermine le Compteur de Lancement du sort qui indique le temps nécessaire pour lancer le sort. Un minimum de deux individus (lanceur le plus expérimenté inclus) doit rester concentré sur le lancement du sort et ne rien faire d'autre.</li>
-                    <li><strong>Contrecoup (Concentration) :</strong> tous subissent le Malus de -1 à toutes leurs stats, tant qu'ils se concentrent pour lancer ou maintenir le sort. Ils peuvent être remplacés ou relayés, cela ne rompt pas le sort tant qu'au moins un des participants reste concentré.</li>
-                </ul>
-            </li>
-            <li><strong>L'Annulation :</strong> rompre les effets de son sort volontairement (ou non) ou de quitter un Cercle rituel permet de récupérer ses statistiques normales.</li>
-        </ul>
+        <h3>Maintien & Rupture</h3>
+        <p><strong>Coût:</strong> Jet de 1D6 = nombre de tours de maintien gratuit. Une fois à 0, le mage subit -1 à toutes ses stats (Concentration).</p>
+        <p><strong>Rupture:</strong> Si le mage subit un Impact ou une Saisie pendant qu'il est sous malus de Concentration, le sort cesse immédiatement.</p>
+    </div>
+
+    <div class="content-card" id="section-cercle-rituel">
+        <h3>Cercle Rituel (Coopératif)</h3>
+        <p><strong>Effet:</strong> Stats du meilleur mage +1.</p>
+        <p><strong>Contrainte:</strong> Tous les participants subissent le Malus de Concentration (-1 stats) pendant le rituel.</p>
     </div>
 
     <div class="content-card" id="section-restauration">
-        <h4>La Magie de Restauration (Soins)</h4>
-        <p>La magie de soin ne remplit pas de PV. Un sort de réparation ou de soin : Restaure 1 Point de Durabilité (Armure ou Résistance Naturelle) OU supprime le désavantage de -1 en traitant l'effet narratif associé (Saignement, Aveuglement, Fracture, etc.).</p>
+        <h3>Magie de Restauration</h3>
+        <p>Restaure 1 Point de Durabilité OU supprime un effet narratif (Saignement, Fracture...). Ne rend pas de "PV".</p>
     </div>
 
     <div class="rule-box" id="section-sorts-sans-opposant">
-        <h4>Pour les sorts sans opposant</h4>
-        <p>La résolution se fait par comparaison des Stats (2 stats au maximum) du lanceur impliquées par l'effet voulu du sort à la Difficulté :</p>
+        <h3>Sorts sans opposant</h3>
+        <p>Comparaison Stats vs Difficulté :</p>
         <ul class="dash-list space-y-2">
-            <li><strong>Difficulté 0 (Initié) :</strong> Sort simple. La majorité des sorts sans opposant.</li>
-            <li><strong>Difficulté 2 (Expert) :</strong> Sort complexe pouvant affecter une petite zone ou ayant des effets puissants.</li>
-            <li><strong>Difficulté 4 (Maître) :</strong> Sort extrêmement complexe pouvant affecter une grande zone ou ayant des effets extrêmement puissants.</li>
-            <li><strong>Difficulté 7 (Mythique) :</strong> Sort nécessitant généralement un Maître de haut niveau et un rituel pour être lancé, peut impacter un région significativement.</li>
-            <li>Dans le cas d'une métamorphose ou d'une invocation : la difficulté est égale à la Dangerosité de la créature +1 par créature additionnelle.</li>
-            <li>Dans le cas d'un bonus aux caracs, talents ou actions : la difficulté est fixée à 2 pour un +1 global et ne semble pas pouvoir avoir un effet plus important même en augmentant la difficulté.</li>
+            <li><strong>Diff 0:</strong> Initié (Simple).</li>
+            <li><strong>Diff 2:</strong> Expert (Zone courte / Puissant).</li>
+            <li><strong>Diff 4:</strong> Maître (Grande zone / Très puissant).</li>
+            <li><strong>Diff 7:</strong> Mythique (Région entière).</li>
         </ul>
-        <p class="mt-2 italic">Malus : Le malus d'armure ne s'applique qu'aux sorts ciblant/incluant un ou des ennemis. Le malus lié à l'utilisation d'une arme manufactureée ou d'un objet, non listé dans la catégorie des focalisateurs magiques (cf. livret 3 chapitre B, Armes) s'applique dans tous les cas. Pour lancer un sort (hors capacités innées), le personnage doit impérativement avoir au moins une main libre (pour les somatiques) ET tenir un focalisateur ou une arme (catalyseur). Une arme tenue à deux mains peut être lâchée d'une main instantanément pour satisfaire cette condition.</p>
+        <p class="italic mt-2">Nécessite une main libre et un catalyseur (sinon malus).</p>
     </div>
 </div>
 
 <div class="content-section" id="section-exploration">
-    <h2>Résolution d'Exploration</h2>
-    <p>Cette section concerne la résolution des actions liées à l'usage des Talents.</p>
-
+    <h2>7. Résolution d'Exploration</h2>
     <div class="content-card">
-        <h3>La Difficulté</h3>
-        <ul>
-            <li><strong>Sans opposant :</strong>
-                <ul>
-                    <li>Difficulté 0 (Facile) : Tâche simple.</li>
-                    <li>Difficulté 1 (Ardue) : Tâche exigeant une expertise.</li>
-                </ul>
-            </li>
-            <li><strong>Avec opposants :</strong>
-                <ul>
-                    <li>La Difficulté est égale au score de talent (ou de statistique) le plus élevé parmi les adversaires, choisi selon la logique de l'action opposée.</li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-
-    <div class="content-card">
-        <h3>Le Test</h3>
-        <p>On compare le Talent à la Difficulté :</p>
+        <h3>Difficulté & Test</h3>
+        <p><strong>Difficulté:</strong> 0 (Facile), 1 (Ardue) ou Stat adverse la plus haute.</p>
+        <p><strong>Résolution:</strong></p>
         <ul class="dash-list space-y-2">
-            <li><strong>Supériorité (Talent > Difficulté) :</strong> Réussite Automatique.</li>
-            <li><strong>Infériorité (Talent < Difficulté) :</strong> Échec Automatique.</li>
-            <li><strong>Égalité (Talent = Difficulté) :</strong> Test de Compteur (D6) pour déterminer, selon les cas : le temps nécessaire avant la réussite (ex : crochetage) ou l'échec (ex : discrétion), et/ou un coût en ressources supplémentaire (ex : endurance).</li>
+            <li>Talent > Difficulté : Réussite Auto.</li>
+            <li>Talent < Difficulté : Échec Auto.</li>
+            <li>Talent = Difficulté : Test de Compteur (1D6) pour le temps/coût.</li>
         </ul>
     </div>
 </div>
 
 <div class="content-section" id="section-social">
-    <h2>Résolution des actions sociales</h2>
-    <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des arguments.</p>
+    <h2>8. Résolution Sociale</h2>
+    <p>Le MJ est le seul juge de la crédibilité. Pas de jet technique, mais jugement situationnel.</p>
 </div>
 
-</body>
-</html>
+
