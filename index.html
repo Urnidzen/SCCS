@@ -464,10 +464,17 @@
                 
                 // On récupère tous les éléments avec ID de section ou les titres
                 const sectionElements = docEl.querySelectorAll('h2, h3, h4');
-                let currentSection = { id: '', title: doc.title, level: 0 };
                 
-                sectionElements.forEach(el => {
-                    const id = el.id || '';
+                sectionElements.forEach((el, index) => {
+                    // Chercher l'ID sur le titre lui-même, ou sur le parent (div/section)
+                    let id = el.id || el.closest('[id^="section-"]')?.id || '';
+                    
+                    // Si toujours pas d'ID, générer un hash du texte
+                    if (!id) {
+                        id = 'auto-' + normalizeText(el.textContent).substring(0, 20).replace(/\s+/g, '-');
+                        el.id = id; // Optionnel : assigner au DOM pour navigation future
+                    }
+                    
                     const title = el.textContent.trim();
                     const level = parseInt(el.tagName.charAt(1)) || 2;
                     
