@@ -457,26 +457,46 @@
                 const text = extractTextContent(html);
                 const normalized = normalizeText(text);
                 
-                // Extraction des sections avec leur contenu pour la hiérarchie
                 const parser = new DOMParser();
                 const docEl = parser.parseFromString(html, 'text/html');
                 const sections = [];
                 
-                // On récupère tous les éléments avec ID de section ou les titres
-                const sectionElements = docEl.querySelectorAll('[id^="section-"], h2, h3, h4');
-                let currentSection = { id: '', title: doc.title, level: 0 };
+                const sectionElements = docEl.querySelectorAll('[id^="section-"], h1, h2, h3, h4, h5, h6');
                 
                 sectionElements.forEach(el => {
                     const id = el.id || '';
-                    const title = el.textContent.trim();
-                    const level = parseInt(el.tagName.charAt(1)) || 2;
+                    let title = '';
+                    let level = parseInt(el.tagName.charAt(1)) || 2;
                     
-                    sections.push({
-                        id: id,
-                        title: title,
-                        normalized: normalizeText(title),
-                        level: level,
-                    });
+                    // Si c'est un conteneur avec ID, chercher le vrai titre dedans
+                    if (el.id && el.id.startsWith('section-')) {
+                        const heading = el.querySelector('h2, h3, h4, h5, h6, strong');
+                        if (heading) {
+                            title = heading.textContent.trim();
+                            level = parseInt(heading.tagName.charAt(1)) || level;
+                        } else {
+                            // Prendre uniquement la première ligne/texte court
+                            const firstText = el.textContent.trim().split(/[\n\r]/)[0];
+                            title = firstText.substring(0, 80);
+                        }
+                    } else {
+                        // C'est déjà un heading
+                        title = el.textContent.trim();
+                    }
+                    
+                    // Limiter à 80 caractères pour éviter les descriptions longues
+                    if (title.length > 80) {
+                        title = title.substring(0, 80) + '...';
+                    }
+                    
+                    if (title && title.length > 2) {
+                        sections.push({
+                            id: id || 'sec-' + sections.length,
+                            title: title,
+                            normalized: normalizeText(title),
+                            level: level,
+                        });
+                    }
                 });
                 
                 searchIndex.set(doc.id, {
