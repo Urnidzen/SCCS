@@ -56,7 +56,7 @@
         }
 
         .tab-handle {
-            width: 25px; height: 105px;
+            width: 40px; height: 120px;
             background: #f5f5f0;
             border: 2px solid #1c1917;
             border-left: none;
@@ -71,7 +71,7 @@
             margin-left: -2px;
         }
 
-        .tab-handle:hover { background: #ffffff; }
+        .tab-handle:hover { background: #ffffff; width: 45px; }
 
         .tab-text {
             writing-mode: vertical-rl;
@@ -204,7 +204,7 @@
             overflow: hidden;
             width: 100%;
             height: 100%;
-         }
+        }
 
         .char-sheet-frame {
             background: transparent;
@@ -287,9 +287,6 @@
             .main-container { margin-left: 0 !important; width: 100% !important; }
             .book-spread { flex-direction: column; }
             .page { padding: 30px 20px 120px 20px; width: 100%; }
-            .book-spread.sheet-mode .page {
-                padding-bottom: 0px;
-            }
             .page-right { display: none; }
             
             .book-spread.sheet-mode .page-left { display: none; }
@@ -388,7 +385,7 @@
             </div>
         </div>
         <div class="tab-handle" id="tabHandle">
-            <span class="tab-text">Documents</span>
+            <span class="tab-text">Documents<br>et Index</span>
         </div>
     </div>
 
@@ -1015,50 +1012,47 @@
             wrapper.appendChild(spread);
         }
 
-function renderRegistryChapter(baseFileUrl) {
-    const wrapper = document.getElementById('bookSpreadsWrapper');
-    wrapper.innerHTML = '';
-    currentIndex = [];
+        function renderRegistryChapter(baseFileUrl) {
+            const wrapper = document.getElementById('bookSpreadsWrapper');
+            wrapper.innerHTML = '';
+            currentIndex = [];
 
-    const profiles = SCCS_Registre.getAllProfiles();
+            const profiles = SCCS_Registre.getAllProfiles();
 
-    for (let i = 0; i < profiles.length; i += 2) {
-        const spread = document.createElement('div');
-        spread.className = 'book-spread sheet-mode';
+            for (let i = 0; i < profiles.length; i += 2) {
+                const spread = document.createElement('div');
+                spread.className = 'book-spread sheet-mode';
+        
+                const leftProfile = profiles[i];
+                const leftUrl = `${baseFileUrl}?uid=${leftProfile.id}`;
+        
+                const leftContent = `
+                    <div class="page page-left sheet-container-frame">
+                        <iframe class="char-sheet-frame" src="${leftUrl}"></iframe>
+                    </div>
+                `;
+        
+                let rightContent = '';
+                if (profiles[i + 1]) {
+                    const rightProfile = profiles[i + 1];
+                    const rightUrl = `${baseFileUrl}?uid=${rightProfile.id}`;
+                    rightContent = `
+                        <div class="page page-right sheet-container-frame">
+                            <iframe class="char-sheet-frame" src="${rightUrl}"></iframe>
+                        </div>
+                    `;
+                } else {
+                    rightContent = `<div class="page page-right"></div>`;
+                }
+        
+                spread.innerHTML = isMobile ? leftContent : (leftContent + rightContent);
+                wrapper.appendChild(spread);
+            }
 
-        const leftProfile = profiles[i];
-        const leftUrl = `${baseFileUrl}?uid=${leftProfile.id}`;
-
-        const leftContent = `
-            <div class="page page-left sheet-container-frame">
-                <iframe class="char-sheet-frame" src="${leftUrl}"></iframe>
-            </div>
-        `;
-
-        let rightContent = '';
-        if (profiles[i + 1]) {
-            const rightProfile = profiles[i + 1];
-            const rightUrl = `${baseFileUrl}?uid=${rightProfile.id}`;
-            rightContent = `
-                <div class="page page-right sheet-container-frame">
-                    <iframe class="char-sheet-frame" src="${rightUrl}"></iframe>
-                </div>
-            `;
-        } else {
-            rightContent = `<div class="page page-right"></div>`;
-        }
-
-        spread.innerHTML = isMobile ? leftContent : (leftContent + rightContent);
-        wrapper.appendChild(spread);
-    }
-
-    if (profiles.length === 0) {
-        SCCS_Registre.createProfile();
-        return renderRegistryChapter(baseFileUrl);
-    }
-
-    setTimeout(resizeAllSheets, 100);
-}
+            if (profiles.length === 0) {
+                SCCS_Registre.createProfile();
+                return renderRegistryChapter(baseFileUrl);
+            }
 
             setTimeout(resizeAllSheets, 100);
         }
@@ -1083,7 +1077,7 @@ function renderRegistryChapter(baseFileUrl) {
 
                 const targetW = 794; 
                 const targetH = 1123;
-
+        
                 const availableH = container.clientHeight; 
                 const availableW = container.clientWidth;
 
@@ -1101,6 +1095,7 @@ function renderRegistryChapter(baseFileUrl) {
                 iframe.style.transformOrigin = 'center center';
             });
         }
+
         let pgnState = { wrapper: null, currentSpread: null, currentPageContent: null, isRightPage: false, pageCount: 1, elementsQueue: [] };
 
         function paginateContent(htmlContent) {
