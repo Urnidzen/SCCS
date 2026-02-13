@@ -1326,9 +1326,6 @@
         function toggleSidebar() {
             const mainContainer = document.getElementById('mainContainer');
             const currentScrollTop = mainContainer.scrollTop;
-            
-            // CORRECTION 1 : Calcul fiable de la page active (indépendant de la sidebar)
-            // Chaque spread fait exactement 100vh, donc on peut calculer directement
             const spreadHeight = window.innerHeight;
             const spreadIndex = Math.floor(currentScrollTop / spreadHeight);
             
@@ -1336,31 +1333,30 @@
             document.getElementById('sidebarContainer').classList.toggle('closed', !sidebarOpen);
             document.getElementById('mainContainer').classList.toggle('sidebar-closed', !sidebarOpen);
             
-            // CORRECTION 2 : Délai adaptatif - plus long sur mobile
-            const isMobile = window.innerWidth <= 1024;
-            const delay = isMobile ? 600 : 350; // 600ms pour mobile, 350ms pour PC
+            const delay = isMobile ? 600 : 350;
             
             setTimeout(() => { 
                 if (currentDoc === 'fiche') {
                     resizeAllSheets();
                 } else if (rawContentCache && currentDoc !== 'contact') {
-                    paginateContent(rawContentCache);
-                    
-                    // RESTAURER LA POSITION APRÈS REPAGINATION
-                    requestAnimationFrame(() => {
-                        // Double requestAnimationFrame pour s'assurer que le DOM est stable
+                    // CORRECTION : Sur mobile, pas besoin de repaginer car la sidebar est en overlay
+                    // La largeur ne change pas (déjà 100%), donc on évite de détruire les highlights
+                    if (!isMobile) {
+                        paginateContent(rawContentCache);
+                        
                         requestAnimationFrame(() => {
-                            const spreads = document.querySelectorAll('.book-spread');
-                            if (spreads[spreadIndex]) {
-                                mainContainer.scrollTo({
-                                    top: spreads[spreadIndex].offsetTop,
-                                    behavior: 'instant'
-                                });
-                            } else {
-                                mainContainer.scrollTo({ top: currentScrollTop, behavior: 'instant' });
-                            }
+                            requestAnimationFrame(() => {
+                                const spreads = document.querySelectorAll('.book-spread');
+                                if (spreads[spreadIndex]) {
+                                    mainContainer.scrollTo({
+                                        top: spreads[spreadIndex].offsetTop,
+                                        behavior: 'instant'
+                                    });
+                                }
+                            });
                         });
-                    });
+                    }
+                    // Sur mobile : on ne fait rien, le CSS gère l'affichage et les highlights restent en place
                 }
             }, delay);
         }
