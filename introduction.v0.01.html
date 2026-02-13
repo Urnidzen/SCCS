@@ -1,3 +1,56 @@
+<style>
+  /* Cible uniquement la première double page du document */
+  #bookSpreadsWrapper > .book-spread:first-child {
+    background-image: url('fond-de-page-accueil.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  /* Rend les pages transparentes pour voir l'image derrière */
+  #bookSpreadsWrapper > .book-spread:first-child .page {
+    background: transparent;
+    box-shadow: none;
+    color: #ffffff;
+  }
+  
+  /* Assure que tous les textes sont en blanc avec ombre pour la lisibilité */
+  #bookSpreadsWrapper > .book-spread:first-child .page * {
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+  }
+  
+  /* Style spécifique pour les titres */
+  #bookSpreadsWrapper > .book-spread:first-child .page h2 {
+    color: #ffffff;
+    border-bottom-color: rgba(255,255,255,0.6);
+    text-shadow: 2px 2px 6px rgba(0,0,0,1);
+    font-weight: 700;
+  }
+  
+  /* Cartes de contenu avec fond semi-transparent pour améliorer la lisibilité sur l'image */
+  #bookSpreadsWrapper > .book-spread:first-child .content-card {
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(3px);
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  /* Adaptation des mentions légales et numéros de page */
+  #bookSpreadsWrapper > .book-spread:first-child .legal-notice,
+  #bookSpreadsWrapper > .book-spread:first-child .page-number {
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    font-weight: 600;
+  }
+  
+  /* Suppression de la bordure verticale entre les deux pages pour un effet plus immersif */
+  #bookSpreadsWrapper > .book-spread:first-child .page-left {
+    border-right: none;
+  }
+</style>
+
 <div class="content-section">
     <h2>Bienvenue dans le Codex Officiel</h2>
     <div class="content-card">
