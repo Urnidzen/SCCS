@@ -411,8 +411,6 @@
         let currentDoc = 'intro';
         let expandedId = null; 
         let sidebarOpen = true;
-        let savedSearchHTML = '';
-        let savedSearchScroll = 0;
         let searchStateBackup = {
             html: '',
             scroll: 0,
@@ -776,10 +774,7 @@
                 // SAUVEGARDE de l'état pour pouvoir le restaurer après fermeture
                 searchStateBackup.html = html;
                 searchStateBackup.term = searchTerm;
-
-                // Sauvegarde pour pouvoir restaurer après fermeture du rabat
-                savedSearchHTML = html;
-                savedSearchScroll = document.querySelector('.sidebar').scrollTop;
+                searchStateBackup.scroll = document.querySelector('.sidebar').scrollTop;
         
                 container.innerHTML = html;
             }
@@ -1317,25 +1312,25 @@
             const sidebar = document.querySelector('.sidebar');
             const searchInput = document.getElementById('searchInput');
             
-            // Sauvegarde de la position avant fermeture
+            // Sauvegarde position avant fermeture
             if (sidebarOpen) {
-                savedSearchScroll = sidebar.scrollTop;
+                searchStateBackup.scroll = sidebar.scrollTop;
             }
             
-            // Basculement visuel (ouverture/fermeture)
+            // Basculement visuel (toujours exécuté)
             sidebarOpen = !sidebarOpen;
             document.getElementById('sidebarContainer').classList.toggle('closed', !sidebarOpen);
             document.getElementById('mainContainer').classList.toggle('sidebar-closed', !sidebarOpen);
             
-            // Si on ouvre et qu'on a une recherche active sauvegardée
-            if (sidebarOpen && savedSearchHTML && searchInput.value.trim().length > 2) {
+            // Si on ouvre et qu'on a une recherche sauvegardée avec terme dans l'input
+            if (sidebarOpen && searchStateBackup.html && searchInput.value.trim().length > 2) {
                 setTimeout(() => {
-                    document.getElementById('documentsList').innerHTML = savedSearchHTML;
-                    sidebar.scrollTop = savedSearchScroll;
-                }, 100); // Délai pour laisser la transition CSS se faire
+                    document.getElementById('documentsList').innerHTML = searchStateBackup.html;
+                    sidebar.scrollTop = searchStateBackup.scroll;
+                }, 100);
             }
             
-            // Redimensionnement des fiches si nécessaire
+            // Redimensionnement
             setTimeout(() => { 
                 if (currentDoc === 'fiche') resizeAllSheets();
                 else if (rawContentCache && currentDoc !== 'contact') paginateContent(rawContentCache); 
