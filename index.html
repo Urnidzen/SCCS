@@ -181,7 +181,7 @@
             flex: 1; height: 100dvh;
             background: #e3d5b8;
             background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-            padding: 50px 60px 120px 60px;
+            padding: 50px 60px 20px 60px;
             position: relative; overflow: hidden;
             display: flex; flex-direction: column; justify-content: flex-start;
         }
@@ -195,8 +195,10 @@
         }
 
         .content-wrapper { 
-            width: 100%; height: 100%;
+            width: 100%;
+            flex: 1;
             display: flex; flex-direction: column;
+            overflow: hidden;
         }
 
         .content-section { margin-bottom: 1.5rem; }
@@ -260,31 +262,30 @@
         .big-plus { font-size: 2rem; }
 
         .legal-notice {
-            position: absolute;
-            bottom: 80px;
             width: 100%;
             text-align: center;
             font-family: 'Cinzel', serif;
             font-size: 0.5rem;
             color: rgba(28, 25, 23, 0.6);
-            left: 0;
             pointer-events: none;
             line-height: 1.4;
-            padding: 0 20px;
+            padding: 15px 20px 5px;
             z-index: 10;
+            margin-top: auto;
+            flex-shrink: 0; 
         }
 
         .page-number {
-            position: absolute;
-            bottom: 60px;
             width: 100%;
             text-align: center;
             font-family: 'Cinzel', serif;
             font-size: 0.8rem;
             color: rgba(28, 25, 23, 0.5);
-            left: 0;
             pointer-events: none;
             z-index: 10;
+            margin-top: auto;
+            flex-shrink: 0;
+            padding-bottom: 10px; 
         }
 
         .section-title-isolated {
@@ -320,7 +321,10 @@
             .page { 
                 padding: 30px 20px 10px 20px; 
                 width: 100%; 
-                height: 100%;                      /* Remplit le spread */
+                height: 100%;
+                min-height: unset;
+                display: flex;           /* S'assurer que c'est là */
+                flex-direction: column;  /* S'assurer que c'est là */
             }
             
             .page-right { display: none; }
