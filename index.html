@@ -975,8 +975,6 @@
 
             const wrapper = document.getElementById('bookSpreadsWrapper');
             wrapper.innerHTML = '<div style="padding:40px; text-align:center; color:#7c2d12;">Chargement...</div>';
-            
-            document.getElementById('mainContainer').setAttribute('data-current-doc', docId);
 
             if (docId === 'fiche') {
                 renderRegistryChapter(doc.file);
