@@ -299,21 +299,27 @@
         @media (max-width: 1024px) {
             .sidebar-container { transform: translateX(-320px); }
             .sidebar-container:not(.closed) { transform: translateX(0); }
-            .main-container { margin-left: 0 !important; width: 100% !important; }
+            
+            .main-container { 
+                margin-left: 0 !important; 
+                width: 100% !important;
+                height: 100dvh;                    /* CRUCIAL : même unité que les spreads */
+                scroll-snap-type: y mandatory;     /* Garder le snap */
+            }
             
             .book-spread {
-                width: calc(100% - 20px);        /* Marge visible */
-                height: calc(100dvh - 20px);      /* Hauteur fixe moins les marges */
-                margin: 10px auto;               /* 10px de marge tout autour */
+                width: calc(100% - 20px);
+                height: calc(100dvh - 20px);       /* 10px marge haut + 10px bas */
+                margin: 10px auto;
                 border-radius: 4px;
-                /* PAS de min-height ici */
+                scroll-snap-align: start;          /* Forcer l'alignement début */
+                scroll-snap-stop: always;          /* Forcer le snap segmenté */
             }
             
             .page { 
-                padding: 30px 20px 10px 20px;     /* Padding bottom réduit */
+                padding: 30px 20px 10px 20px; 
                 width: 100%; 
-                height: 100%;                     /* Remplit le spread (100% de calc(100vh - 20px)) */
-                /* PAS de min-height: unset qui pose problème */
+                height: 100%;                      /* Remplit le spread */
             }
             
             .page-right { display: none; }
@@ -322,7 +328,7 @@
             .book-spread.sheet-mode .page-right { 
                 display: flex; 
                 width: 100%; 
-                height: 100%;                     /* Même chose ici */
+                height: 100%;
             }
         }
 
