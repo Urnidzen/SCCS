@@ -620,6 +620,8 @@
 
         function clearSearch() {
             document.getElementById('searchInput').value = '';
+            // Réinitialiser la sauvegarde
+            searchStateBackup = { html: '', scroll: 0, term: '' };
             renderDocumentsList();
             // Nettoyer les surlignages
             document.querySelectorAll('.search-highlight').forEach(el => {
