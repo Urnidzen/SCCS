@@ -1259,6 +1259,12 @@
         }
 
         function processElement(element) {
+            // FORCER UN SAUT DE PAGE si l'élément a la classe 'page-break'
+            if (element.classList && element.classList.contains('page-break')) {
+                advancePage();
+                return; // On ne traite pas cet élément (c'est juste un marqueur)
+            }
+            
             let node = element.cloneNode(true);
             pgnState.currentPageContent.appendChild(node);
             if (isOverflowing(pgnState.currentPageContent)) {
