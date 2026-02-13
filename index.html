@@ -411,6 +411,11 @@
         let currentDoc = 'intro';
         let expandedId = null; 
         let sidebarOpen = true;
+        let searchStateBackup = {
+            html: '',
+            scroll: 0,
+            term: ''
+        };
         let isMobile = window.innerWidth <= 1024;
         let currentIndex = [];
         let rawContentCache = ""; 
@@ -763,7 +768,11 @@
                         `;
                     });
                 });
-        
+
+                // SAUVEGARDE de l'état pour pouvoir le restaurer après fermeture
+                searchStateBackup.html = html;
+                searchStateBackup.term = searchTerm;
+                
                 container.innerHTML = html;
             }
                 return;
@@ -1297,9 +1306,35 @@
         }
 
         function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const container = document.getElementById('documentsList');
+            const searchInput = document.getElementById('searchInput');
+    
+            // Si on ferme, on sauvegarde la position actuelle
+            if (sidebarOpen) {
+                searchStateBackup.scroll = sidebar.scrollTop;
+            } 
+            // Si on ouvre et qu'on avait une recherche active, on restaure
+            else {
+                if (searchStateBackup.term && searchStateBackup.html) {
+                    // Restaurer le contenu sauvegardé
+                    container.innerHTML = searchStateBackup.html;
+                    // S'assurer que l'input contient toujours le terme
+                    searchInput.value = searchStateBackup.term;
+                    // Restaurer la position de scroll après un court délai
+                    setTimeout(() => {
+                        sidebar.scrollTop = searchStateBackup.scroll;
+                    }, 50);
+                    // Mettre à jour le bouton d'effacement si présent
+                    return; // Important : ne pas rappeler renderDocumentsList
+                }
+            }
+    
             sidebarOpen = !sidebarOpen;
             document.getElementById('sidebarContainer').classList.toggle('closed', !sidebarOpen);
             document.getElementById('mainContainer').classList.toggle('sidebar-closed', !sidebarOpen);
+    
+            // Seulement si pas de restauration faite ci-dessus
             setTimeout(() => { 
                 if (currentDoc === 'fiche') resizeAllSheets();
                 else if (rawContentCache && currentDoc !== 'contact') paginateContent(rawContentCache); 
