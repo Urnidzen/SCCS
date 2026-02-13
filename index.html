@@ -1330,7 +1330,7 @@
             // CORRECTION 1 : Calcul fiable de la page active (indépendant de la sidebar)
             // Chaque spread fait exactement 100vh, donc on peut calculer directement
             const spreadHeight = window.innerHeight;
-            const spreadIndex = Math.round(currentScrollTop / spreadHeight);
+            const spreadIndex = Math.floor(currentScrollTop / spreadHeight);
             
             sidebarOpen = !sidebarOpen;
             document.getElementById('sidebarContainer').classList.toggle('closed', !sidebarOpen);
