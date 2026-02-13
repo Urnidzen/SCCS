@@ -1015,69 +1015,50 @@
             wrapper.appendChild(spread);
         }
 
-        function renderRegistryChapter(baseFileUrl) {
-            const wrapper = document.getElementById('bookSpreadsWrapper');
-            wrapper.innerHTML = '';
-            currentIndex = [];
+function renderRegistryChapter(baseFileUrl) {
+    const wrapper = document.getElementById('bookSpreadsWrapper');
+    wrapper.innerHTML = '';
+    currentIndex = [];
 
-            const profiles = SCCS_Registre.getAllProfiles();
-            const isMobileView = window.innerWidth <= 1024;
+    const profiles = SCCS_Registre.getAllProfiles();
 
-            if (profiles.length === 0) {
-                SCCS_Registre.createProfile();
-                return renderRegistryChapter(baseFileUrl);
-            }
+    for (let i = 0; i < profiles.length; i += 2) {
+        const spread = document.createElement('div');
+        spread.className = 'book-spread sheet-mode';
 
-            if (isMobileView) {
-                // Mode mobile : structure imbriquée pour un centrage correct
-                profiles.forEach((profile) => {
-                    const spread = document.createElement('div');
-                    spread.className = 'book-spread sheet-mode';
-                    const url = `${baseFileUrl}?uid=${profile.id}`;
-            
-                    // IMPORTANT : On imbrique sheet-container-frame DANS .page
-                    // et non pas on fusionne les classes
-                    spread.innerHTML = `
-                        <div class="page page-right">
-                            <div class="sheet-container-frame">
-                                <iframe class="char-sheet-frame" src="${url}"></iframe>
-                            </div>
-                        </div>
-                    `;
-                    wrapper.appendChild(spread);
-                });
-            } else {
-                // Mode desktop : on garde la structure côte-à-côte
-                for (let i = 0; i < profiles.length; i += 2) {
-                    const spread = document.createElement('div');
-                    spread.className = 'book-spread sheet-mode';
-    
-                    const leftProfile = profiles[i];
-                    const leftUrl = `${baseFileUrl}?uid=${leftProfile.id}`;
-    
-                    const leftContent = `
-                        <div class="page page-left sheet-container-frame">
-                            <iframe class="char-sheet-frame" src="${leftUrl}"></iframe>
-                        </div>
-                    `;
-    
-                    let rightContent = '';
-                    if (profiles[i + 1]) {
-                        const rightProfile = profiles[i + 1];
-                        const rightUrl = `${baseFileUrl}?uid=${rightProfile.id}`;
-                        rightContent = `
-                            <div class="page page-right sheet-container-frame">
-                                <iframe class="char-sheet-frame" src="${rightUrl}"></iframe>
-                            </div>
-                        `;
-                    } else {
-                        rightContent = `<div class="page page-right"></div>`;
-                    }
-    
-                    spread.innerHTML = leftContent + rightContent;
-                    wrapper.appendChild(spread);
-                }
-            }
+        const leftProfile = profiles[i];
+        const leftUrl = `${baseFileUrl}?uid=${leftProfile.id}`;
+
+        const leftContent = `
+            <div class="page page-left sheet-container-frame">
+                <iframe class="char-sheet-frame" src="${leftUrl}"></iframe>
+            </div>
+        `;
+
+        let rightContent = '';
+        if (profiles[i + 1]) {
+            const rightProfile = profiles[i + 1];
+            const rightUrl = `${baseFileUrl}?uid=${rightProfile.id}`;
+            rightContent = `
+                <div class="page page-right sheet-container-frame">
+                    <iframe class="char-sheet-frame" src="${rightUrl}"></iframe>
+                </div>
+            `;
+        } else {
+            rightContent = `<div class="page page-right"></div>`;
+        }
+
+        spread.innerHTML = isMobile ? leftContent : (leftContent + rightContent);
+        wrapper.appendChild(spread);
+    }
+
+    if (profiles.length === 0) {
+        SCCS_Registre.createProfile();
+        return renderRegistryChapter(baseFileUrl);
+    }
+
+    setTimeout(resizeAllSheets, 100);
+}
 
             setTimeout(resizeAllSheets, 100);
         }
