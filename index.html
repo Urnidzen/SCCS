@@ -823,7 +823,8 @@
                         indexHtml = currentIndex.map((item, idx, arr) => {
                             if (!item || !item.id) return '';
                             
-                            const safeId = String(item.id).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            const originalId = item.id;
+                            const jsEscapedId = String(item.id).replace(/'/g, "\\'");
                             const safeTitle = String(item.title || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                             
                             // Détection si cet item a des enfants
@@ -836,16 +837,16 @@
                             
                             // Flèche ▶ (fermée) par défaut si enfants existent
                             const arrow = hasChildren ? 
-                                `<span onclick="toggleSection('${safeId}', event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px;">▶</span>` : 
+                                `<span onclick="toggleSection('${jsEscapedId}', event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px;">▶</span>` : 
                                 `<span style="display:inline-block; width:12px; margin-right:4px;"></span>`;
                             
                             const paddingLeft = item.level ? (8 + (item.level-1)*12) : 8;
                             
                             return `
-                                <div class="index-item" data-section="${safeId}" data-level="${item.level || 0}" 
+                                <div class="index-item" data-section="${originalId}" data-level="${item.level || 0}"
                                      style="padding-left:${paddingLeft}px; display:${displayStyle}; align-items:center;">
                                     ${arrow}
-                                    <span onclick="scrollToElement('${safeId}')" style="cursor:pointer; flex:1;">
+                                    <span onclick="scrollToElement('${jsEscapedId}')" style="cursor:pointer; flex:1;">
                                         ${safeTitle}
                                     </span>
                                 </div>
