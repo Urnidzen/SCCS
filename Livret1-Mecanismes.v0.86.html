@@ -174,11 +174,6 @@
     }
 </style>
 
-<div id="table-of-contents">
-    <h2 style="margin-top: 0; margin-bottom: 16px; font-size: 1.5em;">📋 Table des matières</h2>
-    <nav class="doc-index" id="index-nav"></nav>
-</div>
-
 <div class="content-section" id="partie-1">
     <h2>Partie 1 : COMBATTRE</h2>
 
@@ -544,16 +539,23 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const indexData = JSON.parse(document.getElementById('doc-index').textContent);
-    const nav = document.getElementById('index-nav');
+    const sidebar = document.querySelector('.sidebar'); // ou l'ID de votre sidebar
+    if (!sidebar) return;
     
-    indexData.index.forEach(item => {
-        const link = document.createElement('a');
-        link.href = '#' + item.id;
-        link.textContent = item.title;
-        link.className = 'level-' + item.level;
-        nav.appendChild(link);
+    // Pour chaque niveau 1 (Partie)
+    document.querySelectorAll('.level-1').forEach(partie => {
+        partie.style.cursor = 'pointer';
+        partie.addEventListener('click', function(e) {
+            e.preventDefault();
+            let next = this.nextElementSibling;
+            // Cache/montre tout jusqu'au prochain level-1
+            while (next && !next.classList.contains('level-1')) {
+                if (next.classList.contains('level-2') || next.classList.contains('level-3')) {
+                    next.style.display = next.style.display === 'none' ? 'block' : 'none';
+                }
+                next = next.nextElementSibling;
+            }
+        });
     });
 });
 </script>
-
