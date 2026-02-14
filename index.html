@@ -824,7 +824,7 @@
                             </div>
                         </div>
                         <div class="doc-index ${isExpanded ? 'expanded' : ''}">
-                            ${(isActive && doc.id === 'fiche') ? renderCharactersList() : (currentIndex.length > 0 && isActive) ? currentIndex.map((item, idx, arr) => {
+                            ${(isActive && isExpanded && doc.id === 'fiche') ? renderCharactersList() : (isActive && isExpanded && currentIndex.length > 0) ? currentIndex.map((item, idx, arr) => {
                                 // Détection des enfants uniquement si level existe
                                 const hasChildren = item.level && arr[idx+1] && arr[idx+1].level > item.level;
                                 const arrow = hasChildren ? 
