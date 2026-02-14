@@ -4,27 +4,51 @@
     "icon": "⚙️",
     "title": "Livret 1",
     "subtitle": "Mécanismes",
-    "index": [
-        {"id": "partie-1", "title": "Partie 1 : COMBATTRE", "level": 1},
-        {"id": "section-actions", "title": "Chapitre A - Actions", "level": 2},
-        {"id": "section-deroulement", "title": "Chapitre B - Déroulement", "level": 2},
-        {"id": "section-matrice", "title": "Chapitre C - Compétences", "level": 2},
-        {"id": "type-attaque", "title": "Les Compétences d'Attaque", "level": 3},
-        {"id": "cible", "title": "La Cible", "level": 3},
-        {"id": "defense", "title": "La Défense", "level": 3},
-        {"id": "resistance", "title": "La Résistance", "level": 3},
-        {"id": "section-moteur", "title": "Chapitre D - Résolution", "level": 2},
-        {"id": "section-surnombre", "title": "La Loi du Surnombre", "level": 3},
-        {"id": "section-avantage", "title": "L'Avantage Tactique", "level": 3},
-        {"id": "section-incantation", "title": "L'Incantation Libre", "level": 3},
-        {"id": "section-attaques-multiples", "title": "Attaques Multiples", "level": 3},
-        {"id": "section-maintien-sort", "title": "Maintien & Rupture", "level": 3},
-        {"id": "section-sorts-sans-opposant", "title": "Sorts sans opposant", "level": 3},
-        {"id": "section-restauration", "title": "Restauration (Soins)", "level": 3},
-        {"id": "section-resultats", "title": "Résultats (Sup/Inf/Égal)", "level": 3},
-        {"id": "section-impact", "title": "Chapitre E - Conséquences", "level": 2},
-        {"id": "section-exploration", "title": "Partie 2 : AGIR EN DEHORS DES COMBATS", "level": 1},
-        {"id": "section-social", "title": "Partie 3 : INTERACTIONS SOCIALES", "level": 1}
+    "parts": [
+        {
+            "id": "partie-1",
+            "title": "Partie 1 : COMBATTRE",
+            "sections": [
+                {"id": "section-actions", "title": "Chapitre A - Actions"},
+                {"id": "section-deroulement", "title": "Chapitre B - Déroulement", "subsections": [
+                    {"id": "section-obligation", "title": "L'obligation d'agir"},
+                    {"id": "section-initiative", "title": "La hiérarchie de l'Initiative"},
+                    {"id": "section-egalite-priorite", "title": "Résolution des égalités"}
+                ]},
+                {"id": "section-matrice", "title": "Chapitre C - Compétences", "subsections": [
+                    {"id": "type-attaque", "title": "A. Le Type"},
+                    {"id": "cible", "title": "B. La Cible"},
+                    {"id": "defense", "title": "A. La Défense (Parade & Esquive)"},
+                    {"id": "resistance", "title": "B. La Résistance (Encaissement & Armure)"}
+                ]},
+                {"id": "section-moteur", "title": "Chapitre D - Résolution", "subsections": [
+                    {"id": "section-surnombre", "title": "La Loi du Surnombre"},
+                    {"id": "section-avantage", "title": "L'Avantage Tactique"},
+                    {"id": "section-incantation", "title": "L'Incantation Libre"},
+                    {"id": "section-attaques-multiples", "title": "Attaques Étendues et Multiples"},
+                    {"id": "section-maintien-sort", "title": "Maintien d'un sort"},
+                    {"id": "section-sorts-sans-opposant", "title": "Sorts sans opposant"},
+                    {"id": "section-restauration", "title": "La Magie de Restauration"},
+                    {"id": "section-resultats", "title": "Résultats de la Comparaison"}
+                ]},
+                {"id": "section-impact", "title": "Chapitre E - Conséquences"}
+            ]
+        },
+        {
+            "id": "section-exploration",
+            "title": "Partie 2 : AGIR EN DEHORS DES COMBATS",
+            "sections": [
+                {"id": "section-exploration", "title": "La Difficulté"},
+                {"id": "section-exploration", "title": "Le Test"}
+            ]
+        },
+        {
+            "id": "section-social",
+            "title": "Partie 3 : INTERACTIONS SOCIALES",
+            "sections": [
+                {"id": "section-social", "title": "La résolution sociale"}
+            ]
+        }
     ]
 }
 </script>
@@ -481,6 +505,7 @@
     <h2>Partie 3 : INTERACTIONS SOCIALES</h2>
     <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des antécédents.</p>
 </div>
+
 
 
 
