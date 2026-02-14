@@ -47,39 +47,69 @@
         border-collapse: collapse !important;
     }
     
-    /* Cellules du tableau Types */
-    .content-wrapper .table-types th,
-    .content-wrapper .table-types td {
-        width: 33.33% !important;
+    /* ========== TABLEAU 1 : Types d'Attaque ========== */
+    /* Colonne 1 : TYPE */
+    .content-wrapper .table-types th:nth-child(1),
+    .content-wrapper .table-types td:nth-child(1) {
+        width: 20% !important;
         padding: 8px !important;
         vertical-align: top !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        hyphens: auto !important;
     }
     
-    /* Cellules du tableau Cibles */
-    .content-wrapper .table-cibles th,
-    .content-wrapper .table-cibles td {
-        width: 33.33% !important;
+    /* Colonne 2 : Arme Naturelle... */
+    .content-wrapper .table-types th:nth-child(2),
+    .content-wrapper .table-types td:nth-child(2) {
+        width: 40% !important;
         padding: 8px !important;
         vertical-align: top !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        hyphens: auto !important;
     }
     
-    /* En-têtes */
+    /* Colonne 3 : Effet Magique... */
+    .content-wrapper .table-types th:nth-child(3),
+    .content-wrapper .table-types td:nth-child(3) {
+        width: 40% !important;
+        padding: 8px !important;
+        vertical-align: top !important;
+    }
+    
+    /* ========== TABLEAU 2 : Cibles ========== */
+    /* Colonne 1 : CIBLE */
+    .content-wrapper .table-cibles th:nth-child(1),
+    .content-wrapper .table-cibles td:nth-child(1) {
+        width: 20% !important;  /* Ajustez à votre convenance */
+        padding: 8px !important;
+        vertical-align: top !important;
+    }
+    
+    /* Colonne 2 : Morphologique */
+    .content-wrapper .table-cibles th:nth-child(2),
+    .content-wrapper .table-cibles td:nth-child(2) {
+        width: 40% !important;  /* Ajustez à votre convenance */
+        padding: 8px !important;
+        vertical-align: top !important;
+    }
+    
+    /* Colonne 3 : Conceptuelle */
+    .content-wrapper .table-cibles th:nth-child(3),
+    .content-wrapper .table-cibles td:nth-child(3) {
+        width: 40% !important;  /* Ajustez à votre convenance */
+        padding: 8px !important;
+        vertical-align: top !important;
+    }
+    
+    /* Conserver les bordures (optionnel mais recommandé) */
     .content-wrapper .table-types th,
     .content-wrapper .table-cibles th {
         text-align: left !important;
         border-bottom: 2px solid #1c1917 !important;
     }
     
-    /* Cellules de données */
     .content-wrapper .table-types td,
     .content-wrapper .table-cibles td {
         border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
     }
 </style>
 
@@ -436,6 +466,7 @@
     <h2>7. Résolution des actions sociales</h2>
     <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des antécédents.</p>
 </div>
+
 
 
 
