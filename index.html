@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCS - Codex Officiel</title>
+    <title>TRAME - Codex Officiel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="registre.js"></script>
@@ -428,7 +428,7 @@
             </div>
             <div id="documentsList"></div>
             <div style="margin-top: auto; padding-top: 20px; text-align: center; font-size: 0.6rem; opacity: 0.6; font-family: 'Cinzel', serif;">
-                © 2024 Urnidzen - SCCS<br>CC BY-NC-SA 4.0
+                © 2024 Urnidzen - TRAME<br>CC BY-NC-SA 4.0
             </div>
         </div>
         <div class="tab-handle" id="tabHandle">
@@ -452,7 +452,7 @@
             { id: 'livret4', file: 'Livret4-Rencontres.v0.80.html', icon: '⚔️', title: 'Livret 4', subtitle: 'Rencontres' },
             { id: 'livret5', file: 'Livret5-Bestiaire.v0.80.html', icon: '🐾', title: 'Livret 5', subtitle: 'Bestiaire' },
             { id: 'fiche', file: 'Fiche de personnage.v0.87.html', icon: '📝', title: 'Fiche de Personnage', subtitle: 'Interactive' },
-            { id: 'contact', file: 'contact.html', icon: '💬', title: 'Contact & Discutions', subtitle: "Échangez sur le SCCS" }
+            { id: 'contact', file: 'contact.html', icon: '💬', title: 'Contact & Discutions', subtitle: "Échangez sur le TRAME" }
         ];
 
         let currentDoc = 'intro';
@@ -689,11 +689,11 @@
 
         window.addEventListener('message', (e) => {
             if(e.data.action === 'refreshSidebar') {
-                SCCS_Registre.reload();
+                TRAME_Registre.reload();
                 renderDocumentsList();
             }
             if(e.data.action === 'characterDeleted') {
-                SCCS_Registre.reload();
+                TRAME_Registre.reload();
                 loadDocument('fiche');
                 renderDocumentsList();
             }
@@ -714,7 +714,7 @@
 
         // MODIFICATION : Ajout des boutons d'action dans la liste des personnages
         function renderCharactersList() {
-            const profiles = SCCS_Registre.getAllProfiles();
+            const profiles = TRAME_Registre.getAllProfiles();
             let html = '';
     
             profiles.forEach((profile, index) => {
@@ -928,7 +928,7 @@
         // AJOUT : Fonction pour réinitialiser un personnage depuis la sidebar
         function resetCharacter(id) {
             if(!confirm("Voulez-vous vider les champs de ce personnage ?")) return;
-            const profile = SCCS_Registre.getProfile(id);
+            const profile = TRAME_Registre.getProfile(id);
             if (!profile) return;
             
             // Créer une fiche vierge
@@ -958,21 +958,21 @@
                 emptyContent[`__area_${i}`] = "";
             }
             
-            SCCS_Registre.updateProfile(id, emptyContent, "Sans Nom");
+            TRAME_Registre.updateProfile(id, emptyContent, "Sans Nom");
             renderDocumentsList();
             if(currentDoc === 'fiche') loadDocument('fiche');
         }
 
         // AJOUT : Fonction pour exporter un personnage depuis la sidebar
         function exportCharacter(id) {
-            const profile = SCCS_Registre.getProfile(id);
+            const profile = TRAME_Registre.getProfile(id);
             if (!profile) return;
             const dataStr = JSON.stringify(profile, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `SCCS_Heros_${profile.name.replace(/\s+/g, '_')}.json`;
+            a.download = `TRAME_Heros_${profile.name.replace(/\s+/g, '_')}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -991,8 +991,8 @@
                 reader.onload = (event) => {
                     try {
                         const data = JSON.parse(event.target.result);
-                        if (data.content && confirm(`Remplacer "${SCCS_Registre.getProfile(id)?.name || 'ce personnage'}" par "${data.name || 'le personnage importé'}" ?`)) {
-                            SCCS_Registre.updateProfile(id, data.content, data.name || "Sans Nom");
+                        if (data.content && confirm(`Remplacer "${TRAME_Registre.getProfile(id)?.name || 'ce personnage'}" par "${data.name || 'le personnage importé'}" ?`)) {
+                            TRAME_Registre.updateProfile(id, data.content, data.name || "Sans Nom");
                             renderDocumentsList();
                             if(currentDoc === 'fiche') loadDocument('fiche');
                             alert('Personnage importé avec succès !');
@@ -1009,7 +1009,7 @@
         // AJOUT : Fonction pour imprimer un personnage depuis la sidebar
         function printCharacter(id) {
             // Ouvrir la fiche dans un nouvel onglet et lancer l'impression
-            const profile = SCCS_Registre.getProfile(id);
+            const profile = TRAME_Registre.getProfile(id);
             if (!profile) return;
             
             const printWindow = window.open(`Fiche de personnage.v0.87.html?uid=${id}`, '_blank');
@@ -1022,7 +1022,7 @@
 
         function deleteCharacter(id) {
             if(confirm("Êtes-vous certain de vouloir supprimer ce personnage ? Cette action est irréversible.")) {
-                SCCS_Registre.deleteProfile(id);
+                TRAME_Registre.deleteProfile(id);
                 renderDocumentsList();
                 loadDocument('fiche');
             }
@@ -1134,13 +1134,13 @@
             wrapper.innerHTML = '';
             currentIndex = [];
 
-            const profiles = SCCS_Registre.getAllProfiles();
+            const profiles = TRAME_Registre.getAllProfiles();
     
             // Détection en temps réel de la taille d'écran
             const isMobileView = window.innerWidth <= 1024;
 
             if (profiles.length === 0) {
-                SCCS_Registre.createProfile();
+                TRAME_Registre.createProfile();
                 return renderRegistryChapter(baseFileUrl);
             }
 
@@ -1196,13 +1196,13 @@
         }
 
         function createNewHero() {
-            SCCS_Registre.createProfile();
+            TRAME_Registre.createProfile();
             loadDocument('fiche');
         }
 
         function deleteHero(id) {
             if(confirm("Êtes-vous certain de vouloir brûler cette page ? Cette action est irréversible.")) {
-                SCCS_Registre.deleteProfile(id);
+                TRAME_Registre.deleteProfile(id);
                 loadDocument('fiche');
             }
         }
@@ -1264,7 +1264,7 @@
     
             const script = document.createElement('script');
             script.src = "https://giscus.app/client.js";
-            script.setAttribute('data-repo', 'Urnidzen/SCCS');
+            script.setAttribute('data-repo', 'Urnidzen/TRAME');
             script.setAttribute('data-repo-id', 'R_kgDORGC3NQ');
             script.setAttribute('data-category', 'Commentaires Site Web');
             script.setAttribute('data-category-id', 'DIC_kwDORGC3Nc4C2FWF');
