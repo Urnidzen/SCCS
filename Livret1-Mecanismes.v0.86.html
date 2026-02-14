@@ -536,26 +536,3 @@
     <h2>Partie 3 : INTERACTIONS SOCIALES</h2>
     <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des antécédents.</p>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const sidebar = document.querySelector('.sidebar'); // ou l'ID de votre sidebar
-    if (!sidebar) return;
-    
-    // Pour chaque niveau 1 (Partie)
-    document.querySelectorAll('.level-1').forEach(partie => {
-        partie.style.cursor = 'pointer';
-        partie.addEventListener('click', function(e) {
-            e.preventDefault();
-            let next = this.nextElementSibling;
-            // Cache/montre tout jusqu'au prochain level-1
-            while (next && !next.classList.contains('level-1')) {
-                if (next.classList.contains('level-2') || next.classList.contains('level-3')) {
-                    next.style.display = next.style.display === 'none' ? 'block' : 'none';
-                }
-                next = next.nextElementSibling;
-            }
-        });
-    });
-});
-</script>
