@@ -124,7 +124,64 @@
     .content-card + .rule-box {
         margin-top: 0 !important;
     }
+
+    /* ========== INDEX NAVIGATION ========== */
+    #table-of-contents {
+        margin: 20px 0 40px 0;
+        padding: 20px;
+        background: #f5f5f4;
+        border-radius: 8px;
+        border: 1px solid #e7e5e4;
+    }
+    
+    .doc-index {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .doc-index a {
+        text-decoration: none;
+        color: #1c1917;
+        transition: color 0.2s;
+        display: block;
+        padding: 2px 0;
+    }
+    
+    .doc-index a:hover {
+        color: #dc2626;
+        background: rgba(220, 38, 38, 0.05);
+        border-radius: 4px;
+        padding-left: 8px;
+        margin-left: -8px;
+    }
+    
+    .doc-index .level-1 { 
+        font-weight: bold; 
+        margin-top: 12px; 
+        font-size: 1.1em;
+        border-bottom: 2px solid #1c1917;
+        padding-bottom: 4px;
+        margin-bottom: 8px;
+    }
+    
+    .doc-index .level-2 { 
+        padding-left: 20px; 
+        font-size: 1em;
+        font-weight: 600;
+    }
+    
+    .doc-index .level-3 { 
+        padding-left: 40px; 
+        font-size: 0.9em; 
+        color: #57534e;
+    }
 </style>
+
+<div id="table-of-contents">
+    <h2 style="margin-top: 0; margin-bottom: 16px; font-size: 1.5em;">📋 Table des matières</h2>
+    <nav class="doc-index" id="index-nav"></nav>
+</div>
 
 <div class="content-section" id="partie-1">
     <h2>Partie 1 : COMBATTRE</h2>
@@ -489,24 +546,17 @@
     <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des antécédents.</p>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const indexData = JSON.parse(document.getElementById('doc-index').textContent);
+    const nav = document.getElementById('index-nav');
+    
+    indexData.index.forEach(item => {
+        const link = document.createElement('a');
+        link.href = '#' + item.id;
+        link.textContent = item.title;
+        link.className = 'level-' + item.level;
+        nav.appendChild(link);
+    });
+});
+</script>
