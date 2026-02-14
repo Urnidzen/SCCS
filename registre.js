@@ -1,11 +1,11 @@
 /**
- * SCCS REGISTRE - SYSTEME DE SAUVEGARDE CENTRALISÉ
+ * TRAME REGISTRE - SYSTEME DE SAUVEGARDE CENTRALISÉ
  * Ce fichier gère la mémoire (LocalStorage) partagée entre le Codex et les Fiches.
  */
 
-const SCCS_Registre = {
+const TRAME_Registre = {
     // Clé unique de stockage dans le navigateur
-    STORAGE_KEY: "sccs_registre_v1",
+    STORAGE_KEY: "TRAME_registre_v1",
 
     // Cache des données en mémoire vive
     data: {
@@ -21,12 +21,12 @@ const SCCS_Registre = {
             try {
                 this.data = JSON.parse(store);
             } catch (e) {
-                console.error("[SCCS Registre] Erreur de lecture des données corrompues :", e);
+                console.error("[TRAME Registre] Erreur de lecture des données corrompues :", e);
                 // On garde le tableau vide par sécurité
             }
         } else {
             // Premier lancement : aucune donnée existante
-            console.log("[SCCS Registre] Initialisation d'un nouveau registre vierge.");
+            console.log("[TRAME Registre] Initialisation d'un nouveau registre vierge.");
         }
     },
 
@@ -63,7 +63,7 @@ const SCCS_Registre = {
 
         this.data.profiles.push(newProfile);
         this.save();
-        console.log("[SCCS Registre] Profil créé :", newId);
+        console.log("[TRAME Registre] Profil créé :", newId);
         return newId;
     },
 
@@ -80,9 +80,9 @@ const SCCS_Registre = {
             if (name) profile.name = name;
             profile.timestamp = Date.now();
             this.save();
-            // console.log("[SCCS Registre] Profil sauvegardé :", id); // Décommenter pour debug
+            // console.log("[TRAME Registre] Profil sauvegardé :", id); // Décommenter pour debug
         } else {
-            console.warn("[SCCS Registre] Tentative de sauvegarde sur un profil inexistant :", id);
+            console.warn("[TRAME Registre] Tentative de sauvegarde sur un profil inexistant :", id);
         }
     },
 
@@ -96,7 +96,7 @@ const SCCS_Registre = {
         if (index > -1) {
             this.data.profiles.splice(index, 1);
             this.save();
-            console.log("[SCCS Registre] Profil supprimé :", id);
+            console.log("[TRAME Registre] Profil supprimé :", id);
             return true;
         }
         return false;
@@ -110,7 +110,7 @@ const SCCS_Registre = {
             const json = JSON.stringify(this.data);
             localStorage.setItem(this.STORAGE_KEY, json);
         } catch (e) {
-            console.error("[SCCS Registre] Erreur critique lors de l'écriture disque :", e);
+            console.error("[TRAME Registre] Erreur critique lors de l'écriture disque :", e);
             alert("Attention : Impossible de sauvegarder (Quota dépassé ?)");
         }
     },
@@ -124,7 +124,7 @@ const SCCS_Registre = {
             try {
                 this.data = JSON.parse(store);
             } catch (e) {
-                console.error("[SCCS Registre] Erreur de relecture des données :", e);
+                console.error("[TRAME Registre] Erreur de relecture des données :", e);
             }
         }
     },
@@ -139,7 +139,7 @@ const SCCS_Registre = {
         const a = document.createElement('a');
         a.href = url;
         const date = new Date().toISOString().split('T')[0];
-        a.download = `SCCS_Registre_Complet_${date}.json`;
+        a.download = `TRAME_Registre_Complet_${date}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -148,4 +148,4 @@ const SCCS_Registre = {
 };
 
 // Auto-initialisation au chargement du script
-SCCS_Registre.init();
+TRAME_Registre.init();
