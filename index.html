@@ -743,7 +743,7 @@
             const container = document.getElementById('documentsList');
             const searchTerm = document.getElementById('searchInput').value.trim();
             
-            // MODE RECHERCHE ACTIF (inchangé)
+            // MODE RECHERCHE ACTIF (code identique à l'original)
             if (searchTerm.length > 2) {
                 const results = performSearch(searchTerm);
                 
@@ -809,32 +809,10 @@
                 return;
             }
             
-            // MODE NORMAL - VERSION AVEC PARENTHÈSES EXPLICITES
+            // MODE NORMAL - STRUCTURE EXACTEMENT COMME VOTRE ORIGINAL
             container.innerHTML = documents.map(doc => {
                 const isActive = doc.id === currentDoc;
                 const isExpanded = doc.id === expandedId;
-                
-                // Construction de l'index avec accordéon (parenthèses explicites)
-                let indexContent = '';
-                if (isActive && doc.id === 'fiche') {
-                    indexContent = renderCharactersList();
-                } else if (currentIndex.length > 0 && isActive) {
-                    indexContent = currentIndex.map((item, idx, arr) => {
-                        const hasChildren = arr[idx + 1] && arr[idx + 1].level > item.level;
-                        const arrow = hasChildren ? 
-                            `<span class="acc-arrow" onclick="toggleAccordion(this, event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px; user-select:none;">▼</span>` : 
-                            `<span style="display:inline-block; width:12px; margin-right:4px;"></span>`;
-                        
-                        return `
-                            <div class="index-item level-${item.level}" data-level="${item.level}" style="padding-left: ${8 + (item.level - 1) * 12}px; display:flex; align-items:center;">
-                                ${arrow}
-                                <span onclick="scrollToElement('${item.id}')" style="cursor:pointer; flex:1; font-size:${0.9 - (item.level * 0.05)}rem;">
-                                    ${item.title}
-                                </span>
-                            </div>
-                        `;
-                    }).join('');
-                }
                 
                 return `
                     <div class="doc-item">
@@ -846,7 +824,21 @@
                             </div>
                         </div>
                         <div class="doc-index ${isExpanded ? 'expanded' : ''}">
-                            ${indexContent}
+                            ${(isActive && doc.id === 'fiche') ? renderCharactersList() : (currentIndex.length > 0 && isActive) ? currentIndex.map((item, idx, arr) => {
+                                const hasChildren = arr[idx + 1] && arr[idx + 1].level > item.level;
+                                const arrow = hasChildren ? 
+                                    `<span class="acc-arrow" onclick="toggleAccordion(this, event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px; user-select:none;">▼</span>` : 
+                                    `<span style="display:inline-block; width:12px; margin-right:4px;"></span>`;
+                                
+                                return `
+                                    <div class="index-item level-${item.level}" data-level="${item.level}" style="padding-left: ${8 + (item.level - 1) * 12}px; display:flex; align-items:center;">
+                                        ${arrow}
+                                        <span onclick="scrollToElement('${item.id}')" style="cursor:pointer; flex:1;">
+                                            ${item.title}
+                                        </span>
+                                    </div>
+                                `;
+                            }).join('') : ''}
                         </div>
                     </div>
                 `;
