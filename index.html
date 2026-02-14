@@ -743,7 +743,7 @@
             const container = document.getElementById('documentsList');
             const searchTerm = document.getElementById('searchInput').value.trim();
             
-            // MODE RECHERCHE ACTIF (votre code original inchangé)
+            // MODE RECHERCHE ACTIF (inchangé)
             if (searchTerm.length > 2) {
                 const results = performSearch(searchTerm);
                 
@@ -772,18 +772,18 @@
                     results.forEach(docResult => {
                         docResult.sections.forEach(sec => {
                             pageCounter++;
-                   
+                       
                             let breadcrumb = [];
                             breadcrumb.push(`<span style="color:#7c2d12; font-weight:700;">${docResult.docIcon} ${docResult.docTitle}</span>`);
-                    
+                            
                             if (sec.parentTitle && sec.parentTitle !== docResult.docTitle) {
                                 breadcrumb.push(`<span style="color:#666;">${sec.parentTitle}</span>`);
                             }
-                    
+                            
                             breadcrumb.push(`<span style="color:#1c1917; font-weight:600;">${sec.section.title}</span>`);
-                    
+                            
                             const pathLine = breadcrumb.join(' <span style="color:#ccc; font-size:0.9em;">›</span> ');
-                    
+                            
                             html += `
                                 <div onclick="navigateToResult('${docResult.docId}', '${sec.section.id}')" 
                                      style="cursor:pointer; padding:6px 8px; border-left:2px solid #7c2d12; 
@@ -799,20 +799,60 @@
                             `;
                         });
                     });
-        
+                
                     searchStateBackup.html = html;
                     searchStateBackup.term = searchTerm;
                     searchStateBackup.scroll = document.querySelector('.sidebar').scrollTop;
-            
+                    
                     container.innerHTML = html;
                 }
                 return;
             }
             
-            // MODE NORMAL (structure originale conservée)
+            // MODE NORMAL
             container.innerHTML = documents.map(doc => {
                 const isActive = doc.id === currentDoc;
                 const isExpanded = doc.id === expandedId;
+                
+                // Préparer le contenu de l'index seulement si actif ET expanded
+                let indexHtml = '';
+                if (isActive && isExpanded) {
+                    if (doc.id === 'fiche') {
+                        indexHtml = renderCharactersList();
+                    } else if (currentIndex && currentIndex.length > 0) {
+                        indexHtml = currentIndex.map((item, idx, arr) => {
+                            if (!item || !item.id) return '';
+                            
+                            const safeId = String(item.id).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            const safeTitle = String(item.title || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                            
+                            // Détection si cet item a des enfants
+                            const nextItem = arr[idx + 1];
+                            const hasChildren = item.level && nextItem && nextItem.level > item.level;
+                            
+                            // PAR DÉFAUT : Seul le niveau 1 est visible, niveaux 2 et 3 sont cachés
+                            const isVisible = item.level === 1;
+                            const displayStyle = isVisible ? 'flex' : 'none';
+                            
+                            // Flèche ▶ (fermée) par défaut si enfants existent
+                            const arrow = hasChildren ? 
+                                `<span onclick="toggleSection('${safeId}', event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px;">▶</span>` : 
+                                `<span style="display:inline-block; width:12px; margin-right:4px;"></span>`;
+                            
+                            const paddingLeft = item.level ? (8 + (item.level-1)*12) : 8;
+                            
+                            return `
+                                <div class="index-item" data-section="${safeId}" data-level="${item.level || 0}" 
+                                     style="padding-left:${paddingLeft}px; display:${displayStyle}; align-items:center;">
+                                    ${arrow}
+                                    <span onclick="scrollToElement('${safeId}')" style="cursor:pointer; flex:1;">
+                                        ${safeTitle}
+                                    </span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
                 
                 return `
                     <div class="doc-item">
@@ -824,25 +864,7 @@
                             </div>
                         </div>
                         <div class="doc-index ${isExpanded ? 'expanded' : ''}">
-                            ${(isActive && isExpanded && doc.id === 'fiche') ? renderCharactersList() : (isActive && isExpanded && currentIndex.length > 0) ? currentIndex.map((item, idx, arr) => {
-                                // Détection des enfants uniquement si level existe
-                                const hasChildren = item.level && arr[idx+1] && arr[idx+1].level > item.level;
-                                const arrow = hasChildren ? 
-                                    `<span onclick="toggleSection('${item.id}', event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px;">▼</span>` : 
-                                    `<span style="display:inline-block; width:12px; margin-right:4px;"></span>`;
-                                
-                                // Padding basé sur le niveau si présent
-                                const paddingLeft = item.level ? (8 + (item.level-1)*12) : 8;
-                                
-                                return `
-                                    <div class="index-item" data-section="${item.id}" data-level="${item.level || 0}" style="padding-left:${paddingLeft}px; display:flex; align-items:center;">
-                                        ${arrow}
-                                        <span onclick="scrollToElement('section-${item.id}')" style="cursor:pointer; flex:1;">
-                                            ${item.title}
-                                        </span>
-                                    </div>
-                                `;
-                            }).join('') : ''}
+                            ${indexHtml}
                         </div>
                     </div>
                 `;
@@ -857,25 +879,37 @@
             const parentLevel = parseInt(parent.dataset.level);
             const arrow = parent.querySelector('span[onclick^="toggleSection"]');
             let sibling = parent.nextElementSibling;
-            let isHidden = false;
+            let isOpening = false;
             
-            // Détecte si on doit cacher ou montrer
+            // Détecter si on ouvre ou ferme (vérifier l'état du premier enfant)
+            if (sibling) {
+                const siblingLevel = parseInt(sibling.dataset.level);
+                if (siblingLevel > parentLevel) {
+                    isOpening = sibling.style.display === 'none';
+                }
+            }
+            
+            // Modifier tous les enfants (niveau + 1 uniquement quand on ouvre, tout quand on ferme)
             while (sibling) {
                 const siblingLevel = parseInt(sibling.dataset.level);
                 if (siblingLevel <= parentLevel) break;
                 
-                if (sibling.style.display === 'none') {
-                    sibling.style.display = 'flex';
-                    isHidden = false;
+                if (isOpening) {
+                    // On ouvre : on montre seulement le niveau immédiatement inférieur
+                    if (siblingLevel === parentLevel + 1) {
+                        sibling.style.display = 'flex';
+                    }
                 } else {
+                    // On ferme : on cache tout et on remet les flèches des enfants à ▶
                     sibling.style.display = 'none';
-                    isHidden = true;
+                    const childArrow = sibling.querySelector('span[onclick^="toggleSection"]');
+                    if (childArrow) childArrow.textContent = '▶';
                 }
                 sibling = sibling.nextElementSibling;
             }
             
-            // Change la flèche
-            if (arrow) arrow.textContent = isHidden ? '▶' : '▼';
+            // Changer la flèche du parent (▼ si ouvert, ▶ si fermé)
+            if (arrow) arrow.textContent = isOpening ? '▼' : '▶';
         }
 
         function scrollToCharacter(index) {
