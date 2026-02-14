@@ -809,7 +809,7 @@
                 return;
             }
             
-            // MODE NORMAL - CORRIGÉ (remis section-${item.id})
+            // MODE NORMAL (structure originale conservée)
             container.innerHTML = documents.map(doc => {
                 const isActive = doc.id === currentDoc;
                 const isExpanded = doc.id === expandedId;
@@ -825,13 +825,17 @@
                         </div>
                         <div class="doc-index ${isExpanded ? 'expanded' : ''}">
                             ${(isActive && doc.id === 'fiche') ? renderCharactersList() : (currentIndex.length > 0 && isActive) ? currentIndex.map((item, idx, arr) => {
-                                const hasChildren = arr[idx + 1] && arr[idx + 1].level > item.level;
+                                // Détection des enfants uniquement si level existe
+                                const hasChildren = item.level && arr[idx+1] && arr[idx+1].level > item.level;
                                 const arrow = hasChildren ? 
-                                    `<span class="acc-arrow" onclick="toggleAccordion(this, event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px; user-select:none;">▼</span>` : 
+                                    `<span onclick="toggleSection('${item.id}', event)" style="cursor:pointer; display:inline-block; width:12px; margin-right:4px; font-size:10px;">▼</span>` : 
                                     `<span style="display:inline-block; width:12px; margin-right:4px;"></span>`;
                                 
+                                // Padding basé sur le niveau si présent
+                                const paddingLeft = item.level ? (8 + (item.level-1)*12) : 8;
+                                
                                 return `
-                                    <div class="index-item level-${item.level}" data-level="${item.level}" style="padding-left: ${8 + (item.level - 1) * 12}px; display:flex; align-items:center;">
+                                    <div class="index-item" data-section="${item.id}" data-level="${item.level || 0}" style="padding-left:${paddingLeft}px; display:flex; align-items:center;">
                                         ${arrow}
                                         <span onclick="scrollToElement('section-${item.id}')" style="cursor:pointer; flex:1;">
                                             ${item.title}
@@ -845,28 +849,33 @@
             }).join('');
         }
         
-        function toggleAccordion(arrow, event) {
+        function toggleSection(parentId, event) {
             event.stopPropagation();
-            const item = arrow.closest('.index-item');
-            const currentLevel = parseInt(item.dataset.level);
-            const isCollapsed = arrow.textContent === '▶';
+            const parent = document.querySelector(`[data-section="${parentId}"]`);
+            if (!parent) return;
             
-            arrow.textContent = isCollapsed ? '▼' : '▶';
+            const parentLevel = parseInt(parent.dataset.level);
+            const arrow = parent.querySelector('span[onclick^="toggleSection"]');
+            let sibling = parent.nextElementSibling;
+            let isHidden = false;
             
-            let sibling = item.nextElementSibling;
+            // Détecte si on doit cacher ou montrer
             while (sibling) {
                 const siblingLevel = parseInt(sibling.dataset.level);
-                if (siblingLevel <= currentLevel) break;
+                if (siblingLevel <= parentLevel) break;
                 
-                sibling.style.display = isCollapsed ? 'flex' : 'none';
-                
-                if (!isCollapsed) {
-                    const subArrow = sibling.querySelector('.acc-arrow');
-                    if (subArrow) subArrow.textContent = '▶';
+                if (sibling.style.display === 'none') {
+                    sibling.style.display = 'flex';
+                    isHidden = false;
+                } else {
+                    sibling.style.display = 'none';
+                    isHidden = true;
                 }
-                
                 sibling = sibling.nextElementSibling;
             }
+            
+            // Change la flèche
+            if (arrow) arrow.textContent = isHidden ? '▶' : '▼';
         }
 
         function scrollToCharacter(index) {
