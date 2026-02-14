@@ -1,4 +1,4 @@
-# SCCS - Système de Combat et de Création Simple
+# TRAME - Système de Combat et de Création Simple
 
 **Codex Officiel** - Système de jeu de rôle tactique et narratif.
 
@@ -6,16 +6,16 @@
 
 | Document | Version | Description |
 |----------|---------|-------------|
-| [Livret 1 - Mécanismes](https://urnidzen.github.io/SCCS/Livret1-Mecanismes.v0.84.html) | v0.84 | Règles de résolution, combat, magie et exploration |
-| [Livret 2 - Création](https://urnidzen.github.io/SCCS/Livret2-Creation.v0.73.html) | v0.73 | Création et évolution des personnages |
-| [Livret 3 - Équipement](https://urnidzen.github.io/SCCS/Livret3-Equipement.v0.77.html) | v0.77 | Armures, armes, objets et artisanat |
-| [Livret 4 - Rencontres](https://urnidzen.github.io/SCCS/Livret4-Rencontres.v0.79.html) | v0.79 | Équilibrage des rencontres et guide du MJ |
-| [Livret 5 - Bestiaire](https://urnidzen.github.io/SCCS/Livret5-Bestiaire.v0.79.html) | v0.79 | Créatures et adversaires |
-| [Fiche de Personnage](https://urnidzen.github.io/SCCS/Fiche%20de%20personnage.v0.86.html) | v0.86 | Fiche interactive en ligne |
+| [Livret 1 - Mécanismes](https://urnidzen.github.io/TRAME/Livret1-Mecanismes.v0.86.html) | v0.86 | Règles de résolution, combat, magie et exploration |
+| [Livret 2 - Création](https://urnidzen.github.io/TRAME/Livret2-Creation.v0.74.html) | v0.74 | Création et évolution des personnages |
+| [Livret 3 - Équipement](https://urnidzen.github.io/TRAME/Livret3-Equipement.v0.78.html) | v0.78 | Armures, armes, objets et artisanat |
+| [Livret 4 - Rencontres](https://urnidzen.github.io/TRAME/Livret4-Rencontres.v0.80.html) | v0.80 | Équilibrage des rencontres et guide du MJ |
+| [Livret 5 - Bestiaire](https://urnidzen.github.io/TRAME/Livret5-Bestiaire.v0.80.html) | v0.80 | Créatures et adversaires |
+| [Fiche de Personnage](https://urnidzen.github.io/TRAME/Fiche%20de%20personnage.v0.87.html) | v0.87 | Fiche interactive en ligne |
 
 ## 🎲 Philosophie du Système
 
-SCCS abandonne les Points de Vie (PV) traditionnels au profit d'une logique d'**Opportunités et Conséquences**. Le combat devient une discussion tactique où les joueurs cherchent à identifier les failles adverses pour placer des coups décisifs.
+TRAME abandonne les Points de Vie (PV) traditionnels au profit d'une logique d'**Opportunités et Conséquences**. Le combat devient une discussion tactique où les joueurs cherchent à identifier les failles adverses pour placer des coups décisifs.
 
 **Points clés :**
 - ⚔️ **Matrice Martiale** : 12 statistiques de combat (3 Types × 3 Cibles)
@@ -45,7 +45,7 @@ Pour toute demande d'utilisation commerciale ou question de licence : [ajoutez v
 
 ## 🗺️ Sitemap
 
-Ce site est indexé via un [sitemap.xml](https://urnidzen.github.io/SCCS/sitemap.xml) pour les moteurs de recherche.
+Ce site est indexé via un [sitemap.xml](https://urnidzen.github.io/TRAME/sitemap.xml) pour les moteurs de recherche.
 
 ---
-*Dernier update : Février 2024*
+*Dernier update : Février 2026*
