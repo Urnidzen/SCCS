@@ -372,20 +372,53 @@
                 break-after: auto !important;
             }
 
-            .page {
-                height: auto !important;
-                min-height: 100vh !important; 
-                width: 100% !important;
-                display: block !important;
-                border: none !important;
-                box-shadow: none !important;
-                margin: 0 !important;
-                padding: 1cm !important;
-                
-                page-break-inside: avoid !important;
-                page-break-after: always !important;
-                break-after: page !important;
-            }
+    .page {
+        height: 297mm !important;           /* Hauteur fixe A4 */
+        min-height: 297mm !important;
+        width: 210mm !important;            /* Largeur A4 */
+        position: relative !important;       /* Référence pour le positionnement absolu */
+        display: block !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 auto !important;          /* Centré */
+        padding: 1cm 1cm 2.5cm 1cm !important; /* Bas augmenté pour laisser la place au footer */
+        box-sizing: border-box !important;
+        overflow: hidden !important;         /* Empêche le débordement */
+        
+        page-break-inside: avoid !important;
+        page-break-after: always !important;
+        break-after: page !important;
+    }
+
+        /* Fixe le texte légal en bas */
+        .legal-notice {
+            position: absolute !important;
+            bottom: 0.8cm !important;           /* Distance du bas de page */
+            left: 0 !important;
+            width: 100% !important;
+            text-align: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 8pt !important;
+        }
+    
+        /* Fixe le numéro de page juste au-dessus */
+        .page-number {
+            position: absolute !important;
+            bottom: 1.8cm !important;           /* Au-dessus du legal-notice */
+            left: 0 !important;
+            width: 100% !important;
+            text-align: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 10pt !important;
+        }
+    
+        /* S'assure que le contenu ne déborde pas sur le footer */
+        .content-wrapper {
+            height: calc(100% - 2.5cm) !important;
+            overflow: hidden !important;
+        }
 
             .page:last-of-type {
                 page-break-after: auto !important;
