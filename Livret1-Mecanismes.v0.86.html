@@ -24,6 +24,7 @@
         {"id": "section-maintien-sort", "title": "Maintien d'un sort", "level": 3},
         {"id": "section-sorts-sans-opposant", "title": "Sorts sans opposant", "level": 3},
         {"id": "section-restauration", "title": "La Magie de Restauration", "level": 3},
+        {"id": "section-armure", "title": "La protection des armures", "level": 3},
         {"id": "section-resultats", "title": "Résultats de la Comparaison", "level": 3},
         {"id": "section-impact", "title": "Conséquences", "level": 2},
         {"id": "section-exploration", "title": "2. Agir en dehors des combats", "level": 1},
@@ -373,26 +374,25 @@
     <div class="content-section" id="section-moteur">
         <h3>Résolution</h3>
         
-        <div class="rule-box" id="section-surnombre">
+        <div id="section-surnombre">
             <h4>La Loi du Surnombre (L'Érosion Tactique)</h4>
             
-            <p><strong>La Limite d'Engagement (Les 4 Points) :</strong> Seuls 4 adversaires de taille humaine peuvent engager une cible au corps-à-corps simultanément : Face, Dos, Flanc Gauche, Flanc Droit. Les adversaires supplémentaires peuvent :</p>
-            <ul class="dash-list space-y-2 ml-4">
-                <li>Attaquer depuis le second rang avec attaque directe en utilisant une arme à allonge Longue (ex : lance), dans la limite de ce que l'espace permet sans gêner les combattants au CaC ;</li>
-                <li>Attaquer à distance (ex : arc, arbalète, sort) de n'importe quelle position distante depuis laquelle ils disposent d'une ligne de vue dégagée sur la cible.</li>
-            </ul>
-            <p class="italic mt-2"><strong>Responsabilité du MJ :</strong> Déterminer, selon la géométrie du lieu (couloir, salle, plaine) et la disposition des combattants, combien d'attaquants peuvent effectivement tirer sans risquer de toucher leurs alliés ni être gênés par l'encombrement.</p>
-            
-            <p class="mt-4"><strong>Malus d'Érosion :</strong> Chaque attaque subie après la première réduit le score de Protection du personnage de façon cumulative. <em>Toutefois, ce malus ne peut jamais faire descendre la Protection en dessous du score d'Attaque de l'adversaire actuel.</em></p>
-            <ul class="dash-list space-y-2">
-                <li>1ère Attaque reçue : Protection Normale.</li>
-                <li>2ème Attaque reçue : Malus de -1 au score de Protection (sous condition).</li>
-                <li>3ème Attaque reçue : Malus de -2 au score de Protection (sous condition).</li>
-                <li>4ème Attaque reçue : Malus de -3 au score de Protection (sous condition).</li>
-            </ul>
-            
-            <p class="mt-4"><strong>Conséquence : Le Sacrifice de l'Armure :</strong> Si le Malus d'Érosion réduit le score de Protection au point de créer une Infériorité (Attaque > Protection), mais que le bonus de Résistance de l'armure permet de maintenir une Égalité ou une Supériorité : L'attaque est parée/encaissée (Pas de conséquence physique).</p>
-            <p class="mt-2"><strong>Règle d'Usure :</strong> L'Armure perd immédiatement 1 Point de Durabilité (car elle a été nécessaire pour compenser l'érosion).</p>
+            <div class="content-card">
+                <p><strong>La Limite d'Engagement (Les 4 Points) :</strong> Seuls 4 adversaires de taille humaine peuvent engager une cible au corps-à-corps simultanément : Face, Dos, Flanc Gauche, Flanc Droit. Les adversaires supplémentaires peuvent :</p>
+                <ul class="dash-list space-y-2 ml-4">
+                    <li>Attaquer depuis le second rang avec attaque directe en utilisant une arme à allonge Longue (ex : lance), dans la limite de ce que l'espace permet sans gêner les combattants au CaC ;</li>
+                    <li>Attaquer à distance (ex : arc, arbalète, sort) de n'importe quelle position distante depuis laquelle ils disposent d'une ligne de vue dégagée sur la cible.</li>
+                </ul>
+                <p class="italic mt-2"><strong>Responsabilité du MJ :</strong> Déterminer, selon la géométrie du lieu (couloir, salle, plaine) et la disposition des combattants, combien d'attaquants peuvent effectivement tirer sans risquer de toucher leurs alliés ni être gênés par l'encombrement.</p>
+                
+                <p class="mt-4"><strong>Malus d'Érosion :</strong> Chaque attaque subie après la première réduit le score de Protection du personnage de façon cumulative. <em>Toutefois, ce malus ne peut jamais faire descendre la Protection en dessous du score d'Attaque de l'adversaire actuel.</em></p>
+                <ul class="dash-list space-y-2">
+                    <li>1ère Attaque reçue : Protection Normale.</li>
+                    <li>2ème Attaque reçue : Malus de -1 au score de Protection (sous condition).</li>
+                    <li>3ème Attaque reçue : Malus de -2 au score de Protection (sous condition).</li>
+                    <li>4ème Attaque reçue : Malus de -3 au score de Protection (sous condition).</li>
+                </ul>
+            </div>
         </div>
 
         <div class="content-card" id="section-avantage">
@@ -404,7 +404,7 @@
                 <li><strong>Validation :</strong> Ce bonus est ponctuel, narratif et validé par le MJ au cas par cas.</li>
             </ul>
         </div>
-
+        
         <div class="content-card">
             <p class="mb-4">Lorsqu'un joueur déclare une action, il annonce un Type et une Cible (ex : « Attaque Directe au Tronc »). Le MJ compare le Score Total d'Attaque (type + cible) au Score Total de Protection (défense + résistance).</p>
             <ol class="decimal space-y-2">
@@ -496,6 +496,15 @@
             </ul>
         </div>
 
+        <div id="section-armure">
+            <h4>La protection des armures</h4>
+            
+            <div class="content-card">
+                <p class="mt-4"><strong>Conséquence : Le Sacrifice de l'Armure :</strong> Si le Malus d'Érosion réduit le score de Protection au point de créer une Infériorité (Attaque > Protection), mais que le bonus de Résistance de l'armure permet de maintenir une Égalité ou une Supériorité : L'attaque est parée/encaissée (Pas de conséquence physique).</p>
+                <p class="mt-2"><strong>Règle d'Usure :</strong> L'Armure perd immédiatement 1 Point de Durabilité (car elle a été nécessaire pour compenser l'érosion).</p>
+            </div>
+        </div>
+        
         <h4 id="section-resultats">Résultats de la Comparaison</h4>
         
         <div class="content-card" style="border-left: 4px solid #166534;">
@@ -586,10 +595,3 @@
     <h2>3. INTERACTIONS SOCIALES</h2>
     <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des antécédents.</p>
 </div>
-
-
-
-
-
-
-
