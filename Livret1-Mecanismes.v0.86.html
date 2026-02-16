@@ -19,6 +19,7 @@
         {"id": "section-moteur", "title": " Résolution", "level": 2},
         {"id": "section-surnombre", "title": "La Loi du Surnombre", "level": 3},
         {"id": "section-avantage", "title": "L'Avantage Tactique", "level": 3},
+        {"id": "section-comparaison", "title": "L'opposition", "level": 3},
         {"id": "section-incantation", "title": "L'Incantation Libre", "level": 3},
         {"id": "section-attaques-multiples", "title": "Attaques Étendues et Multiples", "level": 3},
         {"id": "section-maintien-sort", "title": "Maintien d'un sort", "level": 3},
@@ -379,7 +380,7 @@
             
             <div class="content-card">
                 <p><strong>La Limite d'Engagement (Les 4 Points) :</strong> Seuls 4 adversaires de taille humaine peuvent engager une cible au corps-à-corps simultanément : Face, Dos, Flanc Gauche, Flanc Droit. Les adversaires supplémentaires peuvent :</p>
-                <ul class="dash-list space-y-2 ml-4">
+                <ul class="dash-list space-y-2">
                     <li>Attaquer depuis le second rang avec attaque directe en utilisant une arme à allonge Longue (ex : lance), dans la limite de ce que l'espace permet sans gêner les combattants au CaC ;</li>
                     <li>Attaquer à distance (ex : arc, arbalète, sort) de n'importe quelle position distante depuis laquelle ils disposent d'une ligne de vue dégagée sur la cible.</li>
                 </ul>
@@ -395,46 +396,54 @@
             </div>
         </div>
 
-        <div class="content-card" id="section-avantage">
+        <div id="section-avantage">
             <h4>L'Avantage Tactique</h4>
-            <p>Un personnage bénéficiant d'une situation favorable (effet de surprise, position surélevée, matériel de qualité, environnement propice, etc.) gagne un <strong>bonus de +1</strong> de circonstance.</p>
-            <ul class="dash-list space-y-2 mt-2">
-                <li><strong>Champ d'application :</strong> Il s'applique à toute action qui semble pouvoir bénéficier de manière pertinente de cet avantage.</li>
-                <li><strong>Calcul :</strong> Le bonus s'ajoute au Score Total de l'action ou au Talent du personnage avant la comparaison avec la Protection ou la Difficulté.</li>
-                <li><strong>Validation :</strong> Ce bonus est ponctuel, narratif et validé par le MJ au cas par cas.</li>
-            </ul>
+            <div class="content-card">
+                <p>Un personnage bénéficiant d'une situation favorable (effet de surprise, position surélevée, matériel de qualité, environnement propice, etc.) gagne un <strong>bonus de +1</strong> de circonstance.</p>
+                <ul class="dash-list space-y-2">
+                    <li><strong>Champ d'application :</strong> Il s'applique à toute action qui semble pouvoir bénéficier de manière pertinente de cet avantage.</li>
+                    <li><strong>Calcul :</strong> Le bonus s'ajoute au Score Total de l'action ou au Talent du personnage avant la comparaison avec la Protection ou la Difficulté.</li>
+                    <li><strong>Validation :</strong> Ce bonus est ponctuel, narratif et validé par le MJ au cas par cas.</li>
+                </ul>
+            </div>
         </div>
         
-        <div class="content-card">
-            <p class="mb-4">Lorsqu'un joueur déclare une action, il annonce un Type et une Cible (ex : « Attaque Directe au Tronc »). Le MJ compare le Score Total d'Attaque (type + cible) au Score Total de Protection (défense + résistance).</p>
-            <ol class="decimal space-y-2">
-                <li><strong>Calcul de l'Attaque :</strong> Score du Type utilisé + Score de la Cible visée.</li>
-                <li><strong>Calcul de la Protection :</strong> Score de Défense contre ce Type + Score de Résistance de la Cible visée.</li>
-                <li><strong>Comparaison :</strong> On compare les deux totaux.</li>
-            </ol>
+        <div id="section-comparaison">
+            <h4>L'opposition</h4>      
+            <div class="content-card">
+                <p class="mb-4">Lorsqu'un acteur déclare une action d'attaque, il annonce un Type et une Cible (ex : « Attaque Directe au Tronc »). Le MJ compare le Score Total d'Attaque (type + cible) au Score Total de Protection (défense + résistance).</p>
+                <ul class="decimal space-y-2">
+                    <li><strong>Calcul de l'Attaque :</strong> Score du Type utilisé + Score de la Cible visée.</li>
+                    <li><strong>Calcul de la Protection :</strong> Score de Défense contre ce Type + Score de Résistance de la Cible visée.</li>
+                    <li><strong>Comparaison :</strong> On compare les deux totaux.</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="rule-box" id="section-incantation">
+        <div id="section-incantation">
             <h4>L'Incantation Libre (Magie uniquement)</h4>
+            <div class="content-card">
             <p class="mb-2">Le mage peut choisir de ne pas focaliser son sort pour gagner en flexibilité :</p>
-            <ul class="dash-list space-y-2">
-                <li><strong>Mode Focalisé (Type + Cible) :</strong> Score complet pour un effet spécifique.</li>
-                <li><strong>Mode Général (Type uniquement) :</strong> Le mage utilise seulement son score de Type. L'attaque est comparée aux scores de défense des 3 zones de la cible (Tête, Tronc, Membres). L'impact a lieu là où la défense est la plus faible.</li>
-                <li><strong>Mode Intuitif (Cible uniquement) :</strong> Le mage utilise seulement son score de Cible pour imposer un effet pur sans forme technique précise.</li>
-            </ul>
+                <ul class="dash-list space-y-2">
+                    <li><strong>Mode Focalisé (Type + Cible) :</strong> Score complet pour un effet spécifique.</li>
+                    <li><strong>Mode Général (Type uniquement) :</strong> Le mage utilise seulement son score de Type. L'attaque est comparée aux scores de défense des 3 zones de la cible (Tête, Tronc, Membres). L'impact a lieu là où la défense est la plus faible.</li>
+                    <li><strong>Mode Intuitif (Cible uniquement) :</strong> Le mage utilise seulement son score de Cible pour imposer un effet pur sans forme technique précise.</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="content-card" id="section-attaques-multiples">
+        <div id="section-attaques-multiples">
             <h4>Attaques Étendues et Multiples (Cible Élargie)</h4>
-            <p>Dès qu'un acteur tente d'effectuer <strong>plus d'une action</strong> ou de frapper <strong>plus d'une cible</strong> au cours de son tour, un Malus est appliqué pour refléter la perte de précision.</p>
-            <p class="mb-2">Ce malus est calculé en fonction du nombre total d'éléments (actions ou cibles) et s'applique à <strong>toutes les résolutions</strong> (Score d'Attaque, Score de Talent lors d'une manœuvre, etc.) de cette séquence.</p>
-            
-            <p><strong>Exemples :</strong></p>
-            <ul class="dash-list space-y-2">
-                <li><strong>Attaquer 2 cibles simultanément :</strong> L'attaquant subit un Malus de <strong>-1</strong> à son Score d'Attaque pour la résolution contre la Cible 1 <strong>et</strong> pour la résolution contre la Cible 2.</li>
-                <li><strong>Tenter un Sort de Zone (3 cibles) :</strong> Le Malus est de <strong>-2</strong> (3 - 1). Ce Malus de -2 est appliqué au Score de Talent du mage pour la résolution contre la Cible 1, la Cible 2 <strong>et</strong> la Cible 3.</li>
-                <li><strong>Frapper, puis Tenter une Manœuvre :</strong> Le Malus est de <strong>-1</strong> (2 actions - 1). Ce Malus de -1 s'applique au Score d'Attaque de la frappe <strong>et</strong> au Score de Talent de la Manœuvre.</li>
-            </ul>
+            <div class="content-card">
+                <p>Dès qu'un acteur tente d'effectuer <strong>plus d'une action</strong> ou de frapper <strong>plus d'une cible</strong> au cours de son tour, un Malus est appliqué pour refléter la perte de précision.</p>
+                <p class="mb-2">Ce malus est calculé en fonction du nombre total d'éléments (actions ou cibles) et s'applique à <strong>toutes les résolutions</strong> (Score d'Attaque, Score de Talent lors d'une manœuvre, etc.) de cette séquence.</p>
+                <p>Exemples :</p>
+                <ul class="dash-list space-y-2">
+                    <li><strong>Attaquer 2 cibles simultanément :</strong> L'attaquant subit un Malus de <strong>-1</strong> à son Score d'Attaque pour la résolution contre la Cible 1 <strong>et</strong> pour la résolution contre la Cible 2.</li>
+                    <li><strong>Tenter un Sort de Zone (3 cibles) :</strong> Le Malus est de <strong>-2</strong> (3 - 1). Ce Malus de -2 est appliqué au Score de Talent du mage pour la résolution contre la Cible 1, la Cible 2 <strong>et</strong> la Cible 3.</li>
+                    <li><strong>Frapper, puis Tenter une Manœuvre :</strong> Le Malus est de <strong>-1</strong> (2 actions - 1). Ce Malus de -1 s'applique au Score d'Attaque de la frappe <strong>et</strong> au Score de Talent de la Manœuvre.</li>
+                </ul>
+            </div>
         </div>
 
         <div class="content-card" id="section-maintien-sort">
@@ -595,3 +604,4 @@
     <h2>3. INTERACTIONS SOCIALES</h2>
     <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des antécédents.</p>
 </div>
+
