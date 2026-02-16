@@ -524,7 +524,7 @@
 
         const state = {
             talents: {
-                athletisme: false, aptitude feline: false, mecanique: false,
+                athletisme: false, aptitude-feline: false, mecanique: false,
                 fourberie: false, perception: false, survie: false,
                 savoir_acad: false
             }
@@ -762,7 +762,7 @@
             findAll('select').forEach(el => el.selectedIndex = 0);
             findAll('input[type=number]').forEach(el => el.value = '0');
             state.talents = {
-                athletisme: false, aptitude feline: false, mecanique: false,
+                athletisme: false, aptitude-feline: false, mecanique: false,
                 fourberie: false, perception: false, survie: false,
                 savoir_acad: false
             };
@@ -797,15 +797,15 @@
         const RULES = {
             ARMORS: {
                 "Aucune": { dur: 0, res: 0, malus: [] },
-                "Légère": { dur: 6, res: 1, malus: ["aptitude feline", "athletisme", "magie"] },
-                "Légère_Heaume": { dur: 6, res: 1, malus: ["aptitude feline", "athletisme", "magie", "perception", "aptitude feline"] }, 
-                "Moyenne": { dur: 8, res: 2, malus: ["aptitude feline", "athletisme", "mecanique", "fourberie", "magie"] },
-                "Moyenne_Heaume": { dur: 8, res: 2, malus: ["aptitude feline", "athletisme", "mecanique", "fourberie", "magie", "perception", "aptitude feline"] },
-                "Lourde": { dur: 10, res: 3, malus: ["aptitude feline", "athletisme", "mecanique", "fourberie", "perception", "magie"] },
-                "Lourde_Heaume": { dur: 10, res: 3, malus: ["aptitude feline", "athletisme", "mecanique", "fourberie", "perception", "magie", "perception", "aptitude feline"] } 
+                "Légère": { dur: 6, res: 1, malus: ["aptitude-feline", "athletisme", "magie"] },
+                "Légère_Heaume": { dur: 6, res: 1, malus: ["aptitude-feline", "athletisme", "magie", "perception", "aptitude-feline"] }, 
+                "Moyenne": { dur: 8, res: 2, malus: ["aptitude-feline", "athletisme", "mecanique", "fourberie", "magie"] },
+                "Moyenne_Heaume": { dur: 8, res: 2, malus: ["aptitude-feline", "athletisme", "mecanique", "fourberie", "magie", "perception", "aptitude-feline"] },
+                "Lourde": { dur: 10, res: 3, malus: ["aptitude-feline", "athletisme", "mecanique", "fourberie", "perception", "magie"] },
+                "Lourde_Heaume": { dur: 10, res: 3, malus: ["aptitude-feline", "athletisme", "mecanique", "fourberie", "perception", "magie", "perception", "aptitude-feline"] } 
             },
             RACES: {
-                "ELFE": ["aptitude feline", "perception", "survie"],
+                "ELFE": ["aptitude-feline", "perception", "survie"],
                 "NAIN": ["athletisme", "mecanique", "savoir_acad"],
                 "ORQUE": ["athletisme", "survie"],
                 "HUMAIN": []
@@ -814,7 +814,7 @@
 
         const talentsList = [
             { id: 'athletisme', label: 'Athlétisme' },
-            { id: 'aptitude feline', label: 'aptitude feline' },
+            { id: 'aptitude-feline', label: 'aptitude-feline' },
             { id: 'mecanique', label: 'Mécanique' },
             { id: 'fourberie', label: 'Fourberie' },
             { id: 'perception', label: 'Perception' },
