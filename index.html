@@ -1526,12 +1526,15 @@
             if (isOverflowing(pgnState.currentPageContent)) {
                 // === DÉBUT MODIFICATIONS ===
                 const container = pgnState.currentPageContent;
-                const availableHeight = container.clientHeight - container.scrollHeight;
+                const availableHeight = container.clientHeight - (container.scrollHeight - node.scrollHeight);
                 const pageHeight = container.clientHeight;
                 const availablePercent = availableHeight / pageHeight;
                 
                 // Retirer le nœud qui déborde (on le remettra si on coupe, ou on le remet en queue si on ne coupe pas)
                 container.removeChild(node);
+
+                // DEBUG TEMPORAIRE À AJOUTER ICI :
+console.log("Espace:", Math.round(availablePercent*100) + "%", "Gauche:", !pgnState.isRightPage, "Card?", element.classList?.contains('content-card'));
                 
                 // CAS 1 : Content-card sur page de gauche avec >40% d'espace
                 if (!pgnState.isRightPage && 
