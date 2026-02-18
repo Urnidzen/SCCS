@@ -1434,6 +1434,65 @@
         
         // === NOUVELLE FONCTION 2 ===
         function splitContentCard(element) {
+            // Vérifier si c'est une liste ou contient une liste
+            const isList = element.tagName === 'UL' || element.tagName === 'OL';
+            const list = isList ? element : element.querySelector('ul, ol');
+            
+            if (list) {
+                const items = Array.from(list.children).filter(child => child.tagName === 'LI');
+                if (items.length < 2) return null; // Pas assez d'items pour couper
+                
+                // Binary search pour trouver combien d'items rentrent dans l'espace restant
+                let low = 0, high = items.length;
+                const container = pgnState.currentPageContent;
+                
+                while (low < high) {
+                    const mid = Math.ceil((low + high) / 2);
+                    const testClone = element.cloneNode(true);
+                    const testList = isList ? testClone : testClone.querySelector('ul, ol');
+                    
+                    // Garder seulement les 'mid' premiers items
+                    const testItems = testList.querySelectorAll('li');
+                    for (let i = testItems.length - 1; i >= mid; i--) {
+                        testItems[i].remove();
+                    }
+                    
+                    container.appendChild(testClone);
+                    if (isOverflowing(container)) {
+                        high = mid - 1;
+                    } else {
+                        low = mid;
+                    }
+                    container.removeChild(testClone);
+                }
+                
+                // Si on ne peut rien mettre ou tout mettre, abandonner le découpage
+                if (low === 0 || low >= items.length) return null;
+                
+                // Créer les deux parties
+                const part1 = element.cloneNode(true);
+                const part2 = element.cloneNode(true);
+                
+                const list1 = isList ? part1 : part1.querySelector('ul, ol');
+                const list2 = isList ? part2 : part2.querySelector('ul, ol');
+                
+                const items1 = list1.querySelectorAll('li');
+                const items2 = list2.querySelectorAll('li');
+                
+                // Partie 1 : garder uniquement les items 0 à low-1
+                for (let i = items1.length - 1; i >= low; i--) {
+                    items1[i].remove();
+                }
+                
+                // Partie 2 : garder uniquement les items low à fin
+                for (let i = low - 1; i >= 0; i--) {
+                    items2[i].remove();
+                }
+                
+                return { part1, part2 };
+            }
+            
+            // Fallback sur l'ancien code pour le texte simple (sans liste)
             const allText = element.innerText || element.textContent;
             if (!allText || allText.length < 20) return null;
             
