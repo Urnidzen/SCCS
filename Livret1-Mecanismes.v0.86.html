@@ -253,7 +253,7 @@
                     <li><strong>Priorité 7 : Le Tir (ou Lancer) en Mêlée</strong> – Armes à Distance alors que le tireur est engagé par au moins un adversaire au corps-à-corps.</li>
                     <li><strong>Priorité 8 : La Magie « Sous Pression »</strong> – Sortilèges et Prières si le lanceur a au moins un adversaire au corps-à-corps.</li>
                 </ul>
-                <p class="italic mb-4" style="margin-top: 1rem;"><strong>Note sur le Déplacement :</strong> Toute action de combat inclut par défaut un déplacement stratégique ou une charge sur une distance raisonnable (jugée par le MJ). Cette distance peut être augmentée avec un talent d'Athlétisme (+1) et, si le terrain est complexe, nécessite aussi Aptitude Féline (+1). L'utilisation du talent Aptitude Féline est requise pour se désengager sauf circonstance particulière (désavantage de l'adversaire ou avantage tactique).</p>
+                <p class="italic mb-4", style="margin-top: 1rem;"><strong>Note sur le Déplacement :</strong> Toute action de combat inclut par défaut un déplacement stratégique ou une charge sur une distance raisonnable (jugée par le MJ). Cette distance peut être augmentée avec un talent d'Athlétisme (+1) et, si le terrain est complexe, nécessite aussi Aptitude Féline (+1). L'utilisation du talent Aptitude Féline est requise pour se désengager sauf circonstance particulière (désavantage de l'adversaire ou avantage tactique).</p>
             </div>
 
         <h4 id="section-egalite-priorite">Résolution des égalités de priorité</h4>
@@ -439,6 +439,7 @@
                         </ul>
                     </li>
                 </ul>
+
                 <h5><strong>Cercle Rituel (2 Mages & +)</strong></h5>
                 <p>Un groupe de lanceur de sorts peut se réunir pour lancer un sort qu'ils ne pourraient pas réussir à lancer individuellement :</p>
                 <ul class="dash-list space-y-2">
@@ -446,9 +447,12 @@
                     <li><strong>Lancement :</strong> Un seul jet de 1D6 est réalisé pour l'ensemble des participants et détermine le <em>Compteur de Lancement</em> du sort qui indique le temps nécessaire pour lancer le sort. Un minimum de deux individus (lanceur le plus expérimenté inclus) doit rester concentré sur le lancement du sort et ne rien faire d'autre.</li>
                     <li><strong>Contrecoup (Concentration) :</strong> Tous subissent le Malus de <strong>-1 à toutes leurs stats</strong>, tant qu'ils se concentrent pour lancer ou maintenir le sort. Ils peuvent être remplacés ou relayés, cela ne rompt pas le sort tant qu'au moins un des participants reste concentré.</li>
                 </ul>
+            </div>
+
                 <h5><strong>L'Annulation</strong></h5>
                 <p>Rompre les effets de son sort volontairement (ou non) ou de quitter un Cercle rituel permet de récupérer ses statistiques normales.</p>
             </div>
+        </div>
 
          <h4 id="section-malus-sort">Malus et Conditions de Lancement des sorts</h4>
             <div class="content-card">
@@ -490,60 +494,59 @@
             </div>
         
         <h4 id="section-resultats">Résultats de la Comparaison</h4>
-            <div class="content-card" style="border-left: 4px solid #166534;">
-                <h5><strong>Cas A : Supériorité (Attaque > protection)</strong></h5>
-                <ul class="dash-list space-y-2">
-                    <li><strong>Condition :</strong> Le total de l'attaquant est strictement supérieur à celui qui se protège.</li>
-                    <li><strong>Résultat :</strong> IMPACT IMMÉDIAT. (Voir section Conséquences de l'Impact).</li>
-                </ul>
-            </div>
+        
+        <div class="content-card" style="border-left: 4px solid #166534;">
+            <h5><strong>Cas A : Supériorité (Attaque > protection)</strong></h5>
+            <ul class="dash-list space-y-2">
+                <li><strong>Condition :</strong> Le total de l'attaquant est strictement supérieur à celui qui se protège.</li>
+                <li><strong>Résultat :</strong> IMPACT IMMÉDIAT. (Voir section Conséquences de l'Impact).</li>
+            </ul>
+        </div>
 
-            <div class="content-card" style="border-left: 4px solid #991b1b;">
-                <h5><strong>Cas B : Infériorité (Attaque < Protection)</strong></h5>
-                <ul class="dash-list space-y-2">
-                    <li><strong>Condition :</strong> Le total de l'attaquant est strictement inférieur à celui qui se protège.</li>
-                    <li><strong>Résultat :</strong> ÉCHEC AUTOMATIQUE.</li>
-                    <li><strong>Description :</strong> L'attaque est parfaitement contrée. Le MJ décrit pourquoi l'action est inefficace.</li>
-                </ul>
-            </div>
+        <div class="content-card" style="border-left: 4px solid #991b1b;">
+            <h5><strong>Cas B : Infériorité (Attaque < Protection)</strong></h5>
+            <ul class="dash-list space-y-2">
+                <li><strong>Condition :</strong> Le total de l'attaquant est strictement inférieur à celui qui se protège.</li>
+                <li><strong>Résultat :</strong> ÉCHEC AUTOMATIQUE.</li>
+                <li><strong>Description :</strong> L'attaque est parfaitement contrée. Le MJ décrit pourquoi l'action est inefficace.</li>
+            </ul>
+        </div>
 
-            <div class="content-card" style="border-left: 4px solid #d97706;">
-                <h5><strong>Cas C : Égalité (Attaque = Protection)</strong></h5>
-                <ul class="dash-list space-y-2">
-                    <li><strong>Condition :</strong> Les deux totaux sont identiques.</li>
-                    <li><strong>Résultat :</strong> TEST DE COMPTEUR (D6).</li>
-                    <li><strong>Procédure :</strong> Un jet de 1D6 est effectué. Le MJ décide si le jet est caché ou ouvert, et s'il est effectué par lui-même ou par le joueur. Ce dé détermine le « Coût de la Réussite » (nombre d'échanges nécessaires pour atteindre sa cible) initiant un Compteur de Tours.
-                        <ul class="dash-list space-y-2 mt-2">
-                            <li><strong>Persévérance :</strong> Si le joueur/adversaire répète l'action, le compteur diminue de 1. À 0, L'IMPACT a lieu.</li>
-                            <li><strong>Changement :</strong> Si l'attaquant change de Type/Cible, le compteur est abandonné et un nouveau test est effectué.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Descriptif nuancé :</strong> Le descriptif qui découle de cette mécanique est nuancé suivant l'arme utilisée :
-                        <ul class="dash-list space-y-2 mt-2">
-                            <li><strong>Arme de CàC :</strong> on décrit combien de coups avant de passer la garde de l'adversaire.</li>
-                            <li><strong>Armes à distance :</strong> le temps nécessaire pour réussir à ajuster un tir / lancé malgré les mouvements et assauts éventuels de la cible.</li>
-                            <li><strong>Sorts :</strong> le temps nécessaire pour réussir à lancer un sort malgré les mouvements et assauts éventuels de la cible.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Note au MJ :</strong> Le MJ se doit de tenir un décompte en marge de la narration des Compteurs de Tours de chaque acteur participant aux combats et en état de combattre.</li>
-                </ul>
-            </div>
+        <div class="content-card" style="border-left: 4px solid #d97706;">
+            <h5><strong>Cas C : Égalité (Attaque = Protection)</strong></h5>
+            <ul class="dash-list space-y-2">
+                <li><strong>Condition :</strong> Les deux totaux sont identiques.</li>
+                <li><strong>Résultat :</strong> TEST DE COMPTEUR (D6).</li>
+                <li><strong>Procédure :</strong> Un jet de 1D6 est effectué. Le MJ décide si le jet est caché ou ouvert, et s'il est effectué par lui-même ou par le joueur. Ce dé détermine le « Coût de la Réussite » (nombre d'échanges nécessaires pour atteindre sa cible) initiant un Compteur de Tours.
+                    <ul class="dash-list space-y-2 mt-2">
+                        <li><strong>Persévérance :</strong> Si le joueur/adversaire répète l'action, le compteur diminue de 1. À 0, L'IMPACT a lieu.</li>
+                        <li><strong>Changement :</strong> Si l'attaquant change de Type/Cible, le compteur est abandonné et un nouveau test est effectué.</li>
+                    </ul>
+                </li>
+                <li><strong>Descriptif nuancé :</strong> Le descriptif qui découle de cette mécanique est nuancé suivant l'arme utilisée :
+                    <ul class="dash-list space-y-2 mt-2">
+                        <li><strong>Arme de CàC :</strong> on décrit combien de coups avant de passer la garde de l'adversaire.</li>
+                        <li><strong>Armes à distance :</strong> le temps nécessaire pour réussir à ajuster un tir / lancé malgré les mouvements et assauts éventuels de la cible.</li>
+                        <li><strong>Sorts :</strong> le temps nécessaire pour réussir à lancer un sort malgré les mouvements et assauts éventuels de la cible.</li>
+                    </ul>
+                </li>
+                <li><strong>Note au MJ :</strong> Le MJ se doit de tenir un décompte en marge de la narration des Compteurs de Tours de chaque acteur participant aux combats et en état de combattre.</li>
+            </ul>
+        </div>
     </div>
 
-    <div class="content-section" id="section-impact">
-        <h3>Conséquences</h3>
-            
-            <h4>Conséquences de l'Impact</h4>
-            <div class="content-card">
-                <p>Lorsqu'une attaque aboutit (Supériorité ou fin du compteur D6), l'effet narratif est choisi par le MJ en fonction de la logique de la scène. Si le choix n'est pas la mort, un <strong>désavantage de -1 à toutes les actions</strong> sera appliqué à la victime jusqu'à guérison, annulation ou contournement de l'effet appliqué si pertinent :</p>
-                <ul class="dash-list space-y-2 mt-2">
-                    <li><strong>Tête :</strong> Mort, Blessure qui sans soins entraîne la mort à court terme, KO, Aveuglement.</li>
-                    <li><strong>Tronc :</strong> Mort, Blessure qui sans soins entraîne la mort à court terme, Souffle coupé, Recul forcé, Hémorragie (malus constant).</li>
-                    <li><strong>Membres :</strong> Perte d'un membre, Désarmement, Lâcher prise, Fracture, Mise au sol, Chute, Boiterie.</li>
-                </ul>
-            </div>
-    </div>
-
+<div class="content-section" id="section-impact">
+    <h3>Conséquences</h3>
+        
+        <h4>Conséquences de l'Impact</h4>
+        <div class="content-card">
+            <p>Lorsqu'une attaque aboutit (Supériorité ou fin du compteur D6), l'effet narratif est choisi par le MJ en fonction de la logique de la scène. Si le choix n'est pas la mort, un <strong>désavantage de -1 à toutes les actions</strong> sera appliqué à la victime jusqu'à guérison, annulation ou contournement de l'effet appliqué si pertinent :</p>
+            <ul class="dash-list space-y-2 mt-2">
+                <li><strong>Tête :</strong> Mort, Blessure qui sans soins entraîne la mort à court terme, KO, Aveuglement.</li>
+                <li><strong>Tronc :</strong> Mort, Blessure qui sans soins entraîne la mort à court terme, Souffle coupé, Recul forcé, Hémorragie (malus constant).</li>
+                <li><strong>Membres :</strong> Perte d'un membre, Désarmement, Lâcher prise, Fracture, Mise au sol, Chute, Boiterie.</li>
+            </ul>
+        </div>
 </div>
 
 <div class="page-break"></div>
@@ -585,6 +588,7 @@
                 </li>
             </ul>
         </div>
+    </div>
     
     <h4 id="section-diff">La Difficulté</h4>
     <div class="content-card">
@@ -619,3 +623,4 @@
         <p>Le MJ est le seul juge de l'ingéniosité et de la crédibilité des actions sociales, c'est à lui de juger si le PJ est convaincant en fonction de la situation et des antécédents.</p>
     </div>
 </div>
+
