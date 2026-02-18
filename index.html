@@ -1520,6 +1520,7 @@
             pgnState.currentPageContent.appendChild(node);
             
             if (isOverflowing(pgnState.currentPageContent)) {
+                // === DÉBUT MODIFICATIONS ===
                 const container = pgnState.currentPageContent;
                 const availableHeight = container.clientHeight - (container.scrollHeight - node.scrollHeight);
                 const pageHeight = container.clientHeight;
@@ -1556,21 +1557,15 @@
                     }
                 }
                 
-                // CAS PAR DÉFAUT
+                // CAS PAR DÉFAUT (logique originale conservée)
                 const isPageEmpty = container.children.length === 0;
-                const hasChildren = element.children && element.children.length > 0;
-                const isAtomic = element.classList && element.classList.contains('atomic');
-                
-                // Si l'élément a des enfants (conteneur) et n'est pas atomique, 
-                // on le décompose pour optimiser l'espace restant sur la page courante
-                if (hasChildren && !isAtomic) {
-                    handleGiantBlock(element);
-                } else if (!isPageEmpty) {
+                if (!isPageEmpty) {
                     advancePage();
                     pgnState.elementsQueue.unshift(element); 
                 } else {
                     handleGiantBlock(element);
                 }
+                // === FIN MODIFICATIONS ===
             }
         }
 
