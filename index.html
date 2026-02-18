@@ -1400,6 +1400,42 @@
             }
         }
 
+        function splitTextElement(element, maxHeight) {
+            // Clone pour manipulation
+            const clone = element.cloneNode(true);
+            const originalText = element.textContent;
+            let low = 0, high = originalText.length;
+            
+            // Binary search pour trouver la longueur exacte qui rentre
+            while (low < high) {
+                const mid = Math.ceil((low + high) / 2);
+                clone.textContent = originalText.substring(0, mid);
+                pgnState.currentPageContent.appendChild(clone);
+                
+                if (pgnState.currentPageContent.scrollHeight <= maxHeight + 2) {
+                    low = mid;
+                } else {
+                    high = mid - 1;
+                }
+                pgnState.currentPageContent.removeChild(clone);
+            }
+            
+            // Coupe finale
+            const text1 = originalText.substring(0, low);
+            const text2 = originalText.substring(low).trim();
+            
+            if (text2.length === 0) return null; // Tout rentre finalement
+            
+            // Crée les deux éléments
+            const part1 = element.cloneNode(true);
+            part1.textContent = text1;
+            
+            const part2 = element.cloneNode(true);
+            part2.textContent = text2;
+            
+            return { part1, part2 };
+        }
+        
         function processElement(element) {
             // FORCER UN SAUT DE PAGE si l'élément a la classe 'page-break'
             if (element.classList && element.classList.contains('page-break')) {
@@ -1410,6 +1446,34 @@
             let node = element.cloneNode(true);
             pgnState.currentPageContent.appendChild(node);
             if (isOverflowing(pgnState.currentPageContent)) {
+                // NOUVEAU : Page de gauche + élément texte simple
+                if (!pgnState.isRightPage && 
+                    (element.tagName === 'P' || element.tagName === 'LI') && 
+                    !element.querySelector('img, table, div')) {
+                    
+                    const container = pgnState.currentPageContent;
+                    const availableHeight = container.clientHeight - (container.scrollHeight - node.scrollHeight);
+                    
+                    // Retire le nœud qui déborde
+                    container.removeChild(node);
+                    
+                    // Tente de remplir l'espace restant
+                    const split = splitTextElement(element, availableHeight);
+                    
+                    if (split && split.part1.textContent.length > 10) { // Minimum 10 caractères
+                        // Met la partie 1 sur la gauche (remplit l'espace)
+                        container.appendChild(split.part1);
+                        
+                        // Remet la partie 2 dans la queue pour la page suivante
+                        pgnState.elementsQueue.unshift(split.part2);
+                        
+                        // Passe à la page droite normalement
+                        advancePage();
+                        return;
+                    }
+                }
+                
+                // Ancienne logique (inchangée)
                 pgnState.currentPageContent.removeChild(node);
                 const isPageEmpty = pgnState.currentPageContent.children.length === 0;
                 if (!isPageEmpty) {
