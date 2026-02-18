@@ -1472,6 +1472,13 @@
                 // Créer les deux parties
                 const part1 = element.cloneNode(true);
                 const part2 = element.cloneNode(true);
+
+                if (!isList) {
+                    const title = part2.querySelector('h1, h2, h3, h4, h5, h6, strong');
+                    if (title) title.remove();
+                    const introText = part2.querySelector('p');
+                    if (introText) introText.remove();
+                }
                 
                 const list1 = isList ? part1 : part1.querySelector('ul, ol');
                 const list2 = isList ? part2 : part2.querySelector('ul, ol');
