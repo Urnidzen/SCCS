@@ -1145,7 +1145,11 @@
                 tempDiv.querySelectorAll('script, style, link[rel="stylesheet"], meta, title, base, noscript').forEach(el => el.remove());
                 
                 rawContentCache = cleanHtmlContent(tempDiv.innerHTML);
-                paginateContent(rawContentCache);
+                // Test : si après 2 secondes c'est bon, c'est un problème de timing (polices/images)
+setTimeout(() => {
+    paginateContent(rawContentCache);
+    console.log("Pagination avec délai effectuée");
+}, 2000);
 
             } catch (error) {
                 console.error('Erreur:', error);
