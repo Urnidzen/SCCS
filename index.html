@@ -1467,6 +1467,7 @@
                         testItems[i].remove();
                     }
                     container.appendChild(testClone);
+                    void testClone.offsetHeight; // FORCER LE CALCUL DES ESPACEMENTS DE LISTE
                     if (isOverflowing(container)) {
                         high = mid - 1;
                     } else {
@@ -1530,6 +1531,8 @@
             
             let node = element.cloneNode(true);
             pgnState.currentPageContent.appendChild(node);
+
+            void node.offsetHeight;
             
             if (isOverflowing(pgnState.currentPageContent)) {
                 const container = pgnState.currentPageContent;
