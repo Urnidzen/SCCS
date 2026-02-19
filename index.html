@@ -781,15 +781,6 @@
         function init() {
             renderDocumentsList();
             loadDocument(currentDoc);
-            
-            if (document.fonts) {
-                document.fonts.ready.then(() => {
-                    if (rawContentCache && currentDoc !== 'fiche' && currentDoc !== 'contact') {
-                        paginateContent(rawContentCache);
-                    }
-                });
-            }
-            
             setupEventListeners();
             checkMobile();
             
@@ -1154,7 +1145,13 @@
                 tempDiv.querySelectorAll('script, style, link[rel="stylesheet"], meta, title, base, noscript').forEach(el => el.remove());
                 
                 rawContentCache = cleanHtmlContent(tempDiv.innerHTML);
-                paginateContent(rawContentCache);
+                if (document.fonts) {
+                    document.fonts.ready.then(() => {
+                        paginateContent(rawContentCache);
+                    });
+                } else {
+                    paginateContent(rawContentCache);
+                }
 
             } catch (error) {
                 console.error('Erreur:', error);
