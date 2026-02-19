@@ -1310,6 +1310,10 @@
             pgnState.wrapper = document.getElementById('bookSpreadsWrapper');
             const staging = document.getElementById('hiddenStaging');
             staging.innerHTML = htmlContent;
+
+            // forcer le calcul immédiat des tailles
+            void staging.offsetHeight;
+            
             pgnState.wrapper.innerHTML = ''; 
             pgnState.pageCount = 1;
             pgnState.isRightPage = false; 
