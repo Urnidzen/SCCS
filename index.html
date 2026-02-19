@@ -1146,11 +1146,6 @@
                 
                 rawContentCache = cleanHtmlContent(tempDiv.innerHTML);
                 paginateContent(rawContentCache);
-                if (document.fonts) {
-                    document.fonts.ready.then(() => {
-                        paginateContent(rawContentCache);
-                    });
-                }
 
             } catch (error) {
                 console.error('Erreur:', error);
