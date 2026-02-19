@@ -1145,12 +1145,11 @@
                 tempDiv.querySelectorAll('script, style, link[rel="stylesheet"], meta, title, base, noscript').forEach(el => el.remove());
                 
                 rawContentCache = cleanHtmlContent(tempDiv.innerHTML);
+                paginateContent(rawContentCache);
                 if (document.fonts) {
                     document.fonts.ready.then(() => {
                         paginateContent(rawContentCache);
                     });
-                } else {
-                    paginateContent(rawContentCache);
                 }
 
             } catch (error) {
