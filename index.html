@@ -1532,13 +1532,14 @@
             pgnState.currentPageContent.appendChild(node);
             
             if (isOverflowing(pgnState.currentPageContent)) {
-                // === DÉBUT MODIFICATIONS ===
                 const container = pgnState.currentPageContent;
-                const availableHeight = container.clientHeight - (container.scrollHeight - node.scrollHeight);
-                const pageHeight = container.clientHeight;
-                const availablePercent = availableHeight / pageHeight;
                 
-                // Retirer le nœud qui déborde (on le remettra si on coupe, ou on le remet en queue si on ne coupe pas)
+                // STOCKER la hauteur AVANT de détacher le nœud !
+                const nodeHeight = node.scrollHeight;
+                const containerScrollHeight = container.scrollHeight;
+                const availableHeight = container.clientHeight - (containerScrollHeight - nodeHeight);
+                
+                // Maintenant on peut détacher
                 container.removeChild(node);
                 
                 // CAS 1 : Content-card sur page de gauche avec >40% d'espace
