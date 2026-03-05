@@ -69,7 +69,7 @@
     }
     .content-wrapper .table-armures th:nth-child(3),
     .content-wrapper .table-armures td:nth-child(3) {
-        width: 25% !important;
+        width: 20% !important;
         padding: 8px !important;
         vertical-align: top !important;
         word-wrap: break-word !important;
@@ -78,7 +78,7 @@
     }
     .content-wrapper .table-armures th:nth-child(4),
     .content-wrapper .table-armures td:nth-child(4) {
-        width: 35% !important;
+        width: 40% !important;
         padding: 8px !important;
         vertical-align: top !important;
         word-wrap: break-word !important;
@@ -166,7 +166,7 @@
 
 <div class="content-section" id="section-armures">
     <h2>1. Armures et Boucliers</h2>
-    <p>Le port d'une armure confère une protection supplémentaire (bonus de résistance) s'ajoutant à celle déjà possédée, mais impose généralement des contraintes, se traduisant par des malus cumulatifs sur certains talents.<br>
+    <p class="mb-4 italic">Le port d'une armure confère une protection supplémentaire (bonus de résistance) s'ajoutant à celle déjà possédée, mais impose généralement des contraintes, se traduisant par des malus cumulatifs sur certains talents.<br>
     Tout personnage souhaitant se protéger doit d'abord revêtir une armure légère (Gambison ou Cuir). Il peut ensuite y ajouter d'autres éléments (Mailles et/ou Plaques) pour en augmenter la Résistance et la Durabilité, au prix de malus cumulatifs.</p>
     
     <h3 id="section-armures-table">Armures</h3>
@@ -177,7 +177,8 @@
                     (appellation)</th>
                 <th>Durabilité</th>
                 <th>Bonus de Résistance</th>
-                <th>Malus</th>
+                <th>Malus<br>
+                (additionnels et cumulatifs)</th>
             </tr>
         </thead>
         <tbody>
@@ -186,28 +187,31 @@
                     (Gambison ou Cuir)</strong></td>
                 <td style="text-align: center;">6</td>
                 <td>+1 (Tronc et Membres)</td>
-                <td>-1 aux jets de Magie (si le sort cible/inclut des ennemis) et -1 aux Talents : Aptitude Féline et Athlétisme.</td>
+                <td>-1 aux jets de Magie (si le sort cible/inclut des ennemis)</td>
             </tr>
             <tr>
                 <td><strong>+ Mailles<br>
                     (Cotte de Mailles)</strong></td>
-                <td style="text-align: center;">+2 (Total 8)</td>
+                <td style="text-align: center;">+2<br>
+                    (Total 8)</td>
                 <td>+1 (Tronc et Membres, Total +2)</td>
-                <td>-1 aux Talents : Mécanique et Fourberie.</td>
+                <td>ET -1 aux Talents : Mécanique et Fourberie.*</td>
             </tr>
             <tr>
                 <td><strong>+ Plaques<br>
                     (Brigandine)</strong></td>
-                <td style="text-align: center;">+2 (Total 8)</td>
+                <td style="text-align: center;">+2<br>
+                    (Total 8)</td>
                 <td>+1 (Tronc et Membres, Total +2)</td>
-                <td>-1 aux Talents : Mécanique et Fourberie.</td>
+                <td>ET -1 aux Talents : Aptitude Féline et Athlétisme.**</td>
             </tr>
             <tr>
                 <td><strong>+ Mailles et Plaques<br>
                     (Harnois)</strong></td>
-                <td style="text-align: center;">+4 (Total 10)</td>
+                <td style="text-align: center;">+4<br>
+                    (Total 10)</td>
                 <td>+2 (Tronc et Membres, Total +3)</td>
-                <td>-1 aux Talents : Perception.</td>
+                <td>ET -1 aux Talents : Mécanique, Fourberie, Aptitude Féline, Athlétisme et Perception.</td>
             </tr>
             <tr>
                 <td><strong>+ protection tête<br>
@@ -219,7 +223,10 @@
         </tbody>
     </table>
 
-    <h3 id="section-boucliers-table">Boucliers</h3>
+    <p class="text-sm italic mt-2">* Les gants de mailles gênent le toucher et ajoutent une épaisseur encombrante aux mains. Les enlever supprime le malus mais aussi le bonus de résistance aux membres.<br>
+    ** La rigidité globale de l'armure entrave globalement les mouvements. Les gants ont des plaques qui recouvrent uniquement le dessus de la main, ne gênant pas l'utilisateur pour accomplir des tâches liées à la mécanique ou à la fourberie.</p>
+
+    <h3 id="section-boucliers-table" class="mt-6">Boucliers</h3>
     <table class="table-boucliers">
         <thead>
             <tr>
@@ -409,7 +416,4 @@
         <p><strong>Effet :</strong> Confère un bonus de +1 en Savoir Académique.</p>
         <p><strong>Création :</strong> Un grimoire vide, une grande bibliothèque, et un rituel magique (Difficulté Rituel Magique 2) qui absorbe tous les livres de la bibliothèque pour les imprimer magiquement dans le grimoire qui devient magique.</p>
     </div>
-
 </div>
-
-
