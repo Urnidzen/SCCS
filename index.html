@@ -1482,57 +1482,7 @@
             return { part1, part2 };
         }
         
-        // === NOUVELLE FONCTION 2 ===
-function splitContentCard(element) {
-    // 1. Gestion des listes (votre code existant est conservé)
-    const isList = element.tagName === 'UL' || element.tagName === 'OL';
-    const list = isList ? element : element.querySelector('ul, ol');
-    
-    if (list) {
-        // ... (Gardez votre logique de liste ici)
-    }
-    
-    // 2. NOUVELLE LOGIQUE pour les cartes avec paragraphes (comme le Cœur de Dragon)
-    const children = Array.from(element.children);
-    if (children.length < 2) return null; // Rien à découper si un seul bloc
-
-    const container = pgnState.currentPageContent;
-    const part1 = element.cloneNode(true);
-    part1.innerHTML = ''; // On vide pour reconstruire proprement
-    container.appendChild(part1);
-
-    const part2 = element.cloneNode(true);
-    part2.innerHTML = '';
-
-    let splitIndex = 0;
-    
-    // On ajoute les enfants un par un jusqu'à ce que ça déborde
-    for (let i = 0; i < children.length; i++) {
-        const childClone = children[i].cloneNode(true);
-        part1.appendChild(childClone);
-        
-        if (isOverflowing(container)) {
-            part1.removeChild(childClone);
-            splitIndex = i;
-            break;
-        }
-    }
-
-    // Si on n'a pas pu mettre un seul enfant, on ne peut pas découper ici
-    if (splitIndex === 0) {
-        container.removeChild(part1);
-        return null;
-    }
-
-    // On met le reste dans la partie 2
-    for (let i = splitIndex; i < children.length; i++) {
-        part2.appendChild(children[i].cloneNode(true));
-    }
-
-    container.removeChild(part1); // On retire la simulation
-    return { part1, part2 };
-}
-        
+        // === NOUVELLE FONCTION 2 ===     
         function processElement(element) {
             // FORCER UN SAUT DE PAGE si l'élément a la classe 'page-break'
             if (element.classList && element.classList.contains('page-break')) {
