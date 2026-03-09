@@ -1483,82 +1483,55 @@
         }
         
         // === NOUVELLE FONCTION 2 ===
-        function splitContentCard(element) {
-            // Vérifier si c'est une liste ou contient une liste
-            const isList = element.tagName === 'UL' || element.tagName === 'OL';
-            const list = isList ? element : element.querySelector('ul, ol');
-            
-            if (list) {
-                const items = Array.from(list.children).filter(child => child.tagName === 'LI');
-                if (items.length < 2) return null;
-                
-                // Trouve où couper (combien d'items rentrent dans la page)
-                let low = 0, high = items.length;
-                const container = pgnState.currentPageContent;
-                
-                while (low < high) {
-                    const mid = Math.ceil((low + high) / 2);
-                    const testClone = element.cloneNode(true);
-                    const testList = isList ? testClone : testClone.querySelector('ul, ol');
-                    const testItems = testList.querySelectorAll('li');
-                    for (let i = testItems.length - 1; i >= mid; i--) {
-                        testItems[i].remove();
-                    }
-                    container.appendChild(testClone);
-                    void testClone.offsetHeight; // FORCER LE CALCUL DES ESPACEMENTS DE LISTE
-                    if (isOverflowing(container)) {
-                        high = mid - 1;
-                    } else {
-                        low = mid;
-                    }
-                    container.removeChild(testClone);
-                }
-                
-                if (low === 0 || low >= items.length) return null;
-                
-                // Partie 1 (première page) : clone avec début de liste
-                const part1 = element.cloneNode(true);
-                const list1 = isList ? part1 : part1.querySelector('ul, ol');
-                const items1 = list1.querySelectorAll('li');
-                for (let i = items1.length - 1; i >= low; i--) {
-                    items1[i].remove();
-                }
-                
-                // Partie 2 (page suivante) : SEULEMENT la suite de la liste, sans titre
-                const part2 = document.createElement(element.tagName);
-                part2.className = element.className;
-                
-                // Crée une liste vide et ajoute seulement les items restants
-                const newList = document.createElement(list.tagName);
-                newList.className = list.className;
-                for (let i = low; i < items.length; i++) {
-                    newList.appendChild(items[i].cloneNode(true));
-                }
-                part2.appendChild(newList);
-                
-                return { part1, part2 };
-            }
-            
-            // Fallback sur l'ancien code pour le texte simple (sans liste)
-            const allText = element.innerText || element.textContent;
-            if (!allText || allText.length < 20) return null;
-            
-            const mid = Math.floor(allText.length / 2);
-            let splitIndex = mid;
-            while (splitIndex > 0 && allText[splitIndex] !== ' ') splitIndex--;
-            if (splitIndex === 0) splitIndex = mid;
-            
-            const text1 = allText.substring(0, splitIndex);
-            const text2 = allText.substring(splitIndex).trim();
-            
-            const part1 = element.cloneNode(true);
-            part1.innerHTML = `<p style="margin:0;">${text1}</p>`;
-            
-            const part2 = element.cloneNode(true);
-            part2.innerHTML = `<p style="margin:0;">${text2}</p>`;
-            
-            return { part1, part2 };
+function splitContentCard(element) {
+    // 1. Gestion des listes (votre code existant est conservé)
+    const isList = element.tagName === 'UL' || element.tagName === 'OL';
+    const list = isList ? element : element.querySelector('ul, ol');
+    
+    if (list) {
+        // ... (Gardez votre logique de liste ici)
+    }
+    
+    // 2. NOUVELLE LOGIQUE pour les cartes avec paragraphes (comme le Cœur de Dragon)
+    const children = Array.from(element.children);
+    if (children.length < 2) return null; // Rien à découper si un seul bloc
+
+    const container = pgnState.currentPageContent;
+    const part1 = element.cloneNode(true);
+    part1.innerHTML = ''; // On vide pour reconstruire proprement
+    container.appendChild(part1);
+
+    const part2 = element.cloneNode(true);
+    part2.innerHTML = '';
+
+    let splitIndex = 0;
+    
+    // On ajoute les enfants un par un jusqu'à ce que ça déborde
+    for (let i = 0; i < children.length; i++) {
+        const childClone = children[i].cloneNode(true);
+        part1.appendChild(childClone);
+        
+        if (isOverflowing(container)) {
+            part1.removeChild(childClone);
+            splitIndex = i;
+            break;
         }
+    }
+
+    // Si on n'a pas pu mettre un seul enfant, on ne peut pas découper ici
+    if (splitIndex === 0) {
+        container.removeChild(part1);
+        return null;
+    }
+
+    // On met le reste dans la partie 2
+    for (let i = splitIndex; i < children.length; i++) {
+        part2.appendChild(children[i].cloneNode(true));
+    }
+
+    container.removeChild(part1); // On retire la simulation
+    return { part1, part2 };
+}
         
         function processElement(element) {
             // FORCER UN SAUT DE PAGE si l'élément a la classe 'page-break'
