@@ -1485,65 +1485,70 @@
         // === NOUVELLE FONCTION 2 ===
         function splitContentCard(element) {
             const container = pgnState.currentPageContent;
-            const part1 = element.cloneNode(false); // Carte vide pour la page actuelle
-            const part2 = element.cloneNode(false); // Carte vide pour la page suivante
+            const part1 = element.cloneNode(false);
+            const part2 = element.cloneNode(false);
             container.appendChild(part1);
         
             const children = Array.from(element.children);
             let i = 0;
         
-            // 1. On remplit part1 tant que ça ne déborde pas
+            // SÉCURITÉ : Si la page est déjà quasiment pleine avant de commencer, 
+            // on ne cherche même pas à couper, on reporte tout.
+            if (isOverflowing(container)) {
+                container.removeChild(part1);
+                return null;
+            }
+        
             while (i < children.length) {
                 const child = children[i];
-                part1.appendChild(child.cloneNode(true));
+                const clone = child.cloneNode(true);
+                part1.appendChild(clone);
         
                 if (isOverflowing(container)) {
-                    part1.removeChild(part1.lastChild);
+                    part1.removeChild(clone);
                     
-                    // AMÉLIORATION : Si c'est une liste qui bloque, on tente de la couper à l'intérieur
+                    // Gestion des listes (UL/OL)
                     if (child.tagName === 'UL' || child.tagName === 'OL') {
                         const listItems = Array.from(child.children);
-                        const listPart1 = child.cloneNode(false); // Créer une liste vide (UL/OL)
+                        const listPart1 = child.cloneNode(false);
                         const listPart2 = child.cloneNode(false);
                         part1.appendChild(listPart1);
                         
                         let k = 0;
                         while (k < listItems.length) {
-                            listPart1.appendChild(listItems[k].cloneNode(true));
+                            const liClone = listItems[k].cloneNode(true);
+                            listPart1.appendChild(liClone);
+                            
                             if (isOverflowing(container)) {
-                                listPart1.removeChild(listPart1.lastChild);
-                                break;
+                                listPart1.removeChild(liClone);
+                                break; // Arrêt dès que ça dépasse
                             }
                             k++;
                         }
                         
-                        // Si au moins un élément de liste est rentré
                         if (k > 0) {
                             for (let j = k; j < listItems.length; j++) {
                                 listPart2.appendChild(listItems[j].cloneNode(true));
                             }
                             part2.appendChild(listPart2);
-                            i++; // On passe à l'élément suivant pour la boucle de part2
+                            i++; 
                         } else {
-                            part1.removeChild(listPart1); // Rien ne rentrait, on laisse i tel quel
+                            part1.removeChild(listPart1);
+                            // Si même le premier élément de la liste ne rentre pas, on sort de la boucle i
                         }
                     }
-                    break; 
+                    break; // Sortie impérative de la boucle principale
                 }
                 i++;
             }
         
-            // SÉCURITÉ ANTI-BUG (pour tes captures d'écran) : 
-            // Si i=0 (rien n'est rentré) ou si seul un titre est orphelin (i=1), on annule le split.
-            // Cela force le système à déplacer TOUT le bloc sur la page suivante au lieu d'afficher une boîte vide.
-            const isOrphanTitle = i === 1 && (children[0].tagName.match(/^H[1-6]$/) || children[0].innerText.includes(':'));
-            
-            if (i === 0 || isOrphanTitle) {
+            // PROTECTION MOBILE : Si rien n'est rentré (i=0) ou si le bloc est trop massif
+            // On évite de créer une carte vide et on bascule sur la page suivante.
+            if (i === 0 || (i === 1 && children[0].tagName.startsWith('H'))) {
                 container.removeChild(part1);
-                return null; // Indique au paginateur de ne pas couper et de décaler le bloc
+                return null;
             }
         
-            // Le reste va dans part2
             for (; i < children.length; i++) {
                 part2.appendChild(children[i].cloneNode(true));
             }
