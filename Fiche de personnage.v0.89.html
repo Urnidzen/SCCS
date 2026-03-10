@@ -254,6 +254,7 @@
                                         <option value="ORQUE">ORQUE</option>
                                         <option value="DRAGON" hidden>DRAGON</option>
                                     </select>
+                                    <input type="hidden" data-id="original-race" value="HUMAIN">
                                 </td>
                                 <td style="padding-right: 15px; vertical-align: bottom;">
                                     <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Genre</label>
@@ -637,7 +638,16 @@
             }
             
             const raceSel = find('race-select');
-            if(raceSel) raceSel.onchange = () => { updateRace(); updatePortrait(); };
+            if(raceSel) raceSel.onchange = () => { 
+                const bloodSel = find('magical-blood-select');
+                // On sauvegarde l'espèce d'origine uniquement si on n'est pas transformé en Dragon
+                if (!bloodSel || bloodSel.value !== "Dragon") {
+                    const origRace = find('original-race');
+                    if (origRace) origRace.value = raceSel.value;
+                }
+                updateRace(); 
+                updatePortrait(); 
+            };
             
             const genderSel = find('gender-select');
             if(genderSel) genderSel.onchange = () => updatePortrait();
@@ -990,23 +1000,32 @@
             });
             const arm = find('armor-select');
             if(arm) arm.onchange = updateUI;
+            // Gestion du changement de Don / Particularité avec mémoire
             const bloodSel = find('magical-blood-select');
             if(bloodSel) {
                 bloodSel.addEventListener('change', (e) => {
                     const raceSelect = find('race-select');
-                    if (raceSelect) {
+                    const origRace = find('original-race'); // Notre mémoire cachée
+                    
+                    if (raceSelect && origRace) {
                         if (e.target.value === "Dragon") {
-                            // On force la transformation en Dragon
+                            // 1. Si on devient Dragon, on stocke d'abord l'espèce actuelle en mémoire
+                            if (raceSelect.value !== "DRAGON") {
+                                origRace.value = raceSelect.value;
+                            }
+                            // 2. On force l'affichage sur DRAGON
                             raceSelect.value = "DRAGON";
-                        } else if (raceSelect.value === "DRAGON") {
-                            // Si on désélectionne le don, on repasse Humain pour ne pas rester bloqué
-                            raceSelect.value = "HUMAIN";
+                        } else {
+                            // 3. Si on choisit autre chose, on rend son espèce d'origine au joueur
+                            if (raceSelect.value === "DRAGON") {
+                                raceSelect.value = origRace.value || "HUMAIN";
+                            }
                         }
-                        updateRace();     // Met à jour les talents de l'espèce
-                        updatePortrait(); // Met à jour l'image
-                        triggerSave();    // Enregistre
+                        updateRace();     // Recalcule les talents gratuits de la race
+                        updatePortrait(); // Change l'image si besoin
+                        triggerSave();    // Sauvegarde tout
                     }
-                    updateUI(); // Met à jour les calculs
+                    updateUI(); // Rafraîchit l'affichage global
                 });
             }
             updateUI();
