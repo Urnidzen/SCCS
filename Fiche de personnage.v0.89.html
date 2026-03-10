@@ -288,7 +288,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">CHEVEUX:</td>
+                                            <td data-id="label-hair" class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">CHEVEUX:</td>
                                             <td colspan="2" class="border-b border-black/30"><input type="text" data-id="identity-hair" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
                                         </tr>
                                     </table>
@@ -1196,6 +1196,16 @@
 
             // Gestion absolue de l'affichage et de l'équipement des armes draconiques
             let isDragonTrueForm = isDragon && shapeSelect && shapeSelect.value === "DRAGON";
+            // Gestion absolue de l'affichage et de l'équipement des armes draconiques
+            let isDragonTrueForm = isDragon && shapeSelect && shapeSelect.value === "DRAGON";
+            
+            // Changement dynamique du label Cheveux / Écailles
+            const labelHair = find('label-hair');
+            if (labelHair) {
+                labelHair.innerText = isDragonTrueForm ? "ÉCAILLES ET AURA:" : "CHEVEUX:";
+            }
+            
+            [1, 2].forEach(index => {
             
             [1, 2].forEach(index => {
                 const weaponSelect = find(`weapon-select-${index}`);
