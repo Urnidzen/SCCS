@@ -1194,7 +1194,7 @@
                 containerForme.style.display = 'none';
             }
 
-            // Gestion infaillible de l'affichage et de l'équipement des armes draconiques
+            // Gestion absolue de l'affichage et de l'équipement des armes draconiques
             let isDragonTrueForm = isDragon && shapeSelect && shapeSelect.value === "DRAGON";
             
             [1, 2].forEach(index => {
@@ -1202,42 +1202,43 @@
                 const offhandSelect = find(`offhand-select-${index}`);
                 
                 if (weaponSelect && offhandSelect) {
-                    // Recherche sécurisée du groupe (même si la classe a été oubliée)
                     const dragonGroup = Array.from(weaponSelect.querySelectorAll('optgroup')).find(g => g.label === "Armes de Dragon" || g.className === "dragon-weapons");
                     
                     if (dragonGroup) {
                         if (isDragonTrueForm) {
-                            // 1. On débloque l'accès aux armes en arrière-plan
                             dragonGroup.hidden = false;
                             dragonGroup.disabled = false;
                             
-                            // 2. On force l'équipement (seulement si ce n'est pas déjà le cas)
-                            let expectedWeapon = (index === 1) ? "Griffes ou Morsure" : "Souffle";
-                            if (weaponSelect.value !== expectedWeapon) {
-                                weaponSelect.value = expectedWeapon;
-                                updateOffhandOptions(index);
-                            }
+                            // 1. On force les valeurs (Arme principale)
+                            weaponSelect.value = (index === 1) ? "Griffes ou Morsure" : "Souffle";
                             
-                            // 3. On verrouille tout visuellement
+                            // On écrase de force le menu de la main gauche pour n'afficher QUE "Occupée"
+                            offhandSelect.innerHTML = '<option value="Occupée">Occupée</option>';
+                            offhandSelect.value = "Occupée";
+                            
+                            // 2. On verrouille ET on grise les DEUX menus
                             weaponSelect.disabled = true;
-                            weaponSelect.style.opacity = "0.7";
-                            offhandSelect.style.opacity = "0.7";
+                            weaponSelect.style.opacity = "0.5";
+                            offhandSelect.disabled = true;
+                            offhandSelect.style.opacity = "0.5";
                             
                         } else {
-                            // 1. On cache les armes draconiques
                             dragonGroup.hidden = true;
                             dragonGroup.disabled = true;
                             
-                            // 2. On déverrouille les menus
-                            weaponSelect.disabled = false;
-                            weaponSelect.style.opacity = "1";
-                            offhandSelect.style.opacity = "1";
-                            
-                            // 3. On nettoie si les armes draconiques étaient encore équipées
+                            // 1. On retire les armes draconiques si la forme s'annule
                             if (weaponSelect.value === "Griffes ou Morsure" || weaponSelect.value === "Souffle") {
                                 weaponSelect.value = "Main Libre";
-                                updateOffhandOptions(index);
                             }
+                            
+                            // 2. On déverrouille les deux menus
+                            weaponSelect.disabled = false;
+                            weaponSelect.style.opacity = "1";
+                            offhandSelect.disabled = false;
+                            offhandSelect.style.opacity = "1";
+                            
+                            // 3. On restaure le fonctionnement normal de la main gauche
+                            updateOffhandOptions(index);
                         }
                     }
                 }
