@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche TRAME - Module Codex v0.88</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Spectral:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="registre.js"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+    html {
+        background: transparent;
+    }
+        
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: transparent; 
+            font-family: 'Cormorant Garamond', serif;
+            color: #000000;
+            overflow: visible; 
+        }
+
+        .sheet-container {
+            width: 794px;
+            height: 1123px;
+            padding: 10mm 15mm; 
+            background: transparent;
+            position: relative; 
+            overflow: hidden; 
+            margin: 0 auto; 
+            transform-origin: top center;
+        }
+
+        .layout-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        table { border-collapse: collapse; }
+        td { vertical-align: top; }
+        .w-full { width: 100%; }
+
+        .font-title { font-family: 'Cinzel', serif; }
+        .font-body { font-family: 'Cormorant Garamond', serif; }
+        .font-digit { font-family: 'Spectral', serif; }
+        
+        ::placeholder { color: #000000 !important; opacity: 0.6; font-style: italic; }
+        input, select { color: #000000; }
+
+        .header-actions { display: flex; gap: 5px; }
+        .btn-action {
+            cursor: pointer; 
+            opacity: 0.4; 
+            transition: opacity 0.2s, color 0.2s;
+            padding: 0 2px; 
+            font-size: 1.1rem;
+            color: #000000; 
+            background: none; 
+            border: none;
+        }
+        .btn-action:hover { opacity: 1; }
+        .btn-reset:hover { color: #ea580c; }
+        .btn-export:hover { color: #2563eb; }
+        .btn-print:hover { color: #1e293b; } 
+
+        .label-cell {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+            vertical-align: middle; 
+            font-size: 0.8rem; 
+            font-weight: 800;
+            text-transform: uppercase; 
+            white-space: nowrap; 
+            font-family: 'Cinzel', serif;
+        }
+        
+        .value-cell {
+            padding: 0 !important; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+            vertical-align: middle; 
+            width: 35px !important;
+            text-align: center;
+        }
+        
+        .clean-input {
+            width: 30px !important;
+            min-width: 30px !important;
+            max-width: 30px !important;
+            height: 30px !important;
+            background: transparent !important; 
+            border: none !important; 
+            outline: none !important;
+            text-align: center !important; 
+            font-weight: 700 !important; 
+            font-size: 1.3rem !important;
+            font-family: 'Spectral', serif !important; 
+            padding: 0 !important; 
+            margin: 0 auto !important; 
+            line-height: 30px !important; 
+            vertical-align: middle !important;
+            display: block !important;
+            box-sizing: border-box !important;
+        }
+        
+        .identity-select, .identity-input {
+            appearance: none; 
+            background: transparent; 
+            border: none;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.5); 
+            width: 100%;
+            padding: 0; 
+            height: 30px; 
+            vertical-align: bottom; 
+            border-radius: 0;
+            outline: none;
+        }
+        .identity-select { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.2rem; }
+        .identity-input { font-family: 'Spectral', serif; font-weight: 700; font-size: 1.2rem; }
+
+        .check-box {
+            width: 14px; 
+            height: 14px; 
+            border: 2px solid #000000;
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            background: rgba(255,255,255,0.3); 
+            margin-right: 8px; 
+            cursor: pointer;
+            vertical-align: middle; 
+        }
+        .check-box.active { background: #000000; }
+        .check-box.active::after { content: "✓"; color: #fff; font-size: 12px; line-height: 1; }
+
+        .area-textarea {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            width: 100%; 
+            height: 50mm; 
+            resize: none; 
+            padding: 0 8px;
+            font-family: 'Cormorant Garamond', serif; 
+            font-weight: 600; 
+            font-size: 1.2rem;
+            line-height: 30px;
+            background-image: linear-gradient(transparent 29px, rgba(0, 0, 0, 0.2) 30px);
+            background-size: 100% 30px; 
+            background-attachment: local;
+            display: block; 
+            margin-top: 4px; 
+            overflow: hidden; 
+            outline: none;
+        }
+        
+        .box-cell {
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px; 
+            padding: 8px;
+        }
+        
+        .spacer-row { height: 5px; } 
+        
+        .portrait-img-custom {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            filter: sepia(0.2) contrast(1.1) brightness(0.9); 
+            mix-blend-mode: multiply;
+        }
+
+        .stat-row { height: 34px; }
+        .stat-col-label { width: 90px; }
+        .stat-col-value { width: 35px; }
+
+        @media print {
+            .header-actions { display: none !important; }
+            .sheet-container { 
+                transform: none !important; 
+                margin: 0 !important; 
+                width: 794px !important; 
+                height: 1123px !important; 
+            }
+            .layout-wrapper { display: block !important; height: auto !important; }
+            .sheet-container > div:last-child {
+                position: fixed !important;
+                bottom: 15px !important;
+            }
+        }
+    </style>
+</head>
+<body class="font-body text-black">
+    <div class="layout-wrapper">
+        <div class="sheet-container zoom-target">
+            <input type="file" data-id="file-upload" style="display:none" accept=".json">
+
+            <table class="w-full">
+                <tr style="height: 175px;">
+                    <td style="width: 160px; padding-right: 25px;">
+                        <table style="width:100%; height:175px; border: 4px solid rgba(0, 0, 0, 0.6);">
+                            <tr>
+                                <td style="padding:4px;">
+                                    <div data-id="portrait-container" style="width:100%; height:100%; border: 2px dashed rgba(0, 0, 0, 0.4); display:flex; align-items:center; justify-content:center; overflow:hidden;"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="vertical-align: bottom;">
+                        <table class="w-full" style="height: 100%;">
+                            <tr>
+                                <td colspan="3" style="vertical-align: top;">
+                                    <div class="flex justify-between items-end">
+                                        <label class="block text-xs font-black uppercase tracking-[0.3em] font-title text-black">Nom du personnage</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="text" data-id="char-name" class="w-full bg-transparent border-b-4 border-black/60 text-4xl font-black py-1 font-title outline-none text-black placeholder-black" placeholder="">
+                                        <div class="header-actions ml-2 sheet-ui-controls">
+                                            <button data-action="delete" class="btn-action btn-delete" title="Supprimer ce personnage">🗑️</button>
+                                            <button data-action="reset" class="btn-action btn-reset" title="Effacer le contenu">↺</button>
+                                            <span style="color:#000; font-size:1.1rem; cursor:default;">|</span> 
+                                            <button data-action="export" class="btn-action btn-export" title="Sauvegarder JSON local">💾</button>
+                                            <button data-action="import" class="btn-action btn-import" title="Charger une sauvegarde">📂</button>
+                                            <span style="color:#000; font-size:1.1rem; cursor:default;">|</span>
+                                            <button data-action="print" class="btn-action btn-print" title="Imprimer cette fiche" onclick="window.print()">🖨️</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="height: 50px;">
+                                <td style="padding-right: 15px; vertical-align: bottom;">
+                                    <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Espèce</label>
+                                    <select data-id="race-select" class="identity-select">
+                                        <option value="HUMAIN">HUMAIN</option>
+                                        <option value="ELFE">ELFE</option>
+                                        <option value="NAIN">NAIN</option>
+                                        <option value="ORQUE">ORQUE</option>
+                                    </select>
+                                </td>
+                                <td style="padding-right: 15px; vertical-align: bottom;">
+                                    <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">Genre</label>
+                                    <select data-id="gender-select" class="identity-select">
+                                        <option value="MASCULIN">MASCULIN</option>
+                                        <option value="FÉMININ">FÉMININ</option>
+                                    </select>
+                                </td>
+                                <td style="width: 70px; vertical-align: bottom;">
+                                    <label class="block text-[9px] font-black uppercase tracking-widest mb-1 font-title text-black">PA</label>
+                                    <input type="number" data-id="val-pa" class="identity-input text-left" value="0">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="padding-top: 15px;">
+                                    <table class="w-full">
+                                        <tr>
+                                            <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">COULEUR DES YEUX:</td>
+                                            <td class="border-b border-black/30"><input type="text" data-id="identity-eyes" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-[10px] font-bold w-28 py-1 align-baseline border-b border-black/30 text-black">CHEVEUX:</td>
+                                            <td class="border-b border-black/30"><input type="text" data-id="identity-hair" class="w-full bg-transparent outline-none italic font-bold placeholder-black" placeholder=""></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="spacer-row"><td></td><td></td></tr>
+
+                <tr>
+                    <td colspan="2">
+                        <table class="w-full" style="table-layout: fixed;">
+                            <tr>
+                                <td style="width: 48%; padding-right: 2%;">
+                                    <h2 class="font-title text-xl font-black uppercase border-l-4 border-black pl-3 mb-2 text-black">⚔️ Attaque</h2>
+                                    <table style="width:100%; border:1px solid rgba(0, 0, 0, 0.3); background-color: rgba(0,0,0,0.05); border-radius:4px;">
+                                        <tr>
+                                            <td style="padding:10px;">
+                                                <table class="w-full">
+                                                    <tr>
+                                                        <td style="padding-right: 15px; vertical-align: top;">
+                                                            <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
+                                                                <div class="text-[9px] font-black uppercase text-black flex-grow">Type</div>
+                                                                <div class="text-[8px] font-black uppercase text-black text-center w-[28px] pb-[1px]" title="Modificateur Magique">Mod.</div>
+                                                                <div class="w-[35px]"></div>
+                                                            </div>
+                                                            <table class="w-full">
+                                                                <colgroup><col><col style="width: 28px;"><col style="width: 35px;"></colgroup>
+                                                                <tr class="stat-row">
+                                                                    <td class="label-cell">Direct</td>
+                                                                    <td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: middle; text-align: center;">
+                                                                        <span data-id="bonus-att-direct" class="font-digit font-bold text-black text-[1.3rem]"></span>
+                                                                    </td>
+                                                                    <td class="value-cell"><input type="number" class="clean-input" value="0"></td>
+                                                                </tr>
+                                                                <tr class="stat-row">
+                                                                    <td class="label-cell">Circulaire</td>
+                                                                    <td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: middle; text-align: center;">
+                                                                        <span data-id="bonus-att-circulaire" class="font-digit font-bold text-black text-[1.3rem]"></span>
+                                                                    </td>
+                                                                    <td class="value-cell"><input type="number" class="clean-input" value="0"></td>
+                                                                </tr>
+                                                                <tr class="stat-row">
+                                                                    <td class="label-cell">Saisie</td>
+                                                                    <td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: middle; text-align: center;"></td>
+                                                                    <td class="value-cell"><input type="number" data-id="stat-att-saisie" class="clean-input" value="0"></td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td style="vertical-align: top;">
+                                                            <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
+                                                                <div class="text-[9px] font-black uppercase text-black flex-grow">Cible</div>
+                                                            </div>
+                                                            <table>
+                                                                <tr class="stat-row"><td class="label-cell stat-col-label">Tête</td><td class="value-cell stat-col-value"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr class="stat-row"><td class="label-cell stat-col-label">Tronc</td><td class="value-cell stat-col-value"><input type="number" data-id="stat-att-tronc" class="clean-input" value="0"></td></tr>
+                                                                <tr class="stat-row"><td class="label-cell stat-col-label">Membres</td><td class="value-cell stat-col-value"><input type="number" class="clean-input" value="0"></td></tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                
+                                <td style="width: 48%; padding-left: 2%;">
+                                    <h2 class="font-title text-xl font-black uppercase border-l-4 border-black pl-3 mb-2 text-black">🛡️ Protection</h2>
+                                    <table style="width:100%; border:1px solid rgba(0, 0, 0, 0.3); background-color: rgba(0,0,0,0.05); border-radius:4px;">
+                                        <tr>
+                                            <td style="padding:10px;">
+                                                <table class="w-full">
+                                                    <tr>
+                                                        <td style="padding-right: 15px; vertical-align: top;">
+                                                            <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
+                                                                <div class="text-[9px] font-black uppercase text-black flex-grow">Défense</div>
+                                                            </div>
+                                                            <table>
+                                                                <tr class="stat-row"><td class="label-cell stat-col-label"><span style="font-size:0.7em; margin-right:1px;">vs</span> Direct</td><td class="value-cell stat-col-value"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr class="stat-row"><td class="label-cell stat-col-label"><span style="font-size:0.7em; margin-right:1px;">vs</span> Circu.</td><td class="value-cell stat-col-value"><input type="number" class="clean-input" value="0"></td></tr>
+                                                                <tr class="stat-row"><td class="label-cell stat-col-label"><span style="font-size:0.7em; margin-right:1px;">vs</span> Saisie</td><td class="value-cell stat-col-value"><input type="number" class="clean-input" value="0"></td></tr>
+                                                            </table>
+                                                        </td>
+                                                        <td style="vertical-align: top;">
+                                                            <div class="flex items-end border-b border-black/40 mb-1" style="height: 15px;">
+                                                                <div class="text-[9px] font-black uppercase text-black flex-grow">Résistance</div>
+                                                                <div class="text-[8px] font-black uppercase text-black text-center w-[32px] pb-[1px]">Nat.</div>
+                                                                <div class="text-[8px] font-black uppercase text-black text-center w-[38px] pb-[1px]">Arm.</div>
+                                                            </div>
+                                                            <table class="w-full">
+                                                                <colgroup><col><col style="width: 32px;"><col style="width: 38px;"></colgroup>
+                                                                <tr class="stat-row"><td class="label-cell">Tête</td><td class="value-cell" style="padding-right: 2px;"><input type="number" data-id="res-nat-tete" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: middle; text-align: center; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1rem]">+</span><span data-id="res-arm-tete" class="font-digit font-bold text-black text-[1.3rem]">0</span></td></tr>
+                                                                <tr class="stat-row"><td class="label-cell">Tronc</td><td class="value-cell" style="padding-right: 2px;"><input type="number" data-id="res-nat-tronc" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: middle; text-align: center; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1rem]">+</span><span data-id="res-arm-tronc" class="font-digit font-bold text-black text-[1.3rem]">0</span></td></tr>
+                                                                <tr class="stat-row"><td class="label-cell">Membres</td><td class="value-cell" style="padding-right: 2px;"><input type="number" data-id="res-nat-membres" class="clean-input" value="0"></td><td style="border-bottom: 1px solid rgba(0, 0, 0, 0.4); vertical-align: middle; text-align: center; white-space: nowrap;"><span class="font-digit font-bold text-black text-[1rem]">+</span><span data-id="res-arm-membres" class="font-digit font-bold text-black text-[1.3rem]">0</span></td></tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="spacer-row"><td></td><td></td></tr>
+
+                <tr>
+                    <td colspan="2">
+                        <table class="w-full" style="table-layout: fixed;">
+                            <tr>
+                                <td style="width: 65%; padding-right: 2%;">
+                                    <table style="width:100%; margin-bottom: 8px;">
+                                        <tr>
+                                            <td class="box-cell">
+                                                <div class="mb-2 border-b border-black/20 pb-1 flex justify-between items-end">
+                                                    <span class="font-title font-black uppercase text-xs text-black">Armes</span>
+                                                </div>
+                                                <table style="width:100%; table-layout: fixed;">
+                                                    <tr>
+                                                        <td style="width:50%; padding-right:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
+                                                            <select data-id="weapon-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate"></select>
+                                                        </td>
+                                                        <td style="width:50%; padding-left:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
+                                                            <select data-id="offhand-select-1" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate"></select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" style="padding-top:4px;">
+                                                            <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
+                                                                <div class="flex items-center">
+                                                                    <span data-id="init-label-1" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
+                                                                    <span data-id="init-val-1" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
+                                                                    <span data-id="magic-malus-1" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                <div class="pl-1 my-1">
+                                                    <span class="text-[9px] font-bold text-black italic lowercase">ou</span>
+                                                </div>
+
+                                                <table style="width:100%; table-layout: fixed;">
+                                                    <tr>
+                                                        <td style="width:50%; padding-right:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Droite</label>
+                                                            <select data-id="weapon-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate"></select>
+                                                        </td>
+                                                        <td style="width:50%; padding-left:5px;">
+                                                            <label class="block text-[8px] font-black uppercase text-black">Main Gauche</label>
+                                                            <select data-id="offhand-select-2" class="w-full bg-transparent font-title font-bold text-sm border-b border-black/40 outline-none text-black truncate"></select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" style="padding-top:4px;">
+                                                            <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
+                                                                <div class="flex items-center">
+                                                                    <span data-id="init-label-2" class="font-title font-bold uppercase text-[8px] text-black mr-2">Initiative</span>
+                                                                    <span data-id="init-val-2" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
+                                                                    <span data-id="magic-malus-2" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <table style="width:100%; margin-bottom: 8px;">
+                                        <tr>
+                                            <td class="box-cell">
+                                                <div class="mb-2 border-b border-black/20 pb-1 flex justify-between items-end">
+                                                    <span class="font-title font-black uppercase text-xs text-black">Protection</span>
+                                                </div>
+
+                                                <table class="w-full">
+                                                    <tr>
+                                                        <td>
+                                                            <label class="block text-[8px] font-black uppercase text-black">Type d'armure</label>
+                                                            <select data-id="armor-select" class="w-full bg-transparent font-title font-bold text-base border-b border-black/40 outline-none text-black">
+                                                                <option value="Aucune">Sans Armure</option>
+                                                                <optgroup label="Armures Standard">
+                                                                    <option value="Gambison">Gambison sans Casque</option>
+                                                                    <option value="Gambison_Casque">Gambison avec Casque</option>
+                                                                    <option value="Cuir">Cuir sans Casque</option>
+                                                                    <option value="Cuir_Casque">Cuir avec Casque</option>
+                                                                    <option value="Cotte_Maille">Cotte de mailles sans Casque</option>
+                                                                    <option value="Cotte_Maille_Casque">Cotte de mailles avec Casque</option>
+                                                                    <option value="Brigandine">Brigandine sans Casque</option>
+                                                                    <option value="Brigandine_Casque">Brigandine avec Casque</option>
+                                                                    <option value="Harnois">Harnois sans Casque</option>
+                                                                    <option value="Harnois_Casque">Harnois avec Casque</option>
+                                                                </optgroup>
+                                                                <optgroup label="Armures Magiques">
+                                                                    <option value="Cuir_Dragon">Cuir de dragon sans Casque</option>
+                                                                    <option value="Cuir_Dragon_Casque">Cuir de dragon avec Casque</option>
+                                                                    <option value="Cotte_Maille_Elfique">Cotte de mailles elf. sans Casque</option>
+                                                                    <option value="Cotte_Maille_Elfique_Casque">Cotte de mailles elf. avec Casque</option>
+                                                                    <option value="Cotte_Maille_Elfique_Draconique">Cotte de mailles elf. draco. sans Casque</option>
+                                                                    <option value="Cotte_Maille_Elfique_Draconique_Casque">Cotte de mailles elf. draco. avec Casque</option>
+                                                                    <option value="Gambison_Nain">Gambison nain sans Casque</option>
+                                                                    <option value="Gambison_Nain_Casque">Gambison nain avec Casque</option>
+                                                                    <option value="Gambison_Nain_Draconique">Gambison nain draco. sans Casque</option>
+                                                                    <option value="Gambison_Nain_Draconique_Casque">Gambison nain draco. avec Casque</option>
+                                                                    <option value="Plaques_Naine">Plaques naines sans Casque</option>
+                                                                    <option value="Plaques_Naine_Casque">Plaques naines avec Casque</option>
+                                                                    <option value="Harnois_Draconique">Harnois draco. sans Casque</option>
+                                                                    <option value="Harnois_Draconique_Casque">Harnois draco. avec Casque</option>
+                                                                    <option value="Harnois_Elfique_Draconique">Harnois elf. draco. sans Casque</option>
+                                                                    <option value="Harnois_Elfique_Draconique_Casque">Harnois elf. draco. avec Casque</option>
+                                                                    <option value="Harnois_Nain_Draconique">Harnois nain draco. sans Casque</option>
+                                                                    <option value="Harnois_Nain_Draconique_Casque">Harnois nain draco. avec Casque</option>
+                                                                    <option value="Harnois_Nain_Elfique_Draconique">Harnois nain, elf., draco. sans Casque</option>
+                                                                    <option value="Harnois_Nain_Elfique_Draconique_Casque">Harnois nain, elf., draco. avec Casque</option>
+                                                                </optgroup>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding-top: 4px;">
+                                                            <div class="flex justify-between items-center bg-black/5 rounded px-2 py-1">
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-2">Durabilité</span>
+                                                                    <span data-id="dur-display" class="font-digit font-bold text-sm text-black">0/0</span>
+                                                                </div>
+                                                                <div class="flex items-center">
+                                                                    <span class="font-title font-bold uppercase text-[8px] text-black mr-1">Malus Magie</span>
+                                                                    <span data-id="magic-malus-armor" class="font-digit font-bold text-sm text-black">0</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="width: 35%; padding-left: 2%; border-left: 2px solid rgba(0, 0, 0, 0.2); vertical-align: top;">
+                                    <h2 class="font-title text-sm font-black uppercase border-b-2 border-black/40 pb-1 mb-2 text-black">Talents</h2>
+                                    <div data-id="talents-container"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="spacer-row"><td></td><td></td></tr>
+
+                <tr>
+                    <td colspan="2">
+                        <div style="width: 100%;">
+                            <h3 class="font-title text-xs font-black uppercase mb-1 text-black">Notes</h3>
+                            <textarea class="area-textarea"></textarea>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Mention légale -->
+            <div style="position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center; font-family: 'Cinzel', serif; font-size: 0.6rem; color: rgba(28, 25, 23, 0.5); pointer-events: none; line-height: 1.4; padding: 0 20px;">
+                Copiez, modifiez, enrichissez ! seul le commerce est interdit.<br>
+                © 2026 Urnidzen | Licence CC BY-NC-SA 4.0 | Images assistées par IA
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        const root = document.currentScript.closest('.sheet-wrapper-direct');
+        if (!root) console.warn("Fiche ouverte hors du Codex ou erreur de contexte.");
+        const context = root || document.body;
+
+        const find = (id) => context.querySelector(`[data-id="${id}"]`);
+        const findClass = (cls) => context.querySelector(`.${cls}`);
+        const findAll = (selector) => context.querySelectorAll(selector);
+
+        // Récupération de l'ID depuis l'URL (pour l'iframe)
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentUid = root ? root.getAttribute('data-uid') : urlParams.get('uid');
+
+        const CUSTOM_PORTRAITS_URLS = {
+            "HUMAIN_MASCULIN": "portraits/portrait_homme_humain.png",
+            "HUMAIN_FÉMININ": "portraits/portrait_femme_humain.png",
+            "ELFE_MASCULIN": "portraits/portrait_homme_elfe.png",
+            "ELFE_FÉMININ": "portraits/portrait_femme_elfe.png",
+            "NAIN_MASCULIN": "portraits/portrait_homme_nain.png",
+            "NAIN_FÉMININ": "portraits/portrait_femme_nain.png",
+            "ORQUE_MASCULIN": "portraits/portrait_homme_orque.png",
+            "ORQUE_FÉMININ": "portraits/portrait_femme_orque.png",
+        };
+
+        const state = {
+            talents: {
+                athletisme: false, aptitude_feline: false, mecanique: false,
+                fourberie: false, perception: false, survie: false,
+                savoir_acad: false
+            }
+        };
+
+        function adjustZoom() {
+            const sheet = findClass('zoom-target');
+            if (!sheet) return;
+
+            // Détection iframe : si dans le Codex, l'index gère le zoom
+            if (window.self !== window.top || !root) {
+                sheet.style.transform = 'none';
+                return;
+            }
+
+            if (window.matchMedia('print').matches) {
+                sheet.style.transform = 'none';
+                root.style.height = 'auto';
+                return;
+            }
+
+            root.style.overflow = 'hidden'; 
+
+            const availableW = root.clientWidth;
+            const availableH = window.innerHeight - 100;
+
+            const targetW = 794;
+            const targetH = 1123;
+
+            const scale = Math.min(
+                availableW / targetW, 
+                availableH / targetH
+            ) * 0.95;
+
+            sheet.style.transform = `scale(${scale})`;
+            root.style.height = (targetH * scale) + 'px';
+        }
+
+        function init() {
+            initWeaponSelect();
+
+            // Cacher la poubelle si c'est le dernier personnage (fiche vierge permanente)
+            if (typeof TRAME_Registre !== 'undefined') {
+                const allProfiles = TRAME_Registre.getAllProfiles();
+                if (allProfiles.length <= 1) {
+                    const btnDelete = context.querySelector('[data-action="delete"]');
+                    if (btnDelete) btnDelete.style.display = 'none';
+                }
+            }
+            
+            const raceSel = find('race-select');
+            if(raceSel) raceSel.onchange = () => { updateRace(); updatePortrait(); };
+            
+            const genderSel = find('gender-select');
+            if(genderSel) genderSel.onchange = () => updatePortrait();
+
+            const nameInput = find('char-name');
+            if(nameInput) nameInput.oninput = (e) => updateProfileName(e.target.value);
+
+            const btnReset = context.querySelector('[data-action="reset"]');
+            if(btnReset) btnReset.onclick = resetSheet;
+
+            const btnExport = context.querySelector('[data-action="export"]');
+            if(btnExport) btnExport.onclick = exportSingleJSON;
+
+            // AJOUT : Gestionnaire du bouton Import
+            const btnImport = context.querySelector('[data-action="import"]');
+            if(btnImport) btnImport.onclick = () => {
+                const fileInput = find('file-upload');
+                if(fileInput) fileInput.click();
+            };
+
+            if (currentUid && typeof TRAME_Registre !== 'undefined') {
+                loadFromRegistry(currentUid);
+                setupAutoSave();
+            }
+
+            // AJOUT : Gestionnaire de l'input file pour l'import
+            const fileInput = find('file-upload');
+            if(fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            if (data.content) {
+                                // Charger les données dans la fiche actuelle
+                                Object.keys(data.content).forEach(key => {
+                                    if (key.startsWith('__clean_input_')) {
+                                        const idx = parseInt(key.replace('__clean_input_', ''));
+                                        const els = findAll('.clean-input:not([data-id])');
+                                        if (els[idx]) els[idx].value = data.content[key];
+                                    } 
+                                    else if (key.startsWith('__area_')) {
+                                        const idx = parseInt(key.replace('__area_', ''));
+                                        const els = findAll('.area-textarea');
+                                        if (els[idx]) els[idx].value = data.content[key];
+                                    }
+                                    else {
+                                        const el = find(key);
+                                        if (el) {
+                                            let val = data.content[key];
+                                            // Migration des anciennes sauvegardes vers les nouvelles armures
+                                            if (key === 'armor-select') {
+                                                const legacyMap = {
+                                                    "Légère": "Cuir", "Légère_Heaume": "Cuir_Casque",
+                                                    "Moyenne": "Cotte_Maille", "Moyenne_Heaume": "Cotte_Maille_Casque",
+                                                    "Plaques": "Brigandine", "Plaques_Heaume": "Brigandine_Casque",
+                                                    "Lourde": "Harnois", "Lourde_Heaume": "Harnois_Casque"
+                                                };
+                                                if (legacyMap[val]) val = legacyMap[val];
+                                            }
+                                            // Migration des anciennes armes vers les noms abrégés
+                                            if (key.includes('weapon-select') || key.includes('offhand-select')) {
+                                                const weaponLegacyMap = {
+                                                    "Épée Lunaire": "Épée Lun.", "Hache Lunaire": "Hache Lun.", "Hache Lunaire (2 mains)": "Hache Lun. (2 mains)",
+                                                    "Lance Diamantine (1 main)": "Lance Diam. (1 main)", "Lance Diamantine (Longue)": "Lance Diam. (Longue)", "Épée à deux mains lunaire": "Épée à deux mains lun."
+                                                };
+                                                if (weaponLegacyMap[val]) val = weaponLegacyMap[val];
+                                            }
+                                            if (el.type === 'checkbox') el.checked = val;
+                                            else el.value = val;
+                                        }
+                                    }
+                                });
+                                
+                                if (data.content.__state_talents) {
+                                    state.talents = JSON.parse(JSON.stringify(data.content.__state_talents));
+                                }
+                                
+                                updateUI();
+                                updatePortrait();
+                                triggerSave();
+                                alert('Personnage chargé avec succès !');
+                            } else {
+                                alert('Format de fichier invalide');
+                            }
+                        } catch (err) {
+                            alert('Erreur lors du chargement du fichier JSON');
+                            console.error(err);
+                        }
+                        // Reset pour permettre de re-sélectionner le même fichier
+                        e.target.value = '';
+                    };
+                    reader.readAsText(file);
+                });
+            }
+
+            const btnDelete = context.querySelector('[data-action="delete"]');
+            if(btnDelete) btnDelete.onclick = () => {
+                if(confirm("Êtes-vous certain de vouloir supprimer ce personnage ? Cette action est irréversible.")) {
+                    if (currentUid && typeof TRAME_Registre !== 'undefined') {
+                        TRAME_Registre.deleteProfile(currentUid);
+                        // Rediriger vers le parent pour rafraîchir
+                        if(window.parent && window.parent !== window) {
+                            window.parent.postMessage({action: 'characterDeleted'}, '*');
+                        }
+                    }
+                }
+            };
+
+            adjustZoom();
+            window.addEventListener('resize', adjustZoom);
+            updatePortrait();
+        }
+
+        function loadFromRegistry(uid) {
+            const profile = TRAME_Registre.getProfile(uid);
+            if (!profile) return;
+
+            const data = profile.content || {};
+            
+            findAll('input, textarea').forEach(el => { el.value = ''; });
+            findAll('select').forEach(el => el.selectedIndex = 0);
+            findAll('input[type=number]').forEach(el => el.value = '0');
+
+            if(find('weapon-select-1')) find('weapon-select-1').value = "Main Libre";
+            if(find('weapon-select-2')) find('weapon-select-2').value = "Main Libre";
+
+            Object.keys(data).forEach(key => {
+                if (key.startsWith('__clean_input_')) {
+                    const idx = parseInt(key.replace('__clean_input_', ''));
+                    const els = findAll('.clean-input:not([data-id])');
+                    if (els[idx]) els[idx].value = data[key];
+                } 
+                else if (key.startsWith('__area_')) {
+                    const idx = parseInt(key.replace('__area_', ''));
+                    const els = findAll('.area-textarea');
+                    if (els[idx]) els[idx].value = data[key];
+                }
+                else {
+                    const el = find(key);
+                    if (el) {
+                        let val = data[key];
+                        // Migration des anciennes sauvegardes vers les nouvelles armures
+                        if (key === 'armor-select') {
+                            const legacyMap = {
+                                "Légère": "Cuir", "Légère_Heaume": "Cuir_Casque",
+                                "Moyenne": "Cotte_Maille", "Moyenne_Heaume": "Cotte_Maille_Casque",
+                                "Plaques": "Brigandine", "Plaques_Heaume": "Brigandine_Casque",
+                                "Lourde": "Harnois", "Lourde_Heaume": "Harnois_Casque"
+                            };
+                            if (legacyMap[val]) val = legacyMap[val];
+                        }
+                        // Migration des anciennes armes vers les noms abrégés
+                        if (key.includes('weapon-select') || key.includes('offhand-select')) {
+                            const weaponLegacyMap = {
+                                "Épée Lunaire": "Épée Lun.", "Hache Lunaire": "Hache Lun.", "Hache Lunaire (2 mains)": "Hache Lun. (2 mains)",
+                                "Lance Diamantine (1 main)": "Lance Diam. (1 main)", "Lance Diamantine (Longue)": "Lance Diam. (Longue)", "Épée à deux mains lunaire": "Épée à deux mains lun."
+                            };
+                            if (weaponLegacyMap[val]) val = weaponLegacyMap[val];
+                        }
+                        if (el.type === 'checkbox') el.checked = val;
+                        else el.value = val;
+                    }
+                }
+            });
+
+            if (data.__state_talents) {
+                state.talents = JSON.parse(JSON.stringify(data.__state_talents));
+            } else {
+                updateRace(); 
+            }
+
+            updateOffhandOptions(1);
+            updateOffhandOptions(2);
+            updateUI();
+            updatePortrait();
+        }
+
+        function setupAutoSave() {
+            findAll('input, select, textarea').forEach(el => {
+                el.addEventListener('input', triggerSave);
+                el.addEventListener('change', triggerSave);
+            });
+        }
+
+        function triggerSave() {
+            if (!currentUid || typeof TRAME_Registre === 'undefined') return;
+
+            const data = {};
+            findAll('input[data-id], select[data-id], textarea[data-id]').forEach(el => {
+                const id = el.getAttribute('data-id');
+                if(el.type === 'checkbox') data[id] = el.checked;
+                else data[id] = el.value;
+            });
+            
+            findAll('.clean-input:not([data-id])').forEach((el, index) => {
+                data[`__clean_input_${index}`] = el.value;
+            });
+            findAll('.area-textarea:not([data-id])').forEach((el, index) => {
+                data[`__area_${index}`] = el.value;
+            });
+            
+            data.__state_talents = state.talents;
+
+            const nameVal = find('char-name').value || "Sans Nom";
+            TRAME_Registre.updateProfile(currentUid, data, nameVal);
+
+            if(window.parent && window.parent !== window) {
+                window.parent.postMessage({action: 'refreshSidebar'}, '*');
+            }
+        }
+
+        function updateProfileName(val) { triggerSave(); }
+
+        function resetSheet() {
+            if (!confirm("Voulez-vous vider les champs de cette fiche ?")) return;
+            findAll('input, textarea').forEach(el => { el.value = ''; });
+            findAll('select').forEach(el => el.selectedIndex = 0);
+            findAll('input[type=number]').forEach(el => el.value = '0');
+            state.talents = {
+                athletisme: false, aptitude_feline: false, mecanique: false,
+                fourberie: false, perception: false, survie: false,
+                savoir_acad: false
+            };
+            updateUI();
+            updatePortrait();
+            triggerSave();
+        }
+
+        function exportSingleJSON() {
+            if (!currentUid) return;
+            const profile = TRAME_Registre.getProfile(currentUid);
+            if (!profile) return;
+            const dataStr = JSON.stringify(profile, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `TRAME_Heros_${profile.name.replace(/\s+/g, '_')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        const WEAPONS_DATA = {
+            "Distance": { label: "Armes à Distance", stats: { init: "1/7", magie: -1 }, items: ["Arc", "Arbalète", "Fronde"] },
+            "Focalisateur": { label: "Focalisateurs", stats: { init: "6", magie: 0 }, items: ["Grimoire", "Chapelet", "Bâton", "Grimoire de l'Érudit"] },
+            "Longue": { label: "Armes Longues (2 mains)", stats: { init: "4", magie: -1 }, items: ["Lance (Longue)", "Épée à deux mains", "Hache à deux mains", "Masse à deux mains", "Lance Diam. (Longue)", "Hache Lun. (2 mains)", "Épée à deux mains lun."] },
+            "Moyenne": { label: "Armes Moyennes (1 main)", stats: { init: "5", magie: -1 }, items: ["Épée", "Hache", "Masse", "Lance (1 main)", "Fléau", "Épée Lun.", "Hache Lun.", "Lance Diam. (1 main)"] },
+            "Courte": { label: "Armes Courtes", stats: { init: "6", magie: -1 }, items: ["Dague", "Épée courte", "Torche", "Main Libre"] }
+        };
+
+        const MAGIC_EFFECTS = {
+            "Épée Lun.": "+1 Attaque Circulaire",
+            "Épée à deux mains lun.": "+1 Attaque Circulaire",
+            "Hache Lun.": "+1 Attaque Circulaire",
+            "Hache Lun. (2 mains)": "+1 Attaque Circulaire",
+            "Lance Diam. (1 main)": "+1 Attaque Directe",
+            "Lance Diam. (Longue)": "+1 Attaque Directe",
+            "Grimoire de l'Érudit": "+1 Savoir Académique"
+        };
+
+        const RULES = {
+            ARMORS: {
+                "Aucune": { dur: 0, res: 0, malus: [] },
+                "Gambison": { dur: 6, res: 1, malus: ["magie"] },
+                "Gambison_Casque": { dur: 6, res: 1, malus: ["magie", "perception", "aptitude_feline"] }, 
+                "Cuir": { dur: 6, res: 1, malus: ["magie"] },
+                "Cuir_Casque": { dur: 6, res: 1, malus: ["magie", "perception", "aptitude_feline"] }, 
+                "Cotte_Maille": { dur: 8, res: 2, malus: ["magie", "mecanique", "fourberie"] },
+                "Cotte_Maille_Casque": { dur: 8, res: 2, malus: ["magie", "mecanique", "fourberie", "perception", "aptitude_feline"] },
+                "Brigandine": { dur: 8, res: 2, malus: ["magie", "aptitude_feline", "athletisme"] },
+                "Brigandine_Casque": { dur: 8, res: 2, malus: ["magie", "aptitude_feline", "athletisme", "perception", "aptitude_feline"] },
+                "Harnois": { dur: 10, res: 3, malus: ["magie", "mecanique", "fourberie", "aptitude_feline", "athletisme", "perception"] },
+                "Harnois_Casque": { dur: 10, res: 3, malus: ["magie", "mecanique", "fourberie", "aptitude_feline", "athletisme", "perception", "perception", "aptitude_feline"] },
+                
+                // Armures Magiques
+                "Cuir_Dragon": { dur: 6, res: 1, malus: [] },
+                "Cuir_Dragon_Casque": { dur: 6, res: 1, malus: ["perception", "aptitude_feline"] },
+                "Cotte_Maille_Elfique": { dur: 8, res: 2, malus: ["magie"] },
+                "Cotte_Maille_Elfique_Casque": { dur: 8, res: 2, malus: ["magie", "perception", "aptitude_feline"] },
+                "Cotte_Maille_Elfique_Draconique": { dur: 8, res: 2, malus: [] },
+                "Cotte_Maille_Elfique_Draconique_Casque": { dur: 8, res: 2, malus: ["perception", "aptitude_feline"] },
+                "Gambison_Nain": { dur: 20, res: 2, malus: ["magie"] },
+                "Gambison_Nain_Casque": { dur: 20, res: 2, malus: ["magie", "perception", "aptitude_feline"] },
+                "Gambison_Nain_Draconique": { dur: 20, res: 2, malus: [] },
+                "Gambison_Nain_Draconique_Casque": { dur: 20, res: 2, malus: ["perception", "aptitude_feline"] },
+                "Plaques_Naine": { dur: 22, res: 3, malus: ["magie", "aptitude_feline", "athletisme"] },
+                "Plaques_Naine_Casque": { dur: 22, res: 3, malus: ["magie", "aptitude_feline", "athletisme", "perception", "aptitude_feline"] },
+                "Harnois_Draconique": { dur: 10, res: 3, malus: ["mecanique", "fourberie", "aptitude_feline", "athletisme", "perception"] },
+                "Harnois_Draconique_Casque": { dur: 10, res: 3, malus: ["mecanique", "fourberie", "aptitude_feline", "athletisme", "perception", "perception", "aptitude_feline"] },
+                "Harnois_Elfique_Draconique": { dur: 10, res: 3, malus: ["aptitude_feline", "athletisme", "perception"] },
+                "Harnois_Elfique_Draconique_Casque": { dur: 10, res: 3, malus: ["aptitude_feline", "athletisme", "perception", "perception", "aptitude_feline"] },
+                "Harnois_Nain_Draconique": { dur: 24, res: 4, malus: ["mecanique", "fourberie", "aptitude_feline", "athletisme", "perception"] },
+                "Harnois_Nain_Draconique_Casque": { dur: 24, res: 4, malus: ["mecanique", "fourberie", "aptitude_feline", "athletisme", "perception", "perception", "aptitude_feline"] },
+                "Harnois_Nain_Elfique_Draconique": { dur: 24, res: 4, malus: ["aptitude_feline", "athletisme", "perception"] },
+                "Harnois_Nain_Elfique_Draconique_Casque": { dur: 24, res: 4, malus: ["aptitude_feline", "athletisme", "perception", "perception", "aptitude_feline"] }
+            },
+            RACES: {
+                "ELFE": ["aptitude_feline", "perception", "survie"],
+                "NAIN": ["athletisme", "mecanique", "savoir_acad"],
+                "ORQUE": ["athletisme", "survie"],
+                "HUMAIN": []
+            }
+        };
+
+        const talentsList = [
+            { id: 'athletisme', label: 'Athlétisme' },
+            { id: 'aptitude_feline', label: 'Apti. Féline' },
+            { id: 'mecanique', label: 'Mécanique' },
+            { id: 'fourberie', label: 'Fourberie' },
+            { id: 'perception', label: 'Perception' },
+            { id: 'survie', label: 'Survie' },
+            { id: 'savoir_acad', label: 'Savoir Acad.' }
+        ];
+
+        function initWeaponSelect() {
+            [1, 2].forEach(index => {
+                const select = find(`weapon-select-${index}`);
+                if (!select) return;
+                select.innerHTML = '';
+                for (const [key, category] of Object.entries(WEAPONS_DATA)) {
+                    const group = document.createElement('optgroup');
+                    group.label = category.label;
+                    category.items.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item;
+                        option.textContent = item;
+                        group.appendChild(option);
+                    });
+                    select.appendChild(group);
+                }
+                select.value = "Main Libre";
+                select.onchange = () => {
+                    updateOffhandOptions(index);
+                    updateUI();
+                };
+                const off = find(`offhand-select-${index}`);
+                if(off) off.onchange = updateUI;
+                updateOffhandOptions(index);
+            });
+            const arm = find('armor-select');
+            if(arm) arm.onchange = updateUI;
+            updateUI();
+        }
+
+        function getWeaponStats(weaponName) {
+            if (["Grimoire","Chapelet","Bâton","Grimoire de l'Érudit"].includes(weaponName)) return { init: "6", magie: 0 };
+            for (const [key, category] of Object.entries(WEAPONS_DATA)) {
+                if (category.items.includes(weaponName)) return category.stats;
+            }
+            return { init: "-", magie: 0 };
+        }
+
+        function getWeaponCategory(weaponName) {
+            for (const [key, category] of Object.entries(WEAPONS_DATA)) {
+                if (category.items.includes(weaponName)) return key;
+            }
+            return "Courte";
+        }
+
+        function updateOffhandOptions(index) {
+            const weaponSelect = find(`weapon-select-${index}`);
+            const offhandSelect = find(`offhand-select-${index}`);
+            if (!weaponSelect || !offhandSelect) return;
+
+            const weaponName = weaponSelect.value;
+            const category = getWeaponCategory(weaponName);
+            const currentOffhand = offhandSelect.value;
+            
+            offhandSelect.innerHTML = ''; 
+            offhandSelect.disabled = false;
+            
+            let options = [];
+            let defaultValue = "Main Libre";
+            
+            if (category === "Distance" || category === "Longue") {
+                options.push("Occupée");
+                offhandSelect.disabled = true;
+                defaultValue = "Occupée";
+            } 
+            else if (category === "Focalisateur") {
+                if (weaponName === "Bâton") {
+                    options.push("Occupée ou Libre", "Bouclier", "Torche");
+                    defaultValue = "Occupée ou Libre";
+                }
+                else {
+                    options.push("Main Libre (Incantation)", "Bouclier", "Torche");
+                    defaultValue = "Main Libre (Incantation)";
+                }
+            }
+            else if (category === "Moyenne") {
+                options.push("Main Libre", "Bouclier", "Torche");
+            }
+            else {
+                options.push("Main Libre", "Bouclier", "Torche");
+                WEAPONS_DATA["Courte"].items.forEach(wp => {
+                    if (!["Main Libre","Torche","Bouclier (Offensif)"].includes(wp)) options.push(wp); 
+                });
+            }
+
+            options.forEach(opt => {
+                const el = document.createElement('option');
+                el.value = opt; el.textContent = opt;
+                offhandSelect.appendChild(el);
+            });
+
+            if (currentOffhand && Array.from(offhandSelect.options).some(o => o.value === currentOffhand)) {
+                offhandSelect.value = currentOffhand;
+            } else {
+                offhandSelect.value = defaultValue;
+            }
+        }
+
+        function updatePortrait() {
+            const race = find('race-select')?.value || "HUMAIN";
+            const gender = find('gender-select')?.value || "MASCULIN";
+            const container = find('portrait-container');
+            if(!container) return;
+            const key = `${race}_${gender}`;
+            if (CUSTOM_PORTRAITS_URLS[key]) {
+                container.innerHTML = `<img src="${CUSTOM_PORTRAITS_URLS[key]}" class="portrait-img-custom" alt="Portrait">`;
+            } else {
+                container.innerHTML = `<img src="${CUSTOM_PORTRAITS_URLS["HUMAIN_MASCULIN"]}" class="portrait-img-custom" alt="Portrait">`;
+            }
+        }
+
+        function updateRace() {
+            const race = find('race-select')?.value;
+            if (!race) return;
+            Object.keys(state.talents).forEach(k => state.talents[k] = false);
+            if (RULES.RACES[race]) RULES.RACES[race].forEach(tid => state.talents[tid] = true);
+            const saisieField = find('stat-att-saisie');
+            if(saisieField) saisieField.value = (race === "ORQUE") ? 1 : 0;
+            triggerSave();
+            updateUI();
+        }
+
+        function updateUI() {
+            // Collect equipped items for global bonuses (like Talents)
+            const equipped = [];
+            let bonusDirect = 0;
+            let bonusCirculaire = 0;
+
+            [1, 2].forEach(index => {
+                const weaponSelect = find(`weapon-select-${index}`);
+                const offhandSelect = find(`offhand-select-${index}`);
+                const initLabel = find(`init-label-${index}`);
+                
+                if (weaponSelect && offhandSelect) {
+                    if (document.activeElement === weaponSelect) updateOffhandOptions(index);
+                    
+                    const weaponName = weaponSelect.value;
+                    const offhandName = offhandSelect.value;
+                    const weaponStats = getWeaponStats(weaponName);
+                    const cat = getWeaponCategory(weaponName);
+
+                    if (weaponName) equipped.push(weaponName);
+                    if (offhandName) equipped.push(offhandName);
+                    
+                    const isRightFree = weaponName === "Main Libre";
+                    const isLeftFree = offhandName && (offhandName.includes("Libre") || offhandName.includes("Occupée"));
+                    const hasFreeHand = isRightFree || isLeftFree;
+                    
+                    const isRightCatalyst = !["Main Libre","Torche"].includes(weaponName);
+                    const isLeftCatalyst = offhandName && !["Main Libre","Main Libre (Incantation)","Bouclier","Torche","Occupée","Occupée ou Libre"].includes(offhandName);
+                    
+                    const hasCatalyst = isRightCatalyst || isLeftCatalyst;
+                    const canCast = hasFreeHand && hasCatalyst;
+
+                    const initSpan = find(`init-val-${index}`);
+                    const rawInit = weaponStats.init;
+                    
+                    if (initSpan) {
+                        if (canCast) {
+                            if (initLabel) initLabel.style.display = 'none'; 
+                            let weaponInitDisplay = rawInit;
+                            if (weaponName === "Bâton") weaponInitDisplay = `5 <span class="font-body font-bold text-[10px]">(1m)</span> 4 <span class="font-body font-bold text-[10px]">(2m)</span>`;
+                            
+                            initSpan.innerHTML = `
+                                <span class="font-title font-bold text-[8px] mr-1">INIT:</span>
+                                <span class="font-title font-bold text-[8px] mr-1">ARME</span>${weaponInitDisplay}
+                                <span class="mx-1 opacity-50 font-sans">/</span>
+                                <span class="font-title font-bold text-[8px] mr-1">SORT</span>2 <span class="font-body font-bold text-[10px]">(lib)</span> 8 <span class="font-body font-bold text-[10px]">(eng)</span>
+                            `;
+                        } else {
+                            if (initLabel) initLabel.style.display = 'inline'; 
+                            let standardDisplay = rawInit;
+                            if (rawInit.includes('/')) {
+                                const [v1, v2] = rawInit.split('/');
+                                standardDisplay = `${v1} <span class="font-body font-bold text-[10px]">(lib)</span> ${v2} <span class="font-body font-bold text-[10px]">(eng)</span>`;
+                            } 
+                            initSpan.innerHTML = standardDisplay;
+                        }
+                    }
+
+                    const magicSpan = find(`magic-malus-${index}`);
+                    if(magicSpan) {
+                        if (!hasFreeHand || !hasCatalyst) {
+                            magicSpan.innerText = "imp.";
+                            magicSpan.style.color = "#dc2626";
+                        } else {
+                            const val = (cat === "Focalisateur") ? 0 : weaponStats.magie;
+                            magicSpan.innerText = val;
+                            magicSpan.style.color = "#000000";
+                        }
+                    }
+
+                    // Calcul des bonus d'armes magiques
+                    if (MAGIC_EFFECTS[weaponName]) {
+                        if (MAGIC_EFFECTS[weaponName].includes("Attaque Directe")) bonusDirect = Math.max(bonusDirect, parseInt(MAGIC_EFFECTS[weaponName].match(/\+(\d+)/)[1] || 1));
+                        if (MAGIC_EFFECTS[weaponName].includes("Attaque Circulaire")) bonusCirculaire = Math.max(bonusCirculaire, parseInt(MAGIC_EFFECTS[weaponName].match(/\+(\d+)/)[1] || 1));
+                    }
+                    if (MAGIC_EFFECTS[offhandName]) {
+                        if (MAGIC_EFFECTS[offhandName].includes("Attaque Directe")) bonusDirect = Math.max(bonusDirect, parseInt(MAGIC_EFFECTS[offhandName].match(/\+(\d+)/)[1] || 1));
+                        if (MAGIC_EFFECTS[offhandName].includes("Attaque Circulaire")) bonusCirculaire = Math.max(bonusCirculaire, parseInt(MAGIC_EFFECTS[offhandName].match(/\+(\d+)/)[1] || 1));
+                    }
+                }
+            });
+
+            const bdEl = find('bonus-att-direct');
+            if(bdEl) bdEl.innerHTML = bonusDirect > 0 ? `${bonusDirect} <span class="font-title text-[1rem] font-bold">+</span>` : '';
+
+            const bcEl = find('bonus-att-circulaire');
+            if(bcEl) bcEl.innerHTML = bonusCirculaire > 0 ? `${bonusCirculaire} <span class="font-title text-[1rem] font-bold">+</span>` : '';
+
+            const armorEl = find('armor-select');
+            if (armorEl) {
+                const armor = armorEl.value;
+                const armorData = RULES.ARMORS[armor];
+                const baseRes = armorData ? armorData.res : 0;
+                const headRes = (armor.includes("_Heaume") || armor.includes("_Casque")) ? baseRes : 0;
+                
+                find('res-arm-tete').innerText = headRes;
+                find('res-arm-tronc').innerText = baseRes;
+                find('res-arm-membres').innerText = baseRes;
+
+                let malusArmure = 0;
+                if (armorData && armorData.malus && armorData.malus.includes("magie")) malusArmure = -1;
+                find('magic-malus-armor').innerText = (malusArmure >= 0 ? "+" : "") + malusArmure;
+
+                const maxDur = armorData ? armorData.dur : 0;
+                find('dur-display').innerText = `${maxDur}/${maxDur}`;
+
+                const container = find('talents-container');
+                if (container) {
+                    container.innerHTML = '';
+                    const table = document.createElement('table');
+                    table.style.cssText = "width:100%; border-collapse:collapse; table-layout:fixed;";
+                    table.innerHTML = `
+                        <colgroup><col style="width: auto;"><col style="width: 25px;"><col style="width: 25px;"><col style="width: 15px;"><col style="width: 35px;"></colgroup>
+                        <tr style="border-bottom: 1px solid rgba(0, 0, 0, 0.4);">
+                            <td></td><td class="text-[8px] font-black uppercase text-black text-center"></td><td class="text-[8px] font-black uppercase text-black text-center" title="Modificateur (Armure + Magie)">Mod.</td><td></td><td class="text-[8px] font-black uppercase text-black text-center">Tot.</td>
+                        </tr>`;
+
+                    talentsList.forEach(t => {
+                        const isChecked = state.talents[t.id];
+                        let baseScore = isChecked ? 1 : 0; 
+                        let armorMalus = 0;
+                        if (armorData && armorData.malus) {
+                            const count = armorData.malus.filter(m => m === t.id).length;
+                            armorMalus = -count;
+                        }
+
+                        // Apply weapon magic bonuses to talents
+                        let magicBonus = 0;
+                        if (t.id === 'savoir_acad' && equipped.includes("Grimoire de l'Érudit")) {
+                            magicBonus = 1;
+                        }
+
+                        let modTotal = armorMalus + magicBonus;
+                        let modDisplay = modTotal !== 0 ? modTotal : '0';
+                        if (magicBonus > 0 && modTotal > 0) modDisplay = `${modTotal} <span class="font-title text-[1rem] font-bold">+</span>`;
+
+                        let totalScore = baseScore + modTotal;
+
+                        const row = document.createElement('tr');
+                        row.style.cursor = 'pointer';
+                        row.onmouseover = () => row.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                        row.onmouseout = () => row.style.backgroundColor = 'transparent';
+                        row.onclick = () => {
+                            state.talents[t.id] = !state.talents[t.id];
+                            triggerSave();
+                            updateUI();
+                        };
+
+                        row.innerHTML = `
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); vertical-align:middle;">
+                                <div class="check-box ${isChecked ? 'active' : ''}"></div>
+                                <span style="font-weight:700; text-transform:uppercase; font-size:0.8rem; color:#000000; vertical-align:middle;">${t.label}</span>
+                            </td>
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:600; font-size:1rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000;">${baseScore}</td>
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:600; font-size:1rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000;">${modDisplay}</td>
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:600; font-size:1rem; vertical-align:middle; font-family: 'Spectral', serif;">=</td>
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:700; font-size:1.3rem; vertical-align:middle; font-family: 'Spectral', serif;">${totalScore}</td>
+                        `;
+                        table.appendChild(row);
+                    });
+                    container.appendChild(table);
+                }
+            }
+        }
+
+        init();
+    })();
+    </script>
+</body>
+</html>
