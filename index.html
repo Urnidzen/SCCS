@@ -244,6 +244,22 @@
             padding: 1.2rem; margin-bottom: 1.2rem; border-radius: 4px;
         }
 
+        /* La fausse liste pour contourner le bug de pagination JS */
+        .pseudo-li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 0.5rem;
+            display: block; /* S'assure que le paragraphe se comporte bien comme un bloc */
+        }
+        
+        .pseudo-li:before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: #7c2d12;
+            font-weight: bold;
+        }
+        
         .dash-list {
             list-style: none;
             padding-left: 0;
