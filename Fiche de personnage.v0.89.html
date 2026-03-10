@@ -252,6 +252,7 @@
                                         <option value="ELFE">ELFE</option>
                                         <option value="NAIN">NAIN</option>
                                         <option value="ORQUE">ORQUE</option>
+                                        <option value="DRAGON" hidden>DRAGON</option>
                                     </select>
                                 </td>
                                 <td style="padding-right: 15px; vertical-align: bottom;">
@@ -947,7 +948,8 @@
                 "ELFE": ["aptitude_feline", "perception", "survie"],
                 "NAIN": ["athletisme", "mecanique", "savoir_acad"],
                 "ORQUE": ["athletisme", "survie"],
-                "HUMAIN": []
+                "HUMAIN": [],
+                "DRAGON": []
             }
         };
 
@@ -989,7 +991,24 @@
             const arm = find('armor-select');
             if(arm) arm.onchange = updateUI;
             const bloodSel = find('magical-blood-select');
-            if(bloodSel) bloodSel.addEventListener('change', updateUI);
+            if(bloodSel) {
+                bloodSel.addEventListener('change', (e) => {
+                    const raceSelect = find('race-select');
+                    if (raceSelect) {
+                        if (e.target.value === "Dragon") {
+                            // On force la transformation en Dragon
+                            raceSelect.value = "DRAGON";
+                        } else if (raceSelect.value === "DRAGON") {
+                            // Si on désélectionne le don, on repasse Humain pour ne pas rester bloqué
+                            raceSelect.value = "HUMAIN";
+                        }
+                        updateRace();     // Met à jour les talents de l'espèce
+                        updatePortrait(); // Met à jour l'image
+                        triggerSave();    // Enregistre
+                    }
+                    updateUI(); // Met à jour les calculs
+                });
+            }
             updateUI();
         }
 
