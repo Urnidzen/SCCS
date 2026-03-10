@@ -1191,17 +1191,19 @@
                     const table = document.createElement('table');
                     table.style.cssText = "width:100%; border-collapse:collapse; table-layout:fixed;";
                     
-                    // L'en-tête dynamique
+                    // 1. L'en-tête dynamique avec la nouvelle colonne BONUS
                     table.innerHTML = `
                         <colgroup>
                             <col style="width: auto;">
-                            <col style="width: 35px;">
-                            ${hasArmor ? '<col style="width: 35px;">' : ''}
+                            <col style="width: 30px;">
+                            ${hasArmor ? '<col style="width: 30px;">' : ''}
+                            <col style="width: 45px;">
                         </colgroup>
                         <tr style="border-bottom: 1px solid rgba(0, 0, 0, 0.4);">
                             <td class="text-[8px] font-black uppercase text-black text-right pr-2" style="vertical-align:bottom; padding-bottom: 2px;">${hasArmor ? 'ARMURE :' : ''}</td>
                             <td class="text-[8px] font-black uppercase text-black text-center" style="vertical-align:bottom; padding-bottom: 2px;">${hasArmor ? 'SANS' : 'SCORE'}</td>
                             ${hasArmor ? '<td class="text-[8px] font-black uppercase text-black text-center" style="vertical-align:bottom; padding-bottom: 2px;">AVEC</td>' : ''}
+                            <td class="text-[8px] font-black uppercase text-black text-center" style="vertical-align:bottom; padding-bottom: 2px;">BONUS</td>
                         </tr>`;
 
                     talentsList.forEach(t => {
@@ -1214,41 +1216,68 @@
                             armorMalus = -count;
                         }
 
-                        // Bonus magique
+                        // Bonus magique liés à l'équipement
                         let magicBonus = 0;
                         if (t.id === 'savoir_acad' && equipped.includes("Grimoire de l'Érudit")) {
                             magicBonus = 1;
                         }
 
-                        // Calculs situationnels
+                        // Calculs situationnels purs (indépendants du bonus manuel)
                         let scoreSansArmure = baseScore + magicBonus;
                         let scoreAvecArmure = scoreSansArmure + armorMalus;
 
+                        // On récupère le bonus manuel s'il a été sauvegardé
+                        let bonusKey = t.id + "_bonus";
+                        let currentBonus = state.talents[bonusKey] || "";
+
                         const row = document.createElement('tr');
-                        row.style.cursor = 'pointer';
                         row.onmouseover = () => row.style.backgroundColor = 'rgba(0,0,0,0.05)';
                         row.onmouseout = () => row.style.backgroundColor = 'transparent';
-                        row.onclick = () => {
-                            state.talents[t.id] = !state.talents[t.id];
-                            triggerSave();
-                            updateUI();
-                        };
 
-                        // Cellules de base (Nom du talent + Score Sans Armure)
+                        // 2. Cellules de base (Nom du talent + Score) avec la classe 'clickable-cell'
                         let cellsHTML = `
-                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); vertical-align:middle;">
+                            <td class="clickable-cell" style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); vertical-align:middle; cursor:pointer;">
                                 <div class="check-box ${isChecked ? 'active' : ''}"></div>
                                 <span style="font-weight:700; text-transform:uppercase; font-size:0.8rem; color:#000000; vertical-align:middle;">${t.label}</span>
                             </td>
-                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:700; font-size:1.3rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000;">${scoreSansArmure}</td>
+                            <td class="clickable-cell" style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:700; font-size:1.3rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000; cursor:pointer;">${scoreSansArmure}</td>
                         `;
 
-                        // Si une armure est équipée, on ajoute la 3ème colonne
+                        // 3. Colonne AVEC (si armure)
                         if (hasArmor) {
-                            cellsHTML += `<td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:700; font-size:1.3rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000;">${scoreAvecArmure}</td>`;
+                            cellsHTML += `<td class="clickable-cell" style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; font-weight:700; font-size:1.3rem; vertical-align:middle; font-family: 'Spectral', serif; color:#000000; cursor:pointer;">${scoreAvecArmure}</td>`;
                         }
 
+                        // 4. La nouvelle colonne BONUS avec son menu déroulant
+                        cellsHTML += `
+                            <td style="padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.2); text-align:center; vertical-align:middle;">
+                                <select class="bonus-select" style="width:100%; text-align-last:center; appearance:none; background:transparent; border:none; border-bottom:2px solid rgba(0,0,0,0.3); font-family:'Spectral', serif; font-weight:700; font-size:1.1rem; outline:none; cursor:pointer; color:#000000;">
+                                    <option value="" ${currentBonus === "" ? "selected" : ""}></option>
+                                    <option value="-1" ${currentBonus === "-1" ? "selected" : ""}>-1</option>
+                                    <option value="+1" ${currentBonus === "+1" ? "selected" : ""}>+1</option>
+                                    <option value="+2" ${currentBonus === "+2" ? "selected" : ""}>+2</option>
+                                </select>
+                            </td>
+                        `;
+
                         row.innerHTML = cellsHTML;
+
+                        // 5. Comportement des clics : on sépare la case à cocher du menu déroulant
+                        row.querySelectorAll('.clickable-cell').forEach(cell => {
+                            cell.onclick = () => {
+                                state.talents[t.id] = !state.talents[t.id];
+                                triggerSave();
+                                updateUI();
+                            };
+                        });
+
+                        // 6. Enregistrement automatique du modificateur manuel
+                        const selectEl = row.querySelector('.bonus-select');
+                        selectEl.onchange = (e) => {
+                            state.talents[bonusKey] = e.target.value;
+                            triggerSave();
+                        };
+
                         table.appendChild(row);
                     });
 
