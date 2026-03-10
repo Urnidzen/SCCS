@@ -646,12 +646,13 @@
             if (typeof TRAME_Registre !== 'undefined') {
                 const allProfiles = TRAME_Registre.getAllProfiles();
                 if (allProfiles.length <= 1) {
-                    const shapeSel = find('shape-select');
-                    if(shapeSel) shapeSel.onchange = () => { updateUI(); updatePortrait(); };
                     const btnDelete = context.querySelector('[data-action="delete"]');
                     if (btnDelete) btnDelete.style.display = 'none';
                 }
             }
+            
+            const shapeSel = find('shape-select');
+            if(shapeSel) shapeSel.addEventListener('change', () => { updateUI(); updatePortrait(); triggerSave(); });
             
             const raceSel = find('race-select');
             if(raceSel) raceSel.onchange = () => { 
@@ -933,6 +934,7 @@
         const RULES = {
             ARMORS: {
                 "Aucune": { dur: 0, res: 0, malus: [] },
+                "Naturelle_Cuir_Ecailles": { dur: 20, res: 3, malus: [] },
                 "Gambison": { dur: 6, res: 1, malus: ["magie"] },
                 "Gambison_Casque": { dur: 6, res: 1, malus: ["magie", "perception", "aptitude_feline"] }, 
                 "Cuir": { dur: 6, res: 1, malus: ["magie"] },
@@ -1241,6 +1243,31 @@
 
             const armorEl = find('armor-select');
             if (armorEl) {
+                // Logique de Vraie Forme Draconique
+                let isDragonTrueForm = isDragon && shapeSelect && shapeSelect.value === "DRAGON";
+                
+                let natOption = armorEl.querySelector('option[value="Naturelle_Cuir_Ecailles"]');
+                if (!natOption) {
+                    natOption = document.createElement('option');
+                    natOption.value = "Naturelle_Cuir_Ecailles";
+                    natOption.textContent = "Naturelle (cuir et écailles)";
+                    armorEl.insertBefore(natOption, armorEl.firstChild);
+                }
+
+                if (isDragonTrueForm) {
+                    natOption.hidden = false;
+                    armorEl.value = "Naturelle_Cuir_Ecailles";
+                    armorEl.disabled = true; // Bloque la sélection
+                    armorEl.style.opacity = "0.7";
+                } else {
+                    natOption.hidden = true; // Cache l'option si pas en vraie forme
+                    armorEl.disabled = false;
+                    armorEl.style.opacity = "1";
+                    if (armorEl.value === "Naturelle_Cuir_Ecailles") {
+                        armorEl.value = "Aucune"; // Rétablit à Aucune si on quitte la vraie forme
+                    }
+                }
+
                 const armor = armorEl.value;
                 const armorData = RULES.ARMORS[armor];
                 const baseRes = armorData ? armorData.res : 0;
@@ -1307,8 +1334,12 @@
                         // On détermine si le talent actuel bénéficie du bonus Dragon
                         let isDragonTalent = isDragon && (t.id === 'athletisme' || t.id === 'perception');
                         
-                        // On additionne la base et le bonus Dragon pour l'affichage
-                        let displayedBonusInt = baseBonusInt + (isDragonTalent ? 1 : 0);
+                        // On détermine si le dragon est polymorphé (malus de -1 à toutes les actions)
+                        let isDragonPolymorphed = isDragon && shapeSelect && shapeSelect.value !== "DRAGON";
+                        let polymorphMalus = isDragonPolymorphed ? -1 : 0;
+                        
+                        // On additionne la base, le bonus Dragon et le malus de polymorphie pour l'affichage
+                        let displayedBonusInt = baseBonusInt + (isDragonTalent ? 1 : 0) + polymorphMalus;
                         
                         // On convertit le résultat en texte pour le menu ("", "-1", "+1", "+2", etc.)
                         let currentBonus = displayedBonusInt === 0 ? "" : (displayedBonusInt > 0 ? "+" + displayedBonusInt : displayedBonusInt.toString());
@@ -1337,10 +1368,11 @@
                                 <select class="bonus-select" style="width:100%; text-align-last:center; appearance:none; background:transparent; border:none; border-bottom:2px solid rgba(0,0,0,0.3); font-family:'Spectral', serif; font-weight:700; font-size:1.1rem; outline:none; cursor:pointer; color:#000000;">
                                     <option value="" ${currentBonus === "" ? "selected" : ""}></option>
                                     <option value="-1" ${currentBonus === "-1" ? "selected" : ""}>-1</option>
+                                    <option value="-2" ${currentBonus === "-2" ? "selected" : ""}>-2</option>
+                                    <option value="-3" ${currentBonus === "-3" ? "selected" : ""}>-3</option>
                                     <option value="+1" ${currentBonus === "+1" ? "selected" : ""}>+1</option>
                                     <option value="+2" ${currentBonus === "+2" ? "selected" : ""}>+2</option>
                                     <option value="+3" ${currentBonus === "+3" ? "selected" : ""}>+3</option>
-                                    <option value="-2" ${currentBonus === "-2" ? "selected" : ""}>-2</option>
                                 </select>
                             </td>
                         `;
@@ -1359,9 +1391,9 @@
                         // 6. Enregistrement automatique du modificateur manuel
                         const selectEl = row.querySelector('.bonus-select');
                         selectEl.onchange = (e) => {
-                            // On prend la valeur choisie et on retire le bonus Dragon avant de sauvegarder
+                            // On prend la valeur choisie et on retire les modificateurs de classe avant de sauvegarder le socle manuel
                             let selectedInt = parseInt(e.target.value) || 0;
-                            let newBaseInt = selectedInt - (isDragonTalent ? 1 : 0);
+                            let newBaseInt = selectedInt - (isDragonTalent ? 1 : 0) - polymorphMalus;
                             
                             // On convertit pour la sauvegarde
                             state.talents[bonusKey] = newBaseInt === 0 ? "" : (newBaseInt > 0 ? "+" + newBaseInt : newBaseInt.toString());
