@@ -1485,19 +1485,15 @@
         // === NOUVELLE FONCTION 2 ===
         function splitContentCard(element) {
             const container = pgnState.currentPageContent;
+            // On vérifie si la page est déjà vide pour éviter les boucles infinies
+            const isPageEmpty = container.children.length === 0;
+            
             const part1 = element.cloneNode(false);
             const part2 = element.cloneNode(false);
             container.appendChild(part1);
         
             const children = Array.from(element.children);
             let i = 0;
-        
-            // SÉCURITÉ : Si la page est déjà quasiment pleine avant de commencer, 
-            // on ne cherche même pas à couper, on reporte tout.
-            if (isOverflowing(container)) {
-                container.removeChild(part1);
-                return null;
-            }
         
             while (i < children.length) {
                 const child = children[i];
@@ -1507,7 +1503,7 @@
                 if (isOverflowing(container)) {
                     part1.removeChild(clone);
                     
-                    // Gestion des listes (UL/OL)
+                    // Gestion des listes (UL/OL) - Très sollicité dans le Livret 1
                     if (child.tagName === 'UL' || child.tagName === 'OL') {
                         const listItems = Array.from(child.children);
                         const listPart1 = child.cloneNode(false);
@@ -1521,7 +1517,7 @@
                             
                             if (isOverflowing(container)) {
                                 listPart1.removeChild(liClone);
-                                break; // Arrêt dès que ça dépasse
+                                break; 
                             }
                             k++;
                         }
@@ -1531,24 +1527,26 @@
                                 listPart2.appendChild(listItems[j].cloneNode(true));
                             }
                             part2.appendChild(listPart2);
-                            i++; 
-                        } else {
-                            part1.removeChild(listPart1);
-                            // Si même le premier élément de la liste ne rentre pas, on sort de la boucle i
+                            i++; // On avance l'index pour sortir proprement
+                        } else if (isPageEmpty) {
+                            // SÉCURITÉ MOBILE : Si même le 1er LI ne rentre pas sur une page vide, 
+                            // on le force quand même pour casser la boucle infinie.
+                            part1.appendChild(clone);
+                            i++;
                         }
                     }
-                    break; // Sortie impérative de la boucle principale
+                    break; 
                 }
                 i++;
             }
         
-            // PROTECTION MOBILE : Si rien n'est rentré (i=0) ou si le bloc est trop massif
-            // On évite de créer une carte vide et on bascule sur la page suivante.
-            if (i === 0 || (i === 1 && children[0].tagName.startsWith('H'))) {
+            // Si on a rien pu mettre (i=0) et que la page n'était pas vide, on reporte tout.
+            if (i === 0 && !isPageEmpty) {
                 container.removeChild(part1);
                 return null;
             }
         
+            // Le reste va dans part2
             for (; i < children.length; i++) {
                 part2.appendChild(children[i].cloneNode(true));
             }
