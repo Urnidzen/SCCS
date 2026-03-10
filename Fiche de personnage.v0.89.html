@@ -1116,20 +1116,38 @@
             const race = find('race-select')?.value;
             if (!race) return;
             
-            // On ne réinitialise les talents que si keepTalents est faux
+            // 1. Gestion des Talents (Coches)
             if (!keepTalents) {
                 Object.keys(state.talents).forEach(k => {
-                    // On ne vide que les booléens (les coches), pas les bonus
                     if (typeof state.talents[k] === 'boolean') state.talents[k] = false;
                 });
-                if (RULES.RACES[race]) RULES.RACES[race].forEach(tid => state.talents[tid] = true);
+                if (RULES.RACES[race]) {
+                    RULES.RACES[race].forEach(tid => state.talents[tid] = true);
+                }
             }
             
+            // 2. GESTION DU SCORE DE SAISIE (Bonus Orque)
             const saisieField = find('stat-att-saisie');
             if(saisieField) {
-                // Saisie est à 1 pour les Orques, sinon 0 (évite le vide)
-                saisieField.value = (race === "ORQUE") ? 1 : 0;
+                let currentVal = parseInt(saisieField.value) || 0;
+                
+                // On utilise une petite variable temporaire pour savoir si on avait déjà mis le bonus
+                // (On stocke l'état précédent dans le dataset de l'élément pour ne pas se tromper)
+                const hadOrcBonus = saisieField.dataset.hadBonus === "true";
+                const isOrque = (race === "ORQUE");
+
+                if (isOrque && !hadOrcBonus) {
+                    // On devient Orque : on ajoute 1
+                    saisieField.value = currentVal + 1;
+                    saisieField.dataset.hadBonus = "true";
+                } 
+                else if (!isOrque && hadOrcBonus) {
+                    // On n'est plus Orque : on retire le 1 qu'on avait ajouté
+                    saisieField.value = Math.max(0, currentVal - 1);
+                    saisieField.dataset.hadBonus = "false";
+                }
             }
+
             triggerSave();
             updateUI();
         }
