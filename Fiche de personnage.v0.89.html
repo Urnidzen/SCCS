@@ -54,6 +54,19 @@
         ::placeholder { color: #000000 !important; opacity: 0.6; font-style: italic; }
         input, select { color: #000000; }
 
+        /* Désactiver les flèches des champs numériques (Chrome, Safari, Edge, Opera) */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        /* Désactiver les flèches des champs numériques (Firefox) */
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
         .header-actions { display: flex; gap: 5px; }
         .btn-action {
             cursor: pointer; 
