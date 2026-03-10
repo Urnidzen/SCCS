@@ -1091,6 +1091,10 @@
             let bonusDirect = 0;
             let bonusCirculaire = 0;
 
+            const bloodSelect = find('magical-blood-select');
+            const isOgreMage = bloodSelect && bloodSelect.value === "Sang d'Ogre Mage";
+            const isDragon = bloodSelect && bloodSelect.value === "Dragon";
+
             [1, 2].forEach(index => {
                 const weaponSelect = find(`weapon-select-${index}`);
                 const offhandSelect = find(`offhand-select-${index}`);
@@ -1113,9 +1117,6 @@
                     
                     const isRightCatalyst = !["Main Libre","Torche"].includes(weaponName);
                     const isLeftCatalyst = offhandName && !["Main Libre","Main Libre (Incantation)","Bouclier","Torche","Occupée","Occupée ou Libre"].includes(offhandName);
-                    const bloodSelect = find('magical-blood-select');
-                    const isOgreMage = bloodSelect && bloodSelect.value === "Sang d'Ogre Mage";
-                    const isDragon = bloodSelect && bloodSelect.value === "Dragon";
                     
                     const hasCatalyst = isRightCatalyst || isLeftCatalyst || isOgreMage || isDragon;
                     const canCast = hasFreeHand && hasCatalyst;
