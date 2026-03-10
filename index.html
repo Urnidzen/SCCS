@@ -1484,93 +1484,27 @@
         
         // === NOUVELLE FONCTION 2 ===
         function splitContentCard(element) {
-            // === BLOC LISTE : STRICTEMENT TON CODE D'ORIGINE (Gère déjà les images) ===
-            const isList = element.tagName === 'UL' || element.tagName === 'OL';
-            const list = isList ? element : element.querySelector('ul, ol');
-            
-            if (list) {
-                const items = Array.from(list.children).filter(child => child.tagName === 'LI');
-                if (items.length < 2) return null;
-                
-                let low = 0, high = items.length;
-                const container = pgnState.currentPageContent;
-                
-                while (low < high) {
-                    const mid = Math.ceil((low + high) / 2);
-                    const testClone = element.cloneNode(true);
-                    const testList = isList ? testClone : testClone.querySelector('ul, ol');
-                    const testItems = testList.querySelectorAll('li');
-                    for (let i = testItems.length - 1; i >= mid; i--) { testItems[i].remove(); }
-                    container.appendChild(testClone);
-                    void testClone.offsetHeight; 
-                    if (isOverflowing(container)) { high = mid - 1; } else { low = mid; }
-                    container.removeChild(testClone);
+            const container = pgnState.currentPageContent;
+            const part1 = element.cloneNode(false); // Carte vide
+            const part2 = element.cloneNode(false); // Carte vide
+            container.appendChild(part1);
+        
+            const children = Array.from(element.children);
+            let i = 0;
+            // On remplit part1 tant que ça ne déborde pas
+            while (i < children.length) {
+                part1.appendChild(children[i].cloneNode(true));
+                if (isOverflowing(container)) {
+                    part1.removeChild(part1.lastChild);
+                    break;
                 }
-                
-                if (low === 0 || low >= items.length) return null;
-                
-                const part1 = element.cloneNode(true);
-                const list1 = isList ? part1 : part1.querySelector('ul, ol');
-                const items1 = list1.querySelectorAll('li');
-                for (let i = items1.length - 1; i >= low; i--) { items1[i].remove(); }
-                
-                const part2 = document.createElement(element.tagName);
-                part2.className = element.className;
-                const newList = document.createElement(list.tagName);
-                newList.className = list.className;
-                for (let i = low; i < items.length; i++) {
-                    newList.appendChild(items[i].cloneNode(true));
-                }
-                part2.appendChild(newList);
-                
-                return { part1, part2 };
+                i++;
             }
-
-            // === BLOC FALLBACK : RÉINTÉGRATION DES STRONG ET DES IMAGES ===
-            
-            // 1. Transformation en marqueurs (protège le Strong ET l'Image de l'effacement)
-            let rawHTML = element.innerHTML
-                .replace(/<strong>/g, '§S§')
-                .replace(/<\/strong>/g, '§/S§')
-                .replace(/<img([^>]*)>/g, '§IMG$1§'); // Sauvegarde l'image avec ses attributs
-
-            if (rawHTML.length < 20) return null;
-
-            // 2. Ta logique de découpe au milieu
-            const mid = Math.floor(rawHTML.length / 2);
-            let splitIndex = mid;
-            
-            // Sécurité : ne pas couper au milieu d'un marqueur §...§ (évite les plantages)
-            const lastMarkerStart = rawHTML.lastIndexOf('§', splitIndex);
-            const lastMarkerEnd = rawHTML.lastIndexOf('§', splitIndex - 1);
-            if (lastMarkerStart > lastMarkerEnd) splitIndex = lastMarkerStart;
-
-            while (splitIndex > 0 && rawHTML[splitIndex] !== ' ') splitIndex--;
-            if (splitIndex === 0) splitIndex = mid;
-            
-            let html1 = rawHTML.substring(0, splitIndex);
-            let html2 = rawHTML.substring(splitIndex).trim();
-
-            // 3. Réinjection du gras si la coupe a eu lieu entre §S§ et §/S§
-            const opens = (html1.match(/§S§/g) || []).length;
-            const closes = (html1.match(/§\/S§/g) || []).length;
-            if (opens > closes) {
-                html1 += '§/S§';
-                html2 = '§S§' + html2;
+            // Le reste va dans part2
+            for (; i < children.length; i++) {
+                part2.appendChild(children[i].cloneNode(true));
             }
-
-            // 4. Retransformer en balises HTML (Strong et Img) pour l'affichage
-            const restore = (txt) => txt
-                .replace(/§S§/g, '<strong>')
-                .replace(/§\/S§/g, '</strong>')
-                .replace(/§IMG([^§]*)§/g, '<img$1>');
-
-            const part1 = element.cloneNode(true);
-            part1.innerHTML = restore(html1);
-            
-            const part2 = element.cloneNode(true);
-            part2.innerHTML = restore(html2);
-            
+            container.removeChild(part1);
             return { part1, part2 };
         }
         
