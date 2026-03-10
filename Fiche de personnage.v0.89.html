@@ -383,6 +383,14 @@
                                             <td class="box-cell">
                                                 <div class="mb-2 border-b border-black/20 pb-1 flex justify-between items-end">
                                                     <span class="font-title font-black uppercase text-xs text-black">Armes</span>
+                                                    <div class="flex items-center">
+                                                        <span class="font-title font-bold uppercase text-[8px] text-black mr-2">Don</span>
+                                                        <select data-id="magical-blood-select" class="bg-transparent font-title font-bold text-[10px] uppercase border-b border-black/40 outline-none text-black cursor-pointer text-right">
+                                                            <option value=""></option>
+                                                            <option value="Sang d'Ogre Mage">Sang d'Ogre Mage</option>
+                                                            <option value="Dragon">Dragon</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                                 <table style="width:100%; table-layout: fixed;">
                                                     <tr>
@@ -980,6 +988,8 @@
             });
             const arm = find('armor-select');
             if(arm) arm.onchange = updateUI;
+            const bloodSel = find('magical-blood-select');
+            if(bloodSel) bloodSel.addEventListener('change', updateUI);
             updateUI();
         }
 
@@ -1103,8 +1113,10 @@
                     
                     const isRightCatalyst = !["Main Libre","Torche"].includes(weaponName);
                     const isLeftCatalyst = offhandName && !["Main Libre","Main Libre (Incantation)","Bouclier","Torche","Occupée","Occupée ou Libre"].includes(offhandName);
+                    const bloodSelect = find('magical-blood-select');
+                    const isOgreMage = bloodSelect && bloodSelect.value === "Sang d'Ogre Mage";
                     
-                    const hasCatalyst = isRightCatalyst || isLeftCatalyst;
+                    const hasCatalyst = isRightCatalyst || isLeftCatalyst || isOgreMage;
                     const canCast = hasFreeHand && hasCatalyst;
 
                     const initSpan = find(`init-val-${index}`);
