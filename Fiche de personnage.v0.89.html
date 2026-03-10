@@ -1110,8 +1110,9 @@
                 defaultValue = "Occupée";
             } 
             else if (category === "Draconique") {
-                options.push("Main Libre", "Occupée");
-                defaultValue = "Main Libre";
+                options.push("Occupée");
+                offhandSelect.disabled = true;
+                defaultValue = "Occupée";
             }
             else if (category === "Focalisateur") {
                 if (weaponName === "Bâton") {
@@ -1197,15 +1198,22 @@
             let isDragonTrueForm = isDragon && shapeSelect && shapeSelect.value === "DRAGON";
             [1, 2].forEach(index => {
                 const weaponSelect = find(`weapon-select-${index}`);
+                const offhandSelect = find(`offhand-select-${index}`);
                 if (weaponSelect) {
                     const dragonGroup = weaponSelect.querySelector('.dragon-weapons');
                     if (dragonGroup) {
                         if (isDragonTrueForm) {
                             dragonGroup.hidden = false;
                             dragonGroup.disabled = false;
+                            weaponSelect.disabled = true; // Verrouille l'arme
+                            weaponSelect.style.opacity = "0.7"; // Grise l'arme
+                            if (offhandSelect) offhandSelect.style.opacity = "0.7"; // Grise la main gauche
                         } else {
                             dragonGroup.hidden = true;
                             dragonGroup.disabled = true;
+                            weaponSelect.disabled = false;
+                            weaponSelect.style.opacity = "1";
+                            if (offhandSelect) offhandSelect.style.opacity = "1";
                             // Si on quitte la vraie forme, on retire les armes draconiques des mains
                             if (weaponSelect.value === "Griffes ou Morsure" || weaponSelect.value === "Souffle") {
                                 weaponSelect.value = "Main Libre";
@@ -1326,7 +1334,8 @@
                 const armor = armorEl.value;
                 const armorData = RULES.ARMORS[armor];
                 const baseRes = armorData ? armorData.res : 0;
-                const headRes = (armor.includes("_Heaume") || armor.includes("_Casque")) ? baseRes : 0;
+                // On ajoute l'armure naturelle dans les conditions pour protéger la tête
+                const headRes = (armor.includes("_Heaume") || armor.includes("_Casque") || armor === "Naturelle_Cuir_Ecailles") ? baseRes : 0;
                 
                 find('res-arm-tete').innerText = headRes;
                 find('res-arm-tronc').innerText = baseRes;
