@@ -1194,27 +1194,46 @@
                 containerForme.style.display = 'none';
             }
 
-            // Gestion de l'affichage des armes draconiques
+            // Gestion infaillible de l'affichage et de l'équipement des armes draconiques
             let isDragonTrueForm = isDragon && shapeSelect && shapeSelect.value === "DRAGON";
+            
             [1, 2].forEach(index => {
                 const weaponSelect = find(`weapon-select-${index}`);
                 const offhandSelect = find(`offhand-select-${index}`);
-                if (weaponSelect) {
-                    const dragonGroup = weaponSelect.querySelector('.dragon-weapons');
+                
+                if (weaponSelect && offhandSelect) {
+                    // Recherche sécurisée du groupe (même si la classe a été oubliée)
+                    const dragonGroup = Array.from(weaponSelect.querySelectorAll('optgroup')).find(g => g.label === "Armes de Dragon" || g.className === "dragon-weapons");
+                    
                     if (dragonGroup) {
                         if (isDragonTrueForm) {
+                            // 1. On débloque l'accès aux armes en arrière-plan
                             dragonGroup.hidden = false;
                             dragonGroup.disabled = false;
-                            weaponSelect.disabled = true; // Verrouille l'arme
-                            weaponSelect.style.opacity = "0.7"; // Grise l'arme
-                            if (offhandSelect) offhandSelect.style.opacity = "0.7"; // Grise la main gauche
+                            
+                            // 2. On force l'équipement (seulement si ce n'est pas déjà le cas)
+                            let expectedWeapon = (index === 1) ? "Griffes ou Morsure" : "Souffle";
+                            if (weaponSelect.value !== expectedWeapon) {
+                                weaponSelect.value = expectedWeapon;
+                                updateOffhandOptions(index);
+                            }
+                            
+                            // 3. On verrouille tout visuellement
+                            weaponSelect.disabled = true;
+                            weaponSelect.style.opacity = "0.7";
+                            offhandSelect.style.opacity = "0.7";
+                            
                         } else {
+                            // 1. On cache les armes draconiques
                             dragonGroup.hidden = true;
                             dragonGroup.disabled = true;
+                            
+                            // 2. On déverrouille les menus
                             weaponSelect.disabled = false;
                             weaponSelect.style.opacity = "1";
-                            if (offhandSelect) offhandSelect.style.opacity = "1";
-                            // Si on quitte la vraie forme, on retire les armes draconiques des mains
+                            offhandSelect.style.opacity = "1";
+                            
+                            // 3. On nettoie si les armes draconiques étaient encore équipées
                             if (weaponSelect.value === "Griffes ou Morsure" || weaponSelect.value === "Souffle") {
                                 weaponSelect.value = "Main Libre";
                                 updateOffhandOptions(index);
